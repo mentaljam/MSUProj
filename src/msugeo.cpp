@@ -34,12 +34,15 @@ msumr::msugeo::msugeo()
     dstFile = NULL;
     dstDS = NULL;
 
-    dstFormat = (char*)"GTiff";
+    dstFormat = new char[6];
+    strcpy(dstFormat, "GTiff\0");
 }
 
 msumr::msugeo::~msugeo()
 {
     delete[] geoTransform;
+    delete[] dstFormat;
+    delete[] dstFile;
     if (gcpSize > 0)
         delete[] gcps;
     if (srcDS != NULL)
@@ -55,12 +58,17 @@ const char *msumr::msugeo::getVersion()
 
 void msumr::msugeo::setDST(const char *file)
 {
-    dstFile = (char*)file;
+    if (dstFile != NULL)
+        delete[] dstFile;
+    dstFile = new char[strlen(file)];
+    strcpy(dstFile, file);
 }
 
 void msumr::msugeo::setDSTFormat(const char *format)
 {
-    dstFormat = (char*)format;
+    delete[] dstFormat;
+    dstFormat = new char[strlen(format)];
+    strcpy(dstFormat, format);
 }
 
 msumr::retCode msumr::msugeo::setSRC(const char *file)

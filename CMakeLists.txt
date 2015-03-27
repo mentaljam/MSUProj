@@ -17,7 +17,7 @@ set(HHC      "" CACHE FILEPATH "HTML Help generator path")
 set(PDFLATEX "" CACHE FILEPATH "PDFLatex path")
 
 #### Documentation
-set(DOC_LANGUAGE "Russian" CACHE STRING "Language (English or Russian)")
+set(DOC_LANGUAGE "English" CACHE STRING "Language (English or Russian)")
 set(GENERATE_HTML     NO CACHE STRING "Documentation in HTML")
 set(GENERATE_HTMLHELP NO CACHE STRING "Documentation in HTML Help")
 set(GENERATE_LATEX    NO CACHE STRING "Documentation in LaTeX")
@@ -27,7 +27,7 @@ set(GENERATE_RTF      NO CACHE STRING "Documentation in RTF")
 set(GENERATE_XML      NO CACHE STRING "Documentation in XML")
 
 #### Compiler flags
-set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
+set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3")
 set(CMAKE_CXX_FLAGS "" CACHE STRING "CXX compiler flags")
 set(CMAKE_AUTOMOC ON)
 
