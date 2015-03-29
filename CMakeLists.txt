@@ -108,7 +108,8 @@ add_executable(msugeo-cli src/msugeo-cli.cpp
                           src/logomark.hpp)
 target_link_libraries(msugeo-cli ${GDAL_LIBRARIES})
 
-add_executable(image2class src/tools/image2class.cpp)
+add_executable(image2class EXCLUDE_FROM_ALL
+                           src/tools/image2class.cpp)
 target_link_libraries(image2class ${GDAL_LIBRARIES})
 
 add_executable(gcp-thiner src/tools/gcp-thiner.cpp)
