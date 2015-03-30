@@ -217,8 +217,8 @@ msumr::retCode msumr::msugeo::warp()
     dstDS->SetGeoTransform(geoTransform);
 
     short band;
-    unsigned char *srcData[bands];
-    unsigned char *tmpData[bands];
+    unsigned char **srcData = new unsigned char*[bands];
+    unsigned char **tmpData = new unsigned char*[bands];
 
     for (band = 0; band < bands; ++band)
     {
@@ -271,14 +271,16 @@ msumr::retCode msumr::msugeo::warp()
         }
     }
 
-    unsigned char *dstData[bands];
+    unsigned char **dstData = new unsigned char*[bands];
     for (band = 0; band < bands; ++band)
     {
         delete[] srcData[band];
         dstData[band] = new unsigned char[dstSize]();
     }
+    delete[] srcData;
 
-    double vl, wDelim, sum[bands];
+    double vl, wDelim;
+    double *sum = new double[bands];
 
     for (pLine = 0; pLine < dstYSize; ++pLine)
     {
@@ -384,6 +386,7 @@ msumr::retCode msumr::msugeo::warp()
     }
 
     delete[] gcpsW;
+    delete[] sum;
 
     for (band = 0; band < bands; ++band)
     {
@@ -392,6 +395,8 @@ msumr::retCode msumr::msugeo::warp()
         delete[] tmpData[band];
         delete[] dstData[band];
     }
+    delete[] tmpData;
+    delete[] dstData;
 
     logomark logo;
     dstXSize -= logo.width;
@@ -401,7 +406,7 @@ msumr::retCode msumr::msugeo::warp()
         bands = 3;
         for (band = 0; band < bands; ++band)
             dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, dstXSize, dstYSize,
-                                                     logo.width, logo.height, (unsigned char*)&logo.data[logo.width * logo.height * band],
+                                                     logo.width, logo.height, (unsigned char*)&logo.data[band][0],
                                                      logo.width, logo.height, GDT_Byte, 0, 0);
     }
 

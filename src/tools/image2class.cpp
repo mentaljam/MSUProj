@@ -34,41 +34,45 @@ int main(int argc, char *argv[])
               << "    unsigned int  width;" << "  ///< Number of rows in image" << endl
               << "    unsigned int  height;" << " ///< Number of lines in image" << endl
               << "    unsigned int  bands;" << "  ///< Number of image bands" << endl
-              << "    unsigned int  size;" << "   ///< Number of pixels in image" << endl
-              << "    unsigned char *data;" << "  ///< Image data array" << endl
+              << "    unsigned int  size;" << "   ///< Number of pixels in band" << endl
+              << "    unsigned char **data;" << " ///< Image data array" << endl
               << "};" << endl << endl
               << argv[2] << "::" << argv[2] << "()" << endl
               << "{" << endl
               << "    width  = " << x << ";" << endl
               << "    height = " << y << ";" << endl
               << "    bands  = " << bands << ";" << endl
-              << "    size   = " << x * y * bands + 1 << ";" << endl << endl
-              << "    data = new unsigned char[size];" << endl
-              << "    memcpy(data," << endl;
+              << "    size   = " << x * y << ";" << endl << endl
+              << "    data = new unsigned char*[3];" << endl << endl;
 
     int i, j;
     unsigned char *tmpData;
 
     for (int b = 0; b < bands; ++b)
     {
+        outstream << "    data[" << b << "] = new unsigned char[size];" << endl;
         tmpData = new unsigned char[size]();
         tt->GetRasterBand(b + 1)->RasterIO(GF_Read, 0, 0, x, y, tmpData,
                                            x, y, GDT_Byte, 0, 0);
         for (i = 0; i < y; ++i)
         {
-            outstream << "           \"";
+            outstream << "    memcpy(&data[" << b << "][" << std::dec << i * x << "]," << endl
+                      << "           \"";
             for (j = 0; j < x; ++j)
                 outstream << "\\x" << std::hex << (int)tmpData[i * x + j];
-            outstream << "\"" << endl;
+            outstream << "\"," << endl
+                      << "           width);" << endl;
         }
         delete[] tmpData;
+        outstream << endl;
     }
 
-    outstream << "           \"\\0\"," << endl
-              << "           size);" << endl
-              << "}" << endl << endl
+    outstream << "}" << endl << endl
               << argv[2] << "::~" << argv[2] << "()" << endl
               << "{" << endl
+              << "    for (int b = 0; b < bands; ++b)" << endl
+              << "        if (data[b])" << endl
+              << "            delete[] data[b];" << endl
               << "    if (data)" << endl
               << "        delete[] data;" << endl
               << "}" << endl;
