@@ -200,9 +200,17 @@ msumr::retCode msumr::msugeo::warp()
     GDALDriver *dstDriver;
     dstDriver = GetGDALDriverManager()->GetDriverByName(dstFormat);
     char **dstOptions = NULL;
+    char **dstMetadata = NULL;
     if (strcmp(dstFormat, "GTiff") == 0)
+    {
         dstOptions = CSLSetNameValue(dstOptions, "PHOTOMETRIC", "RGB");
+        dstOptions = CSLSetNameValue(dstOptions, "COMPRESS", "JPEG");
+        dstOptions = CSLSetNameValue(dstOptions, "JPEG_QUALITY", "100");
+        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
+        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "msugeo v" VERSION);
+    }
     dstDS = dstDriver->Create(dstFile, dstXSize, dstYSize, 3, GDT_Byte, dstOptions);
+    dstDS->SetMetadata(dstMetadata);
     dstDS->SetProjection(srsWKT);
     dstDS->SetGeoTransform(geoTransform);
 

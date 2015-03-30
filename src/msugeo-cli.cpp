@@ -28,8 +28,7 @@ int main(int argc, char *argv[])
                        "Usage:   msugeo-cli [OPTIONS] -src input_file -gcp gcp_file [-gcp output_file]\n\n"
                        "Options:\n"
                        "   -u        - Produce an image in UTM projection\n"
-                       "               (a zone number is calculated with center point)\n"
-                       "   -f [name] - Output raster format (it must support GDAL create method\n", msuObj.getVersion());
+                       "               (a zone number is calculated with center point)\n", msuObj.getVersion());
                 return 0;
             }
             else if (i + 1 < argc && strcmp(argv[i], "-src") == 0)
