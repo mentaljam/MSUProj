@@ -145,6 +145,8 @@ msumr::retCode msumr::msugeo::warp()
     if (dstFile == NULL)
         return errDST;
 
+    short bands = srcDS->GetRasterCount();
+
     gcp *gcpsW = new gcp[gcpSize];
     memcpy(gcpsW, gcps, gcpSize * sizeof(gcp));
 
@@ -209,16 +211,16 @@ msumr::retCode msumr::msugeo::warp()
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "msugeo v" VERSION);
     }
-    dstDS = dstDriver->Create(dstFile, dstXSize, dstYSize, 3, GDT_Byte, dstOptions);
+    dstDS = dstDriver->Create(dstFile, dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
     dstDS->SetMetadata(dstMetadata);
     dstDS->SetProjection(srsWKT);
     dstDS->SetGeoTransform(geoTransform);
 
-    int band;
-    unsigned char *srcData[3];
-    unsigned char *tmpData[3];
+    short band;
+    unsigned char *srcData[bands];
+    unsigned char *tmpData[bands];
 
-    for (band = 0; band < 3; ++band)
+    for (band = 0; band < bands; ++band)
     {
         srcData[band] = new unsigned char[srcSize];
         srcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize, srcData[band],
@@ -259,7 +261,7 @@ msumr::retCode msumr::msugeo::warp()
 
             dCount = (int)(lat + 0.5) * dstXSize + (int)(lon + 0.5);
 
-            for (band = 0; band < 3; ++band)
+            for (band = 0; band < bands; ++band)
             {
                 if (tmpData[band][dCount] == 0)
                     tmpData[band][dCount] = srcData[band][pCount];
@@ -269,14 +271,14 @@ msumr::retCode msumr::msugeo::warp()
         }
     }
 
-    unsigned char *dstData[3];
-    for (band = 0; band < 3; ++band)
+    unsigned char *dstData[bands];
+    for (band = 0; band < bands; ++band)
     {
         delete[] srcData[band];
         dstData[band] = new unsigned char[dstSize]();
     }
 
-    double vl, wDelim, sum[3];
+    double vl, wDelim, sum[bands];
 
     for (pLine = 0; pLine < dstYSize; ++pLine)
     {
@@ -285,9 +287,8 @@ msumr::retCode msumr::msugeo::warp()
         {
             x = pRow;
             y = pLine;
-            sum[0] = tmpData[0][pCount];
-            sum[1] = tmpData[1][pCount];
-            sum[2] = tmpData[2][pCount];
+            for (band = 0; band < bands; ++band)
+                sum[band] = tmpData[band][pCount];
 
             if (tmpData[0][pCount] == 0)
             {
@@ -308,9 +309,8 @@ msumr::retCode msumr::msugeo::warp()
                     tmpData[0][yy] > 0)
                 {
                     vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
-                    sum[0] += tmpData[0][yy] / vl;
-                    sum[1] += tmpData[1][yy] / vl;
-                    sum[2] += tmpData[2][yy] / vl;
+                    for (band = 0; band < bands; ++band)
+                        sum[band] += tmpData[band][yy] / vl;
                     wDelim += 1 / vl;
                     ++xx;
                 }
@@ -323,9 +323,8 @@ msumr::retCode msumr::msugeo::warp()
                         tmpData[0][yy] > 0)
                     {
                         vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
-                        sum[0] += tmpData[0][yy] / vl;
-                        sum[1] += tmpData[1][yy] / vl;
-                        sum[2] += tmpData[2][yy] / vl;
+                        for (band = 0; band < bands; ++band)
+                            sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
                         ++xx;
                     }
@@ -339,9 +338,8 @@ msumr::retCode msumr::msugeo::warp()
                         tmpData[0][yy] > 0)
                     {
                         vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
-                        sum[0] += tmpData[0][yy] / vl;
-                        sum[1] += tmpData[1][yy] / vl;
-                        sum[2] += tmpData[2][yy] / vl;
+                        for (band = 0; band < bands; ++band)
+                            sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
                         ++xx;
                     }
@@ -355,9 +353,8 @@ msumr::retCode msumr::msugeo::warp()
                         tmpData[0][yy] > 0)
                     {
                         vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
-                        sum[0] += tmpData[0][yy] / vl;
-                        sum[1] += tmpData[1][yy] / vl;
-                        sum[2] += tmpData[2][yy] / vl;
+                        for (band = 0; band < bands; ++band)
+                            sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
                         ++xx;
                     }
@@ -371,9 +368,8 @@ msumr::retCode msumr::msugeo::warp()
                         tmpData[0][yy] > 0)
                     {
                         vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
-                        sum[0] += tmpData[0][yy] / vl;
-                        sum[1] += tmpData[1][yy] / vl;
-                        sum[2] += tmpData[2][yy] / vl;
+                        for (band = 0; band < bands; ++band)
+                            sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
                         ++xx;
                     }
@@ -382,15 +378,14 @@ msumr::retCode msumr::msugeo::warp()
                 if (xx >= dCount * 4)
                     break;
             }
-            dstData[0][pCount] = (unsigned char)(sum[0] / wDelim + 0.5);
-            dstData[1][pCount] = (unsigned char)(sum[1] / wDelim + 0.5);
-            dstData[2][pCount] = (unsigned char)(sum[2] / wDelim + 0.5);
+            for (band = 0; band < bands; ++band)
+                dstData[band][pCount] = (unsigned char)(sum[band] / wDelim + 0.5);
         }
     }
 
     delete[] gcpsW;
 
-    for (band = 0; band < 3; ++band)
+    for (band = 0; band < bands; ++band)
     {
         dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, 0, 0, dstXSize, dstYSize, dstData[band],
                                                  dstXSize, dstYSize, GDT_Byte, 0, 0);
@@ -401,15 +396,14 @@ msumr::retCode msumr::msugeo::warp()
     logomark logo;
     dstXSize -= logo.width;
     dstYSize -= logo.height;
-    dstDS->GetRasterBand(1)->RasterIO(GF_Write, dstXSize, dstYSize,
-                                      logo.width, logo.height, (unsigned char*)&logo.data[0],
-                                      logo.width, logo.height, GDT_Byte, 0, 0);
-    dstDS->GetRasterBand(2)->RasterIO(GF_Write, dstXSize, dstYSize,
-                                      logo.width, logo.height, (unsigned char*)&logo.data[logo.width * logo.height],
-                                      logo.width, logo.height, GDT_Byte, 0, 0);
-    dstDS->GetRasterBand(3)->RasterIO(GF_Write, dstXSize, dstYSize,
-                                      logo.width, logo.height, (unsigned char*)&logo.data[logo.width * logo.height * 2],
-                                      logo.width, logo.height, GDT_Byte, 0, 0);
+    if (bands >= 3)
+    {
+        bands = 3;
+        for (band = 0; band < bands; ++band)
+            dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, dstXSize, dstYSize,
+                                                     logo.width, logo.height, (unsigned char*)&logo.data[logo.width * logo.height * band],
+                                                     logo.width, logo.height, GDT_Byte, 0, 0);
+    }
 
     return success;
 }
