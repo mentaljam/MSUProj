@@ -1,6 +1,6 @@
 #include "msugeo.h"
 #include "logomark.hpp"
-#include "info.h"
+#include <msugeo_version.h>
 #include <ogrsf_frmts.h>
 #include <fstream>
 #include <sstream>
@@ -51,9 +51,14 @@ msumr::msugeo::~msugeo()
         dstDS->~GDALDataset();
 }
 
-const char *msumr::msugeo::getVersion()
+const char *msumr::msugeo::getVersion(int type)
 {
-    return VERSION;
+    if (type == 0)
+        return VERSION;
+    else if (type == 1)
+        return V_DATE;
+    else if (type == 2)
+        return V_ARCH;
 }
 
 void msumr::msugeo::setDST(const char *file)

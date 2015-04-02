@@ -46,9 +46,7 @@ set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
                               "/\\\\3rd/"
                               "/\\\\.gitignore"
-                              "/\\\\CMakeLists.txt.user"
-                              "/\\\\src/\\\\info.h$"
-                              "/\\\\src/\\\\versions.h")
+                              "/\\\\CMakeLists.txt.user")
 
 set(DOC_DIR         ${PROJECT_SOURCE_DIR}/doc)
 set(RESOURCES_DIR   ${PROJECT_SOURCE_DIR}/res)
@@ -57,22 +55,6 @@ set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/3rd)
 #### GDAL paths (on Windows)
 set(GDAL_INCLUDE_DIRS "C:\\msys\\1.0\\local\\include" CACHE FILEPATH "GDAL headers path")
 set(GDAL_DLL ${CMAKE_BINARY_DIR}/libgdal-1.dll CACHE FILEPATH "GDAL precompiled dll")
-
-
-#################### Configuring files #####################
-
-file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
-source_group("Source Files" FILES ${SOURCE_FILES})
-
-file(GLOB_RECURSE HEADER_FILES src/*.h)
-source_group("Headers" FILES ${HEADER_FILES})
-
-file(GLOB_RECURSE HPP_FILES src/*.hpp)
-source_group("HPP" FILES ${HPP_FILES})
-
-set(VERSION_FILES ${SOURCE_FILES}
-                  ${HEADER_FILES}
-                  ${HPP_FILES})
 
 
 ###################### CMake modules #######################
@@ -121,12 +103,12 @@ if(WIN32)
     set (BIN .)
     install(FILES ${CPACK_RESOURCE_FILE_LICENSE} DESTINATION . COMPONENT license)
     set(COMPONENTS_ALL license)
-    if (EXISTS ${DLLS})
+    if (EXISTS ${DLL_ARCH})
         install(FILES ${DLLS} DESTINATION . COMPONENT libs OPTIONAL)
         set(CPACK_COMPONENT_LIBS_DISPLAY_NAME "Runtime")
         set(CPACK_COMPONENT_LIBS_DESCRIPTION "Thirdparty runtime libraries")
         set(COMPONENTS_ALL "${COMPONENTS_ALL} libs")
-    endif (EXISTS ${DLLS})
+    endif (EXISTS ${DLL_ARCH})
 else(WIN32)
     set (BIN bin)
 endif(WIN32)

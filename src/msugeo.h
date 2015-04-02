@@ -55,7 +55,7 @@ public:
      * @brief Метод получения версии проекта
      * @return Номер версии
      */
-    const char* getVersion();
+    const char* getVersion(int type = 0);
 
     /**
      * @ru

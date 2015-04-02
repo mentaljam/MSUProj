@@ -18,17 +18,25 @@ int main(int argc, char *argv[])
             if (strcmp(argv[i], "-h") == 0 ||
                 strcmp(argv[i], "--help") == 0)
             {
-                printf("\nmsugeo-cli - a command line utility\n"
-                       "             for projecting images of MSU-MR equipment\n"
-                       "             of Russian ERS sattelite Meteor-M\n\n"
+                printf("\nmsugeo-cli - a command line utility for projecting images\n"
+                       "             of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
                        "Author:  Petr Tsymbarovich <tpr@ntsomz.ru>\n"
                        "         Research Center for Earth Operative Monitoring\n"
                        "         (NTs OMZ) <www.ntsomz.ru>\n\n"
-                       "Version: %s\n\n"
-                       "Usage:   msugeo-cli [OPTIONS] -src input_file -gcp gcp_file [-gcp output_file]\n\n"
+                       "Version: %s (%s) for %s\n\n"
+                       "Usage:   msugeo-cli [OPTIONS] -src input_file -gcp gcp_file [-dst output_file]\n\n"
                        "Options:\n"
-                       "   -u        - Produce an image in UTM projection\n"
-                       "               (a zone number is calculated with center point)\n", msuObj.getVersion());
+                       "    -u              Produce an image in UTM projection\n"
+                       "                    (a zone number is calculated for center point)\n"
+                       "    -v | --version  Print version number and exit\n"
+                       "    -h | --help     Print help message and exit\n",
+                       msuObj.getVersion(), msuObj.getVersion(1), msuObj.getVersion(2));
+                return 0;
+            }
+            if (strcmp(argv[i], "-v") == 0 ||
+                strcmp(argv[i], "--version") == 0)
+            {
+                printf("%s", msuObj.getVersion());
                 return 0;
             }
             else if (i + 1 < argc && strcmp(argv[i], "-src") == 0)
