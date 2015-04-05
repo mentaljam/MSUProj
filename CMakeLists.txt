@@ -37,7 +37,11 @@ set(CMAKE_AUTOMOC ON)
 set(VERSION_STATUS "")
 set(CMAKE_BUILD_TYPE "Release")
 
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MSUGeo Project
+ MSUGeo is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.
+ Data from Meteor-M MSU-MR equipment is broadcasted at frequencies of 137.1 and 137.9 MHz in the LRPT format and can be obtained by everyone under \\\"Free Space\\\" program.
+ All additional information in English can be found on meteor.robonuka.ru.
+ This package contains MSUGeo command line utility.")
 set(CPACK_PACKAGE_VENDOR "NTs OMZ")
 set(COPYRIGHT "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
 set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <tpr@ntsomz.ru>")
@@ -100,31 +104,45 @@ add_executable(gcp-thiner src/tools/gcp-thiner.cpp)
 ################### Setting install paths ##################
 
 if(WIN32)
-    set (BIN .)
-    install(FILES ${CPACK_RESOURCE_FILE_LICENSE} DESTINATION . COMPONENT license)
-    set(COMPONENTS_ALL license)
-    if (EXISTS ${DLL_ARCH})
-        install(FILES ${DLLS} DESTINATION . COMPONENT libs OPTIONAL)
+    set(DOCS doc)
+    if(EXISTS ${DLL_ARCH})
+        install(FILES ${DLLS} DESTINATION bin COMPONENT libs OPTIONAL)
         set(CPACK_COMPONENT_LIBS_DISPLAY_NAME "Runtime")
         set(CPACK_COMPONENT_LIBS_DESCRIPTION "Thirdparty runtime libraries")
         set(COMPONENTS_ALL "${COMPONENTS_ALL} libs")
-    endif (EXISTS ${DLL_ARCH})
+    endif(EXISTS ${DLL_ARCH})
+    if(DOXYGEN_FOUND AND HHC)
+        message(STATUS "WARNING! Before building package make shure manual have been compiled")
+        install(CODE "execute_process(COMMAND ${CMAKE_BUILD_TOOL} manual)" COMPONENT man)
+        install(FILES ${CHM_FILE} DESTINATION man COMPONENT man OPTIONAL)
+        set(CPACK_COMPONENT_MAN_DISPLAY_NAME "Manual")
+        set(CPACK_COMPONENT_MAN_DESCRIPTION "KMSS2Raster user documentation")
+        set(COMPONENTS_ALL "${COMPONENTS_ALL} man")
+    endif(DOXYGEN_FOUND AND HHC)
 else(WIN32)
-    set (BIN bin)
+    set(DOCS share/doc/${CMAKE_PROJECT_NAME})
 endif(WIN32)
 
-install(TARGETS msugeo-cli DESTINATION ${BIN} COMPONENT cli)
-install(TARGETS gcp-thiner DESTINATION ${BIN} COMPONENT tools OPTIONAL)
+install(TARGETS msugeo-cli DESTINATION bin COMPONENT app)
+set(CPACK_COMPONENT_APP_DISPLAY_NAME "MSUGeo")
+set(CPACK_COMPONENT_APP_DESCRIPTION "MSUGeo command line utility")
+set(CPACK_COMPONENT_APP_REQUIRED ON)
 
-set(COMPONENTS_ALL "${COMPONENTS_ALL} cli tools")
-set(CPACK_COMPONENT_CLI_DISPLAY_NAME "msugeo cli")
-set(CPACK_COMPONENT_CLI_DESCRIPTION "msugeo command line utility")
+install(TARGETS gcp-thiner DESTINATION bin COMPONENT tools OPTIONAL)
 set(CPACK_COMPONENT_TOOLS_DISPLAY_NAME "Tools")
-set(CPACK_COMPONENT_TOOLS_DESCRIPTION "msugeo additional tools")
-set(CPACK_COMPONENT_LICENSE_HIDDEN ON)
+set(CPACK_COMPONENT_TOOLS_DESCRIPTION "MSUGeo additional tools")
+
+install(FILES ${CPACK_RESOURCE_FILE_LICENSE} DESTINATION ${DOCS} COMPONENT doc)
+install(FILES CHANGELOG.txt DESTINATION ${DOCS} COMPONENT doc)
+install(FILES TODO.txt DESTINATION ${DOCS} COMPONENT doc)
+set(CPACK_COMPONENT_DOC_HIDDEN ON)
+
+set(COMPONENTS_ALL "${COMPONENTS_ALL} app tools doc")
+
 #set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CPACK_WIX_CULTURES "en-US")
 include(CPack)
+
 
 ###################### Generated Files #####################
 

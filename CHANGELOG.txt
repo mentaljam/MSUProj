@@ -1,0 +1,2 @@
+Current:
+    - UPDATE: GTiff creation options and metadata - JPEG compression
