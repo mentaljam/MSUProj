@@ -1,5 +1,3 @@
-Thirdparty:
-
 "GDALLogoColor" by GDAL Team - http://download.osgeo.org/gdal/.
 Licensed under CC BY-SA 3.0 via Wikimedia Commons -
 http://commons.wikimedia.org/wiki/File:GDALLogoColor.svg#/media/File:GDALLogoColor.svg

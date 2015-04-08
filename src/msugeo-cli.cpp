@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
             if (strcmp(argv[i], "-v") == 0 ||
                 strcmp(argv[i], "--version") == 0)
             {
-                printf("%s", msuObj.getVersion());
+                printf("%s\n", msuObj.getVersion());
                 return 0;
             }
             else if (i + 1 < argc && strcmp(argv[i], "-src") == 0)

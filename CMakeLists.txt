@@ -46,9 +46,10 @@ set(CPACK_PACKAGE_VENDOR "NTs OMZ")
 set(COPYRIGHT "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
 set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <tpr@ntsomz.ru>")
 set(WEB "http://www.ntsomz.ru")
-set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
+set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/COPYING.txt)
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
                               "/\\\\3rd/"
+                              "/\\\\cmake/"
                               "/\\\\.gitignore"
                               "/\\\\CMakeLists.txt.user")
 
@@ -63,6 +64,9 @@ set(GDAL_DLL ${CMAKE_BINARY_DIR}/libgdal-1.dll CACHE FILEPATH "GDAL precompiled 
 
 ###################### CMake modules #######################
 
+if(EXISTS ${PROJECT_SOURCE_DIR}/cmake)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+endif(EXISTS ${PROJECT_SOURCE_DIR}/cmake)
 include(myProjectConf)
 include(myDoxyConf)
 
@@ -104,7 +108,7 @@ add_executable(gcp-thiner src/tools/gcp-thiner.cpp)
 ################### Setting install paths ##################
 
 if(WIN32)
-    set(DOCS doc)
+    set(DOCS doc/${CMAKE_PROJECT_NAME})
     if(EXISTS ${DLL_ARCH})
         install(FILES ${DLLS} DESTINATION bin COMPONENT libs OPTIONAL)
         set(CPACK_COMPONENT_LIBS_DISPLAY_NAME "Runtime")
