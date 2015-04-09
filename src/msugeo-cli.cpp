@@ -8,15 +8,16 @@ int main(int argc, char *argv[])
     GDALAllRegister();
     msugeo msuObj;
 
-    char *srcFile;
-    char *gcpFile;
+    string srcFile;
+    string gcpFile;
     string dstFile;
+
     for (short i = 1; i < argc; ++i)
     {
         if (argv[i][0] == '-')
         {
             if (strcmp(argv[i], "-h") == 0 ||
-                strcmp(argv[i], "--help") == 0)
+                    strcmp(argv[i], "--help") == 0)
             {
                 printf("\nmsugeo-cli - a command line utility for projecting images\n"
                        "             of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
                 return 0;
             }
             if (strcmp(argv[i], "-v") == 0 ||
-                strcmp(argv[i], "--version") == 0)
+                    strcmp(argv[i], "--version") == 0)
             {
                 printf("%s\n", msuObj.getVersion());
                 return 0;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (srcFile == NULL || gcpFile == NULL)
+    if (srcFile.empty() || gcpFile.empty())
     {
         printf("ERROR: input and output not specified\n"
                "print \"-h\" for help\n");
@@ -66,14 +67,14 @@ int main(int argc, char *argv[])
 
     retCode code;
 
-    code = msuObj.setSRC(srcFile);
+    code = msuObj.setSRC(srcFile.c_str());
     if (code != success)
     {
         printf("ERROR: can not read input file\n");
         return code;
     }
 
-    code = msuObj.readGCP(gcpFile);
+    code = msuObj.readGCP(gcpFile.c_str());
     if (code != success)
     {
         printf("ERROR: can not read gcp file\n");
