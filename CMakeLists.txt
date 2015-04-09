@@ -46,7 +46,7 @@ set(CPACK_PACKAGE_VENDOR "NTs OMZ")
 set(COPYRIGHT "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
 set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <tpr@ntsomz.ru>")
 set(WEB "http://www.ntsomz.ru")
-set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/COPYING.txt)
+set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.MSUGeo.txt)
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
                               "/\\\\3rd/"
                               "/\\\\cmake/"
@@ -108,7 +108,7 @@ add_executable(gcp-thiner src/tools/gcp-thiner.cpp)
 ################### Setting install paths ##################
 
 if(WIN32)
-    set(DOCS doc/${CMAKE_PROJECT_NAME})
+    set(DOCS doc)
     if(EXISTS ${DLL_ARCH})
         install(FILES ${DLLS} DESTINATION bin COMPONENT libs OPTIONAL)
         set(CPACK_COMPONENT_LIBS_DISPLAY_NAME "Runtime")
@@ -137,6 +137,7 @@ set(CPACK_COMPONENT_TOOLS_DISPLAY_NAME "Tools")
 set(CPACK_COMPONENT_TOOLS_DESCRIPTION "MSUGeo additional tools")
 
 install(FILES ${CPACK_RESOURCE_FILE_LICENSE} DESTINATION ${DOCS} COMPONENT doc)
+install(FILES LICENSE.GDALLogoColor.txt DESTINATION ${DOCS} COMPONENT doc)
 install(FILES CHANGELOG.txt DESTINATION ${DOCS} COMPONENT doc)
 install(FILES TODO.txt DESTINATION ${DOCS} COMPONENT doc)
 set(CPACK_COMPONENT_DOC_HIDDEN ON)
