@@ -157,7 +157,7 @@ const char *msumr::msugeo::getUTM()
     }
 }
 
-msumr::retCode msumr::msugeo::warp(bool useUtm)
+msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
 {
     if (srcDS == NULL)
         return errSRC;
@@ -222,6 +222,7 @@ msumr::retCode msumr::msugeo::warp(bool useUtm)
     geoTransform[3] = coords[maxLAT];
     geoTransform[4] = 0;
 
+    short band;
     GDALDriver *dstDriver;
     dstDriver = GetGDALDriverManager()->GetDriverByName(dstFormat);
     char **dstOptions = NULL;
@@ -238,8 +239,10 @@ msumr::retCode msumr::msugeo::warp(bool useUtm)
     dstDS->SetMetadata(dstMetadata);
     dstDS->SetProjection(srsWKT);
     dstDS->SetGeoTransform(geoTransform);
+    if (zerosAsND)
+        for (band = 1; band <= bands; ++band)
+            dstDS->GetRasterBand(band)->SetNoDataValue(0);
 
-    short band;
     unsigned char **srcData = new unsigned char*[bands];
     unsigned char **tmpData = new unsigned char*[bands];
 

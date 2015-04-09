@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
     GDALAllRegister();
 
     bool useUTM = false;
+    bool zerosAsND = false;
 
     msugeo msuObj;
 
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
                        "Options:\n"
                        "    -u              Produce an image in UTM projection\n"
                        "                    (a zone number is calculated for center point)\n"
+                       "    -z              Set NoData value to zero\n"
                        "    -v | --version  Print version number and exit\n"
                        "    -h | --help     Print help message and exit\n",
                        msuObj.getVersion(), msuObj.getVersion(1), msuObj.getVersion(2));
@@ -49,6 +51,8 @@ int main(int argc, char *argv[])
                 dstFile = argv[++i];
             else if (!strcmp(argv[i], "-u"))
                 useUTM = true;
+            else if (!strcmp(argv[i], "-z"))
+                zerosAsND = true;
             else if (i + 1 < argc && !strcmp(argv[i], "-f"))
                 msuObj.setDSTFormat(argv[++i]);
             else
@@ -86,10 +90,13 @@ int main(int argc, char *argv[])
 
     printf("Processing warp operation");
     if (useUTM)
-        printf(" in UTM mode using zone %s\n", msuObj.getUTM());
+        printf(" in UTM mode using zone %s", msuObj.getUTM());
     else
-        printf(" in LatLon mode\n");
-    code = msuObj.warp(useUTM);
+        printf(" in LatLon mode");
+    if (zerosAsND)
+        printf(" and NoData=0");
+    printf("\n");
+    code = msuObj.warp(useUTM, zerosAsND);
     switch (code) {
     case errSRC:
         printf("ERROR: can not read input file\n");

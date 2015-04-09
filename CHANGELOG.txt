@@ -1,2 +1,7 @@
 Current:
     - UPDATE: GTiff creation options and metadata - JPEG compression
+    - NEW: Added getUTM() method which returns UTM zone number in {N,S}No format
+    - REMOVE: Removed setUTM()
+    - NEW: warp() options:
+        - useUTM - build output raster in UTM projection
+        - zerosAsND - set no data value to zero

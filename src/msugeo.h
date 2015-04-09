@@ -105,7 +105,7 @@ public:
      * - errSRC - Не указан исходный растр
      * - errGCP - Не указан файл GCP
      */
-    retCode warp(bool useUTM = false);
+    retCode warp(bool useUTM = false, bool zerosAsND = false);
 
 private:
 
