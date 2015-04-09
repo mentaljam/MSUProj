@@ -94,11 +94,7 @@ public:
      */
     void setPerimSize(int perim);
 
-    /**
-     * @ru
-     * @brief Строить или нет файл в проекции UTM
-     */
-    void useUTM(bool);
+    const char *getUTM();
 
     /**
      * @ru
@@ -109,7 +105,7 @@ public:
      * - errSRC - Не указан исходный растр
      * - errGCP - Не указан файл GCP
      */
-    retCode warp();
+    retCode warp(bool useUTM = false);
 
 private:
 
@@ -132,15 +128,13 @@ private:
     char *dstFile;   ///< @ru Файл назначения
     char *dstFormat; ///< @ru Формат выходного файла (должен поддерживать GDALCreate)
 
-    gcp* gcps;      ///< @ru Массив точек геосетки
+    gcp* gcps;       ///< @ru Массив точек геосетки
 
-    bool ifUTM;     ///< @ru Переключатель построения построения изображения в проекции UTM
-
-    int zone;       ///< @ru Номер зоны UTM
-    int hemisphere; ///< @ru Полушарие:
-                    /// - 0 - южное
-                    /// - 1 - северное
-    int perimSize;  ///< @ru Максимальный периметр поиска пикселей для интерполяции
+    int zone;        ///< @ru Номер зоны UTM
+    bool hemisphere; ///< @ru Полушарие:
+                     /// - 0 - южное
+                     /// - 1 - северное
+    int perimSize;   ///< @ru Максимальный периметр поиска пикселей для интерполяции
 
     int srcXSize; ///< @ru Количество столбцов исходного растра
     int srcYSize; ///< @ru Количество строк исходного растра

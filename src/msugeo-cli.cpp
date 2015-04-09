@@ -6,6 +6,9 @@ using namespace msumr;
 int main(int argc, char *argv[])
 {
     GDALAllRegister();
+
+    bool useUTM = false;
+
     msugeo msuObj;
 
     string srcFile;
@@ -16,8 +19,7 @@ int main(int argc, char *argv[])
     {
         if (argv[i][0] == '-')
         {
-            if (strcmp(argv[i], "-h") == 0 ||
-                    strcmp(argv[i], "--help") == 0)
+            if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
             {
                 printf("\nmsugeo-cli - a command line utility for projecting images\n"
                        "             of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
@@ -34,21 +36,20 @@ int main(int argc, char *argv[])
                        msuObj.getVersion(), msuObj.getVersion(1), msuObj.getVersion(2));
                 return 0;
             }
-            if (strcmp(argv[i], "-v") == 0 ||
-                    strcmp(argv[i], "--version") == 0)
+            if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version"))
             {
                 printf("%s\n", msuObj.getVersion());
                 return 0;
             }
-            else if (i + 1 < argc && strcmp(argv[i], "-src") == 0)
+            else if (i + 1 < argc && !strcmp(argv[i], "-src"))
                 srcFile = argv[++i];
-            else if (i + 1 < argc && strcmp(argv[i], "-gcp") == 0)
+            else if (i + 1 < argc && !strcmp(argv[i], "-gcp"))
                 gcpFile = argv[++i];
-            else if (i + 1 < argc && strcmp(argv[i], "-dst") == 0)
+            else if (i + 1 < argc && !strcmp(argv[i], "-dst"))
                 dstFile = argv[++i];
-            else if (strcmp(argv[i], "-u") == 0)
-                msuObj.useUTM(true);
-            else if (i + 1 < argc && strcmp(argv[i], "-f") == 0)
+            else if (!strcmp(argv[i], "-u"))
+                useUTM = true;
+            else if (i + 1 < argc && !strcmp(argv[i], "-f"))
                 msuObj.setDSTFormat(argv[++i]);
             else
                 printf("WARNING: Unknown option \"%s\"\n", argv[i]);argv[i];
@@ -83,8 +84,12 @@ int main(int argc, char *argv[])
 
     msuObj.setDST(dstFile.c_str());
 
-    printf("Processing warp operation\n");
-    code = msuObj.warp();
+    printf("Processing warp operation");
+    if (useUTM)
+        printf(" in UTM mode using zone %s\n", msuObj.getUTM());
+    else
+        printf(" in LatLon mode\n");
+    code = msuObj.warp(useUTM);
     switch (code) {
     case errSRC:
         printf("ERROR: can not read input file\n");
@@ -96,7 +101,8 @@ int main(int argc, char *argv[])
         printf("ERROR: can not read gcp file\n");
         break;
     default:
-        printf("Finished successfully\n");
+        printf("Finished successfully\n"
+               "Output raster: %s\n", dstFile.c_str());
         break;
     }
 

@@ -7,8 +7,6 @@
 
 msumr::msugeo::msugeo()
 {
-    ifUTM = false;
-
     srcXSize = 0;
     srcYSize = 0;
     srcSize  = 0;
@@ -142,12 +140,24 @@ void msumr::msugeo::setPerimSize(int perim)
         perimSize = 2 * perim + 1;
 }
 
-void msumr::msugeo::useUTM(bool use)
+const char *msumr::msugeo::getUTM()
 {
-    ifUTM = use;
+    if (gcps == NULL)
+        return "unknownZone";
+    else
+    {
+        std::string UTM;
+        if (hemisphere)
+            UTM = "N";
+        else
+            UTM = "S";
+        UTM += std::to_string(zone);
+
+        return UTM.c_str();
+    }
 }
 
-msumr::retCode msumr::msugeo::warp()
+msumr::retCode msumr::msugeo::warp(bool useUtm)
 {
     if (srcDS == NULL)
         return errSRC;
@@ -166,7 +176,7 @@ msumr::retCode msumr::msugeo::warp()
     OGRSpatialReference latlonSRS;
     latlonSRS.SetWellKnownGeogCS("WGS84");
     char *srsWKT;
-    if (ifUTM)
+    if (useUtm)
     {
         OGRSpatialReference utmSRS;
         utmSRS.SetWellKnownGeogCS("WGS84");
