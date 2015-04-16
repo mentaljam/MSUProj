@@ -112,8 +112,10 @@ const msumr::retCode msumr::msugeo::readGCP(const char *file)
     gcpXStep = srcXSize / gcpXSize + 1;
     gcpYStep = srcYSize / gcpYSize + 1;
 
-    zone = (int)((gcps[(int)(gcpSize / 2)].lon + 180) / 6) + 1;
-    hemisphere = (gcps[(int)(gcpSize / 2)].lat > 0);
+    zone = ((int)(((gcps[0].lon + gcps[gcpXSize - 1].lon +
+           gcps[gcpSize - gcpXSize].lon + gcps[gcpSize - 1].lon) / 4 + 180) / 6) + 1);
+    hemisphere = ((gcps[0].lat + gcps[gcpXSize - 1].lat +
+           gcps[gcpSize - gcpXSize].lat + gcps[gcpSize - 1].lat) / 4 > 0);
 
     return success;
 }

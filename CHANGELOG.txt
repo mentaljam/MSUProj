@@ -5,3 +5,4 @@ Current:
     - NEW: warp() options:
         - useUTM - build output raster in UTM projection
         - zerosAsND - set no data value to zero
+    - FIX: calculation of UTM zone number

@@ -62,13 +62,10 @@ int main(int argc, char *argv[])
 
     if (srcFile.empty() || gcpFile.empty())
     {
-        printf("ERROR: input and output not specified\n"
+        printf("ERROR: input files are not specified\n"
                "print \"-h\" for help\n");
         return 1;
     }
-
-    if (dstFile.empty())
-        dstFile = srcFile + string(".tif");
 
     retCode code;
 
@@ -84,6 +81,14 @@ int main(int argc, char *argv[])
     {
         printf("ERROR: can not read gcp file\n");
         return code;
+    }
+
+    if (dstFile.empty())
+    {
+        dstFile = srcFile;
+        if (useUTM)
+            dstFile += "_" + string(msuObj.getUTM());
+        dstFile += ".tif";
     }
 
     msuObj.setDST(dstFile.c_str());
