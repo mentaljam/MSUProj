@@ -1,13 +1,17 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
-project("msugeo")
+project("msuproj")
+set(PROJECT_NAME "MSUProj")
 
 
 ####################### Build options ######################
 
+#### Build locale
+set(LOCALE "Russian" CACHE STRING "Build locale (English or Russian)")
+
 #### Build architecture
-# NO - 32bit, YES - 64bit
-option(IF64 "Build x86-64 application" NO)
+# 32 - 32bit, 64 - 64bit
+set(ARCH "" CACHE STRING "Build x86 or x86-64 application")
 
 #### Additional packages paths
 # set if cmake can not find one of them
@@ -17,7 +21,6 @@ set(HHC      "" CACHE FILEPATH "HTML Help generator path")
 set(PDFLATEX "" CACHE FILEPATH "PDFLatex path")
 
 #### Documentation
-set(DOC_LANGUAGE "English" CACHE STRING "Language (English or Russian)")
 set(GENERATE_HTML     NO CACHE STRING "Documentation in HTML")
 set(GENERATE_HTMLHELP NO CACHE STRING "Documentation in HTML Help")
 set(GENERATE_LATEX    NO CACHE STRING "Documentation in LaTeX")
@@ -26,22 +29,24 @@ set(GENERATE_MAN      NO CACHE STRING "Documentation in MAN")
 set(GENERATE_RTF      NO CACHE STRING "Documentation in RTF")
 set(GENERATE_XML      NO CACHE STRING "Documentation in XML")
 
+#### Build tools
+option(BUILD_TOOLS "Build additional tools" OFF)
+
 #### Compiler flags
-set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3")
-set(CMAKE_CXX_FLAGS "" CACHE STRING "CXX compiler flags")
-set(CMAKE_AUTOMOC ON)
+set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 
 
 ############### Setting additional variables ###############
 
+set(QT NO)
 set(VERSION_STATUS "")
 set(CMAKE_BUILD_TYPE "Release")
 
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MSUGeo Project
- MSUGeo is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} Project
+ ${PROJECT_NAME} is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.
  Data from Meteor-M MSU-MR equipment is broadcasted at frequencies of 137.1 and 137.9 MHz in the LRPT format and can be obtained by everyone under \\\"Free Space\\\" program.
  All additional information in English can be found on meteor.robonuka.ru.
- This package contains MSUGeo command line utility.")
+ This package contains ${PROJECT_NAME} command line utility.")
 set(CPACK_PACKAGE_VENDOR "NTs OMZ")
 set(COPYRIGHT "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
 set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <tpr@ntsomz.ru>")
@@ -61,13 +66,29 @@ set(GDAL_INCLUDE_DIRS "C:\\msys\\1.0\\local\\include" CACHE FILEPATH "GDAL heade
 set(GDAL_DLL ${CMAKE_BINARY_DIR}/libgdal-1.dll CACHE FILEPATH "GDAL precompiled dll")
 
 
+####################### Setting paths ######################
+
+
+set(DOC_DIR         ${PROJECT_SOURCE_DIR}/doc)
+set(RESOURCES_DIR   ${PROJECT_SOURCE_DIR}/res)
+set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/3rd)
+
+if(WIN32)
+    set(INSTALL_PATH_BIN  .)
+    set(INSTALL_PATH_DOCS doc/${CMAKE_PROJECT_NAME})
+    set(INSTALL_PATH_DEV  include/${CMAKE_PROJECT_NAME})
+else()
+    set(INSTALL_PATH_BIN  bin)
+    set(INSTALL_PATH_DOCS share/${CMAKE_PROJECT_NAME}/doc)
+    set(INSTALL_PATH_DEV  share/include/${CMAKE_PROJECT_NAME})
+endif()
+
+
 ###################### CMake modules #######################
 
-if(EXISTS ${PROJECT_SOURCE_DIR}/cmake)
-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-endif(EXISTS ${PROJECT_SOURCE_DIR}/cmake)
-include(myProjectConf)
+include(myProjectPreConf)
 include(myDoxyConf)
+include(packaging)
 
 
 ####################### GDAL library #######################
@@ -90,64 +111,18 @@ endif(NOT GDAL_FOUND)
 include_directories(${GDAL_INCLUDE_DIRS})
 
 
-######################## Executables #######################
+########################## Targets #########################
 
-add_executable(msugeo-cli src/msugeo-cli.cpp
-                          src/msugeo.cpp
-                          src/logomark.hpp)
-target_link_libraries(msugeo-cli ${GDAL_LIBRARIES})
+##### Applications ######
+add_subdirectory(src/ msuproj-cli)
 
-add_executable(image2class EXCLUDE_FROM_ALL
-                           src/tools/image2class.cpp)
-target_link_libraries(image2class ${GDAL_LIBRARIES})
-
-add_executable(gcp-thiner src/tools/gcp-thiner.cpp)
+######### Tools #########
+if(BUILD_TOOLS)
+    add_subdirectory(src/tools/ tools)
+endif()
 
 
-################### Setting install paths ##################
+##################### Post configuration ###################
 
-if(WIN32)
-    set(DOCS doc)
-    if(EXISTS ${DLL_ARCH})
-        install(FILES ${DLLS} DESTINATION bin COMPONENT libs OPTIONAL)
-        set(CPACK_COMPONENT_LIBS_DISPLAY_NAME "Runtime")
-        set(CPACK_COMPONENT_LIBS_DESCRIPTION "Thirdparty runtime libraries")
-        set(COMPONENTS_ALL "${COMPONENTS_ALL} libs")
-    endif(EXISTS ${DLL_ARCH})
-    if(DOXYGEN_FOUND AND HHC)
-        message(STATUS "WARNING! Before building package make shure manual have been compiled")
-        install(CODE "execute_process(COMMAND ${CMAKE_BUILD_TOOL} manual)" COMPONENT man)
-        install(FILES ${CHM_FILE} DESTINATION man COMPONENT man OPTIONAL)
-        set(CPACK_COMPONENT_MAN_DISPLAY_NAME "Manual")
-        set(CPACK_COMPONENT_MAN_DESCRIPTION "MSUGeo user documentation")
-        set(COMPONENTS_ALL "${COMPONENTS_ALL} man")
-    endif(DOXYGEN_FOUND AND HHC)
-else(WIN32)
-    set(DOCS share/doc/${CMAKE_PROJECT_NAME})
-endif(WIN32)
-
-install(TARGETS msugeo-cli DESTINATION bin COMPONENT app)
-set(CPACK_COMPONENT_APP_DISPLAY_NAME "MSUGeo")
-set(CPACK_COMPONENT_APP_DESCRIPTION "MSUGeo command line utility")
-set(CPACK_COMPONENT_APP_REQUIRED ON)
-
-install(TARGETS gcp-thiner DESTINATION bin COMPONENT tools OPTIONAL)
-set(CPACK_COMPONENT_TOOLS_DISPLAY_NAME "Tools")
-set(CPACK_COMPONENT_TOOLS_DESCRIPTION "MSUGeo additional tools")
-
-install(FILES LICENSE.MSUGeo.txt DESTINATION ${DOCS} COMPONENT doc)
-install(FILES LICENSE.GDALLogoColor.txt DESTINATION ${DOCS} COMPONENT doc)
-install(FILES CHANGELOG.txt DESTINATION ${DOCS} COMPONENT doc)
-install(FILES TODO.txt DESTINATION ${DOCS} COMPONENT doc)
-set(CPACK_COMPONENT_DOC_HIDDEN ON)
-
-set(COMPONENTS_ALL "${COMPONENTS_ALL} app tools doc")
-
-#set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
-set(CPACK_WIX_CULTURES "en-US")
-include(CPack)
-
-
-###################### Generated Files #####################
-
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${GENERATED_FILES}")
+include(packaging)
+include(myProjectPostConf)

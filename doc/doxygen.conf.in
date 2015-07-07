@@ -2,7 +2,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-PROJECT_NAME           = KMSS2Raster
+PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = @V_VERSION@
 INPUT                  = @DOXYGEN_INPUT@
 OUTPUT_DIRECTORY       = @DOC_OUT@
