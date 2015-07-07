@@ -4,7 +4,7 @@
 
 It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for-experts/lrpt-analizer-2015/) to help amateur radio operators get remote sensing data from "Meteor-M No2" and uses [GDAL](http://www.gdal.org/) to operate with raster images.
 
-![Meteor-M No2 MSU-MR 1km](http://meteor.robonuka.ru/wp-content/uploads/2015/03/21082014_UTM37_ArcGis.jpg)
+<img src="http://meteor.robonuka.ru/wp-content/uploads/2015/03/21082014_UTM37_ArcGis.jpg" alt="Meteor-M No2 MSU-MR 1km" style="width: 640px;"/>
 
 # Build #
 
