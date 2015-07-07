@@ -1,0 +1,175 @@
+#ifndef MSUGEO_H
+#define MSUGEO_H
+
+#include <gdal_priv.h>
+
+namespace msumr {
+
+/**
+ * @brief Enumeration of exit codes
+ */
+enum retCode
+{
+    success, ///< Successful exit
+    errSRC,  ///< Error of reading of source raster
+    errDST,  ///< Error of creation of destination raster
+    errGCP   ///< Error of reading of GCP file
+};
+
+/**
+ * @brief Ground control point (GCP) structure
+ */
+struct gcp
+{
+    int x;      ///< The row of the source data matrix
+    int y;      ///< The line of the source data matrix
+    double lon; ///< Latitude
+    double lat; ///< Longitude
+};
+
+/**
+ * @brief The class for reprojecting geo data
+ * of sensing equipment MSU-MR of ERS satellite Meteor-M
+ */
+class msugeo
+{
+public:
+
+    /**
+     * @brief Constructor
+     */
+    msugeo();
+
+    /**
+     * @brief Destructor
+     */
+    ~msugeo();
+
+    /**
+     * @brief Method of getting version of MSUGeo
+     * @param type - type of returning value:
+     * - 0 - Get version number
+     * - 1 - Get build date
+     * - 2 - Get build architecture
+     * @return Version value
+     */
+    const char* getVersion(const unsigned int &type = 0) const;
+
+    /**
+     * @brief Method of setting destination file name
+     * @param file Destination file name
+     */
+    void setDST(const char *file);
+
+    /**
+     * @brief Method of setting destination file format
+     * @param format Destination file format
+     */
+    void setDSTFormat(const char *format);
+
+    /**
+     * @brief Method of setting source raster file
+     * @param file Source file name
+     * @return Exit code msumr::retCode:
+     * - success - Successful reading of source file
+     * - errSRC - Error of reading of source file
+     */
+    const retCode setSRC(const char *file);
+
+    /**
+     * @brief Method of setting GCP file
+     * @param file GCP file name
+     * @return Exit code msumr::retCode:
+     * - success - Successful reading of GCP file
+     * - errGCP - Error of reading of GCP file
+     */
+    const retCode readGCP(const char *file);
+
+    /**
+     * @brief Method of setting maximum size of perimeter of interpolation of pixel values
+     * @param perim Perimeter size in pixels
+     */
+    void setPerimSize(const unsigned int &perim);
+
+    const char *getUTM() const;
+
+    /**
+     * @brief Method of projecting of MSU-MR frame
+     * @return Exit code msumr::retCode:
+     * - success - Successful projection
+     * - errDST - Error of creation of destination raster
+     * - errSRC - Не указан исходный растр
+     * - errGCP - Не указан файл GCP
+     */
+    const retCode warp(const bool &useUTM = false, const bool &zerosAsND = false);
+
+private:
+
+    /**
+     * @ru
+     * @brief Перечисление для вычисления
+     * угловых координат выходного растра
+     */
+    enum compareCoords
+    {
+        minLON, ///< @ru Минимальная долгота
+        maxLON, ///< @ru Максимальная долгота
+        minLAT, ///< @ru Минимальная широта
+        maxLAT  ///< @ru Максимальная широта
+    };
+
+    GDALDataset* srcDS; ///< @ru Исходный растр
+    GDALDataset* dstDS; ///< @ru Выходной растр
+
+    gcp* gcps;          ///< @ru Массив точек геосетки
+
+    std::string dstFile;   ///< @ru Файл назначения
+    std::string dstFormat; ///< @ru Формат выходного файла (должен поддерживать GDALCreate)
+
+    bool hemisphere; ///< @ru Полушарие:
+                     /// - 0 - южное
+                     /// - 1 - северное
+    unsigned int zone;        ///< @ru Номер зоны UTM
+
+    unsigned int perimSize;   ///< @ru Максимальный периметр поиска пикселей для интерполяции
+
+    unsigned int srcXSize; ///< @ru Количество столбцов исходного растра
+    unsigned int srcYSize; ///< @ru Количество строк исходного растра
+    unsigned int srcSize;  ///< @ru Количество пикселей исходного растра
+
+    unsigned int gcpXSize; ///< @ru Количество столбцов геосетки
+    unsigned int gcpYSize; ///< @ru Количество строк геосетки
+    unsigned int gcpXStep; ///< @ru Шаг столбцов геосетки относительно исходного растра
+    unsigned int gcpYStep; ///< @ru Шаг строк геосетки относительно исходного растра
+    unsigned int gcpSize;  ///< @ru Количество точек геосетки
+
+    unsigned int dstXSize; ///< @ru Количество столбцов выходного растра
+    unsigned int dstYSize; ///< @ru Количество строк выходного растра
+    unsigned int dstSize;  ///< @ru Количество пикселей выходного растра
+
+    /**
+     * @ru Указатель на массив 6 коэффициентов
+     * аффиного трансформирования выходного растра
+     * (аналог GDAL padfTransform), где
+     * - geoTransform[0] - x координата верхнего левого угла,
+     * - geoTransform[1] - разрешение пиксела по оси x,
+     * - geoTransform[2] - поворот (0 для ориентации на север),
+     * - geoTransform[3] - y координата верхнего левого угла,
+     * - geoTransform[4] - поворот (0 для ориентации на север),
+     * - geoTransform[5] - разрешение пиксела по оси y.
+     */
+    double *geoTransform;
+
+    /**
+     * @ru
+     * @brief Метод замены десятичного разделителя:
+     * запятые (,) на точки (.)
+     * @param str Исходная строка
+     * @return Преобразованная строка
+     */
+    std::string comma2dot(std::string str) const;
+};
+
+}
+
+#endif // MSUGEO_H

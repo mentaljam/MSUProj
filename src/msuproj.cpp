@@ -1,83 +1,64 @@
-#include "msugeo.h"
-#include "logomark.hpp"
-#include <msugeo_version.h>
+#include "msuproj.h"
+#include "logoimage.hpp"
+#include <msuproj_version.h>
 #include <ogrsf_frmts.h>
 #include <fstream>
 #include <sstream>
 
-msumr::msugeo::msugeo()
-{
-    srcXSize = 0;
-    srcYSize = 0;
-    srcSize  = 0;
-
-    dstXSize = 0;
-    dstYSize = 0;
-    dstSize  = 0;
-
-    gcpXSize = 0;
-    gcpYSize = 0;
-    gcpXStep = 0;
-    gcpYStep = 0;
-    gcpSize  = 0;
-
-    geoTransform = new double[6];
-
-    perimSize = 19;
-
-    zone = 0;
-    hemisphere = 0;
-
-    srcDS = NULL;
-    dstFile = NULL;
-    dstDS = NULL;
-
-    dstFormat = new char[6];
-    strcpy(dstFormat, "GTiff\0");
-}
+msumr::msugeo::msugeo() :
+    srcDS(NULL),
+    dstDS(NULL),
+    gcps(NULL),
+    dstFile(),
+    dstFormat("GTiff"),
+    hemisphere(true),
+    zone(0),
+    perimSize(19),
+    srcXSize(0),
+    srcYSize(0),
+    srcSize(0),
+    gcpXSize(0),
+    gcpYSize(0),
+    gcpXStep(0),
+    gcpYStep(0),
+    gcpSize(0),
+    dstXSize(0),
+    dstYSize(0),
+    dstSize(0),
+    geoTransform(new double[6])
+{}
 
 msumr::msugeo::~msugeo()
 {
     delete[] geoTransform;
-    delete[] dstFormat;
-    delete[] dstFile;
     if (gcpSize > 0)
         delete[] gcps;
-    if (srcDS != NULL)
-        srcDS->~GDALDataset();
-    if (dstDS != NULL)
-        dstDS->~GDALDataset();
 }
 
-const char *msumr::msugeo::getVersion(int type)
+const char *msumr::msugeo::getVersion(const unsigned int &type) const
 {
     if (type == 0)
-        return VERSION;
+        return VERSION_MSUPROJ;
     else if (type == 1)
-        return V_DATE;
+        return VER_DATE_MSUPROJ;
     else if (type == 2)
-        return V_ARCH;
+        return VER_ARCH_MSUPROJ;
 }
 
 void msumr::msugeo::setDST(const char *file)
 {
-    if (dstFile != NULL)
-        delete[] dstFile;
-    dstFile = new char[strlen(file)];
-    strcpy(dstFile, file);
+    dstFile = file;
 }
 
 void msumr::msugeo::setDSTFormat(const char *format)
 {
-    delete[] dstFormat;
-    dstFormat = new char[strlen(format)];
-    strcpy(dstFormat, format);
+    dstFormat = format;
 }
 
-msumr::retCode msumr::msugeo::setSRC(const char *file)
+const msumr::retCode msumr::msugeo::setSRC(const char *file)
 {
     srcDS = (GDALDataset*)GDALOpen(file, GA_ReadOnly);
-    if (srcDS == NULL)
+    if (!srcDS)
         return errSRC;
 
     srcXSize = srcDS->GetRasterXSize();
@@ -87,9 +68,9 @@ msumr::retCode msumr::msugeo::setSRC(const char *file)
     return success;
 }
 
-msumr::retCode msumr::msugeo::readGCP(const char *file)
+const msumr::retCode msumr::msugeo::readGCP(const char *file)
 {
-    if (srcDS == NULL)
+    if (!srcDS)
         return errSRC;
 
     std::ifstream srcGcp(file);
@@ -98,27 +79,30 @@ msumr::retCode msumr::msugeo::readGCP(const char *file)
 
     std::string tmp, line;
 
+    gcpSize = 0;
     while(getline(srcGcp, line))
         ++gcpSize;
     srcGcp.clear();
     srcGcp.seekg(0);
 
+    if (gcpSize)
+        delete[] gcps;
     gcps = new gcp[gcpSize];
-    int i = 0;
+    unsigned int gIter = 0;
     while(getline(srcGcp, line))
     {
         std::stringstream iss(line);
         getline(iss, tmp, ' ');
-        gcps[i].x = stoi(tmp);
+        gcps[gIter].x = stoi(tmp);
         getline(iss, tmp, ' ');
-        gcps[i].y = stoi(tmp);
+        gcps[gIter].y = stoi(tmp);
         getline(iss, tmp, ' ');
         tmp = comma2dot(tmp);
-        gcps[i].lat = stod(tmp);
+        gcps[gIter].lat = stod(tmp);
         getline(iss, tmp);
         tmp = comma2dot(tmp);
-        gcps[i].lon = stod(tmp);
-        ++i;
+        gcps[gIter].lon = stod(tmp);
+        ++gIter;
     }
 
     gcpXSize = 1;
@@ -128,21 +112,21 @@ msumr::retCode msumr::msugeo::readGCP(const char *file)
     gcpXStep = srcXSize / gcpXSize + 1;
     gcpYStep = srcYSize / gcpYSize + 1;
 
-    zone = ((int)((gcps[(int)(gcpSize / 2)].lon + 180) / 6) + 1);
+    zone = (int)((gcps[(int)(gcpSize / 2)].lon + 180) / 6) + 1;
     hemisphere = (gcps[(int)(gcpSize / 2)].lat > 0);
 
     return success;
 }
 
-void msumr::msugeo::setPerimSize(int perim)
+void msumr::msugeo::setPerimSize(const unsigned int &perim)
 {
     if (perim > 0)
         perimSize = 2 * perim + 1;
 }
 
-const char *msumr::msugeo::getUTM()
+const char *msumr::msugeo::getUTM() const
 {
-    if (gcps == NULL)
+    if (!gcpSize)
         return "unknownZone";
     else
     {
@@ -153,22 +137,23 @@ const char *msumr::msugeo::getUTM()
             UTM = "S";
         UTM += std::to_string(zone);
 
-        return UTM.c_str();
+        const char *UTMName = UTM.c_str();
+        return UTMName;
     }
 }
 
-msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
+const msumr::retCode msumr::msugeo::warp(const bool &useUtm, const bool &zerosAsND)
 {
-    if (srcDS == NULL)
+    if (!srcDS)
         return errSRC;
 
-    if (gcps == NULL)
+    if (!gcpSize || !gcps)
         return errGCP;
 
-    if (dstFile == NULL)
+    if (dstFile.empty())
         return errDST;
 
-    short bands = srcDS->GetRasterCount();
+    unsigned short bands = srcDS->GetRasterCount();
 
     gcp *gcpsW = new gcp[gcpSize];
     memcpy(gcpsW, gcps, gcpSize * sizeof(gcp));
@@ -184,8 +169,8 @@ msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
         utmSRS.exportToWkt(&srsWKT);
         OGRCoordinateTransformation *transFunc;
         transFunc = OGRCreateCoordinateTransformation(&latlonSRS, &utmSRS);
-        for (int g = 0; g < gcpSize; ++g)
-            transFunc->Transform(1, &gcpsW[g].lon, &gcpsW[g].lat);
+        for (unsigned int gIter = 0; gIter < gcpSize; ++gIter)
+            transFunc->Transform(1, &gcpsW[gIter].lon, &gcpsW[gIter].lat);
         geoTransform[1] = 1000;
         geoTransform[5] = -1000;
     }
@@ -201,7 +186,7 @@ msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
     coords[maxLON] = gcpsW[0].lon;
     coords[minLAT] = gcpsW[0].lat;
     coords[maxLAT] = gcpsW[0].lat;
-    for (int i = 1; i < gcpSize; ++i)
+    for (unsigned int i = 1; i < gcpSize; ++i)
     {
         if (coords[minLON] > gcpsW[i].lon)
             coords[minLON] = gcpsW[i].lon;
@@ -222,20 +207,20 @@ msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
     geoTransform[3] = coords[maxLAT];
     geoTransform[4] = 0;
 
-    short band;
+    unsigned short band;
     GDALDriver *dstDriver;
-    dstDriver = GetGDALDriverManager()->GetDriverByName(dstFormat);
+    dstDriver = GetGDALDriverManager()->GetDriverByName(dstFormat.c_str());
     char **dstOptions = NULL;
     char **dstMetadata = NULL;
-    if (strcmp(dstFormat, "GTiff") == 0)
+    if (dstFormat == "GTiff")
     {
         dstOptions = CSLSetNameValue(dstOptions, "PHOTOMETRIC", "RGB");
         dstOptions = CSLSetNameValue(dstOptions, "COMPRESS", "JPEG");
         dstOptions = CSLSetNameValue(dstOptions, "JPEG_QUALITY", "100");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
-        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "msugeo v" VERSION);
+        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "msugeo v" VERSION_MSUPROJ);
     }
-    dstDS = dstDriver->Create(dstFile, dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
+    dstDS = dstDriver->Create(dstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
     dstDS->SetMetadata(dstMetadata);
     dstDS->SetProjection(srsWKT);
     dstDS->SetGeoTransform(geoTransform);
@@ -254,14 +239,14 @@ msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
         tmpData[band] = new unsigned char[dstSize]();
     }
 
-    int pLine, pRow, pCount, gLine, gRow, gCount,
-        x, y, xx, yy, dCount;
+    unsigned int pLine, pRow, pCount, gRow, gCount, dCount,
+                 bilDelim = gcpXStep * gcpYStep;
+    int x, y, xx, yy;
     double lat, lon;
-    int bilDelim = gcpXStep * gcpYStep;
 
     for (pLine = 0; pLine < srcYSize; ++pLine)
     {
-        gLine = (int)(pLine / gcpYStep);
+        unsigned int gLine = (int)(pLine / gcpYStep);
         pCount = pLine * srcXSize;
         for (pRow = 0; pRow < srcXSize; ++pRow, ++pCount)
         {
@@ -424,7 +409,7 @@ msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
     delete[] tmpData;
     delete[] dstData;
 
-    logomark logo;
+    logoImage logo;
     dstXSize -= logo.width;
     dstYSize -= logo.height;
     if (bands >= 3)
@@ -439,9 +424,10 @@ msumr::retCode msumr::msugeo::warp(bool useUtm, bool zerosAsND)
     return success;
 }
 
-std::string msumr::msugeo::comma2dot(std::string str)
+std::string msumr::msugeo::comma2dot(std::string str) const
 {
-    for (int i = 0; i < str.size(); ++i)
+    unsigned int size = str.size();
+    for (unsigned int i = 0; i < size; ++i)
         if (str[i] == ',')
             str[i] = '.';
 

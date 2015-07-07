@@ -1,4 +1,4 @@
-#include "msugeo.h"
+#include "msuproj.h"
 
 using namespace std;
 using namespace msumr;
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     string gcpFile;
     string dstFile;
 
-    for (short i = 1; i < argc; ++i)
+    for (unsigned short i = 1; i < argc; ++i)
     {
         if (argv[i][0] == '-')
         {
