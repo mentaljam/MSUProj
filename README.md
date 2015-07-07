@@ -1,6 +1,6 @@
-# MSUGeo #
+# MSUProj #
 
-**MSUGeo** is a project to geo transform images of MSU-MR equipment of Russian ERS satellite "Meteor-M".
+**MSUProj** is a project to geo transform images of MSU-MR equipment of Russian ERS satellite "Meteor-M".
 
 It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for-experts/lrpt-analizer-2015/) to help amateur radio operators get remote sensing data from "Meteor-M No2" and uses [GDAL](http://www.gdal.org/) to operate with raster images.
 
@@ -18,25 +18,25 @@ It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for
 
 ### 2. Clone ###
 
-    git clone --recursive https://github.com/mentaljam/msugeo
+    git clone --recursive https://github.com/mentaljam/MSUProj
 
 ### 3. Make a building directory ###
 
-    mkdir msugeo_build
-    cd msugeo_build
+    mkdir msuproj_build
+    cd msuproj_build
 
 ### 4. Compile
 
-Use a *-D IF64={YES/NO}* argument for CMake to build a 32bit or a 64bit application, default is 32bit
+Use a *-DARCH={32/64}* argument for CMake to build a 32bit or a 64bit application, or leave to autodetect
 
 With make:
 
-    cmake -D IF64=YES ../msugeo
+    cmake -DARCH=64 ../msuproj
     make
 
 With ninja:
 
-    cmake -D IF64=YES -G Ninja ../msugeo
+    cmake -DARCH=64 -G Ninja ../msuproj
     ninja
     
 ### Build a package or just install ###
@@ -52,6 +52,6 @@ or
 Debian:
 
     cpack -G DEB
-    sudo dpkg -i msugeo*.deb
+    sudo dpkg -i msuproj*.deb
 
 For full list of CPack generators read [documentation](http://www.cmake.org/Wiki/CMake:CPackPackageGenerators).
