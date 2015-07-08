@@ -59,7 +59,12 @@ int main(int argc, char *argv[])
             outstream << "    memcpy(&data[" << b << "][" << i * x << "],\n"
                          "           \"" << std::hex;
             for (j = 0; j < x; ++j)
-                outstream << "\\x" << (int)tmpData[i * x + j];
+            {
+                int pixVal = (int)tmpData[i * x + j];
+                if (pixVal < 3)
+                    pixVal = 3;
+                outstream << "\\x" << pixVal;
+            }
             outstream << "\",\n"
                          "           width);\n" << std::dec;
         }
