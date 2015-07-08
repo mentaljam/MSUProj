@@ -62,8 +62,7 @@ set(RESOURCES_DIR   ${PROJECT_SOURCE_DIR}/res)
 set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/3rd)
 
 #### GDAL paths (on Windows)
-set(GDAL_INCLUDE_DIRS "C:\\msys\\1.0\\local\\include" CACHE FILEPATH "GDAL headers path")
-set(GDAL_DLL ${CMAKE_BINARY_DIR}/libgdal-1.dll CACHE FILEPATH "GDAL precompiled dll")
+set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")
 
 
 ####################### Setting paths ######################
@@ -88,25 +87,20 @@ endif()
 
 include(myProjectPreConf)
 include(myDoxyConf)
-include(packaging)
 
 
 ####################### GDAL library #######################
 
-if(WIN32 AND CMAKE_COMPILER_IS_GNUCC AND EXISTS ${GDAL_DLL})
-    add_library(GDAL STATIC IMPORTED)
-    set_property(TARGET GDAL PROPERTY IMPORTED_LOCATION ${GDAL_DLL})
-    set(GDAL_LIBRARIES GDAL)
-    set(GDAL_FOUND YES)
-endif(WIN32 AND CMAKE_COMPILER_IS_GNUCC AND EXISTS ${GDAL_DLL})
+if(WIN32 AND CMAKE_COMPILER_IS_GNUCC)
+    list(APPEND CMAKE_SYSTEM_PREFIX_PATH ${SEARCH_PREFIX})
+endif()
+
+find_package(GDAL)
 
 if(NOT GDAL_FOUND)
-    find_package(GDAL)
-endif(NOT GDAL_FOUND)
-
-if(NOT GDAL_FOUND)
-    message(FATAL_ERROR "Could not find GDAL, try to install gdal-dev")
-endif(NOT GDAL_FOUND)
+    message(FATAL_ERROR "Could not find GDAL, try to install gdal-dev "
+                        "or specify CMAKE_SYSTEM_PREFIX_PATH")
+endif()
 
 include_directories(${GDAL_INCLUDE_DIRS})
 
