@@ -1,9 +1,9 @@
-#ifndef MSUGEO_H
-#define MSUGEO_H
+#ifndef MSUPROJ_H
+#define MSUPROJ_H
 
 #include <gdal_priv.h>
 
-namespace msumr {
+namespace MSUMR {
 
 /**
  * @brief Enumeration of exit codes
@@ -31,22 +31,22 @@ struct gcp
  * @brief The class for reprojecting geo data
  * of sensing equipment MSU-MR of ERS satellite Meteor-M
  */
-class msugeo
+class MSUProj
 {
 public:
 
     /**
      * @brief Constructor
      */
-    msugeo();
+    MSUProj();
 
     /**
      * @brief Destructor
      */
-    ~msugeo();
+    ~MSUProj();
 
     /**
-     * @brief Method of getting version of MSUGeo
+     * @brief Method of getting version of MSUProj
      * @param type - type of returning value:
      * - 0 - Get version number
      * - 1 - Get build date
@@ -59,31 +59,31 @@ public:
      * @brief Method of setting destination file name
      * @param file Destination file name
      */
-    void setDST(const char *file);
+    void setDST(std::string file);
 
     /**
      * @brief Method of setting destination file format
      * @param format Destination file format
      */
-    void setDSTFormat(const char *format);
+    void setDSTFormat(std::string format);
 
     /**
      * @brief Method of setting source raster file
      * @param file Source file name
-     * @return Exit code msumr::retCode:
+     * @return Exit code MSUMR::retCode:
      * - success - Successful reading of source file
      * - errSRC - Error of reading of source file
      */
-    const retCode setSRC(const char *file);
+    const retCode setSRC(std::string file);
 
     /**
      * @brief Method of setting GCP file
      * @param file GCP file name
-     * @return Exit code msumr::retCode:
+     * @return Exit code MSUMR::retCode:
      * - success - Successful reading of GCP file
      * - errGCP - Error of reading of GCP file
      */
-    const retCode readGCP(const char *file);
+    const retCode readGCP(std::string file);
 
     /**
      * @brief Method of setting maximum size of perimeter of interpolation of pixel values
@@ -91,11 +91,11 @@ public:
      */
     void setPerimSize(const unsigned int &perim);
 
-    const char *getUTM() const;
+    const std::string getUTM() const;
 
     /**
      * @brief Method of projecting of MSU-MR frame
-     * @return Exit code msumr::retCode:
+     * @return Exit code MSUMR::retCode:
      * - success - Successful projection
      * - errDST - Error of creation of destination raster
      * - errSRC - Не указан исходный растр
@@ -172,4 +172,4 @@ private:
 
 }
 
-#endif // MSUGEO_H
+#endif // MSUPROJ_H

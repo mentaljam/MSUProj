@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-msumr::msugeo::msugeo() :
+MSUMR::MSUProj::MSUProj() :
     srcDS(NULL),
     dstDS(NULL),
     gcps(NULL),
@@ -28,14 +28,14 @@ msumr::msugeo::msugeo() :
     geoTransform(new double[6])
 {}
 
-msumr::msugeo::~msugeo()
+MSUMR::MSUProj::~MSUProj()
 {
     delete[] geoTransform;
     if (gcpSize > 0)
         delete[] gcps;
 }
 
-const char *msumr::msugeo::getVersion(const unsigned int &type) const
+const char *MSUMR::MSUProj::getVersion(const unsigned int &type) const
 {
     if (type == 0)
         return VERSION_MSUPROJ;
@@ -45,19 +45,19 @@ const char *msumr::msugeo::getVersion(const unsigned int &type) const
         return VER_ARCH_MSUPROJ;
 }
 
-void msumr::msugeo::setDST(const char *file)
+void MSUMR::MSUProj::setDST(std::string file)
 {
     dstFile = file;
 }
 
-void msumr::msugeo::setDSTFormat(const char *format)
+void MSUMR::MSUProj::setDSTFormat(std::string format)
 {
     dstFormat = format;
 }
 
-const msumr::retCode msumr::msugeo::setSRC(const char *file)
+const MSUMR::retCode MSUMR::MSUProj::setSRC(std::string file)
 {
-    srcDS = (GDALDataset*)GDALOpen(file, GA_ReadOnly);
+    srcDS = (GDALDataset*)GDALOpen(file.c_str(), GA_ReadOnly);
     if (!srcDS)
         return errSRC;
 
@@ -68,7 +68,7 @@ const msumr::retCode msumr::msugeo::setSRC(const char *file)
     return success;
 }
 
-const msumr::retCode msumr::msugeo::readGCP(const char *file)
+const MSUMR::retCode MSUMR::MSUProj::readGCP(std::string file)
 {
     if (!srcDS)
         return errSRC;
@@ -112,21 +112,21 @@ const msumr::retCode msumr::msugeo::readGCP(const char *file)
     gcpXStep = srcXSize / gcpXSize + 1;
     gcpYStep = srcYSize / gcpYSize + 1;
 
-    zone = ((int)(((gcps[0].lon + gcps[gcpXSize - 1].lon +
-           gcps[gcpSize - gcpXSize].lon + gcps[gcpSize - 1].lon) / 4 + 180) / 6) + 1);
-    hemisphere = ((gcps[0].lat + gcps[gcpXSize - 1].lat +
-           gcps[gcpSize - gcpXSize].lat + gcps[gcpSize - 1].lat) / 4 > 0);
+    zone = ((int)(((int)((gcps[0].lon + gcps[gcpXSize - 1].lon +
+           gcps[gcpSize - gcpXSize].lon + gcps[gcpSize - 1].lon) / 4 + 0.5) + 180) / 6) + 1);
+    hemisphere = ((int)((gcps[0].lat + gcps[gcpXSize - 1].lat +
+           gcps[gcpSize - gcpXSize].lat + gcps[gcpSize - 1].lat) / 4 + 0.5) > 0);
 
     return success;
 }
 
-void msumr::msugeo::setPerimSize(const unsigned int &perim)
+void MSUMR::MSUProj::setPerimSize(const unsigned int &perim)
 {
     if (perim > 0)
         perimSize = 2 * perim + 1;
 }
 
-const char *msumr::msugeo::getUTM() const
+const std::string MSUMR::MSUProj::getUTM() const
 {
     if (!gcpSize)
         return "unknownZone";
@@ -139,12 +139,11 @@ const char *msumr::msugeo::getUTM() const
             UTM = "S";
         UTM += std::to_string(zone);
 
-        const char *UTMName = UTM.c_str();
-        return UTMName;
+        return UTM;
     }
 }
 
-const msumr::retCode msumr::msugeo::warp(const bool &useUtm, const bool &zerosAsND)
+const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosAsND)
 {
     if (!srcDS)
         return errSRC;
@@ -220,7 +219,7 @@ const msumr::retCode msumr::msugeo::warp(const bool &useUtm, const bool &zerosAs
         dstOptions = CSLSetNameValue(dstOptions, "COMPRESS", "JPEG");
         dstOptions = CSLSetNameValue(dstOptions, "JPEG_QUALITY", "100");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
-        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "msugeo v" VERSION_MSUPROJ);
+        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "MSUProj v" VERSION_MSUPROJ);
     }
     dstDS = dstDriver->Create(dstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
     dstDS->SetMetadata(dstMetadata);
@@ -426,7 +425,7 @@ const msumr::retCode msumr::msugeo::warp(const bool &useUtm, const bool &zerosAs
     return success;
 }
 
-std::string msumr::msugeo::comma2dot(std::string str) const
+std::string MSUMR::MSUProj::comma2dot(std::string str) const
 {
     unsigned int size = str.size();
     for (unsigned int i = 0; i < size; ++i)

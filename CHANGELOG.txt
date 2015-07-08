@@ -1,4 +1,10 @@
 Current:
+    FIX: UTM zone calculation
+    CHANGE: Use iostream instead of printf
+    CHANGE: Use strings instead of char arrays
+    UPDATE: Rename class and namespace
+
+0.3:
     - UPDATE: GTiff creation options and metadata - JPEG compression
     - NEW: Added getUTM() method which returns UTM zone number in {N,S}No format
     - REMOVE: Removed setUTM()

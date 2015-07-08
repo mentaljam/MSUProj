@@ -1,7 +1,8 @@
 #include "msuproj.h"
+#include "iostream"
 
 using namespace std;
-using namespace msumr;
+using namespace MSUMR;
 
 int main(int argc, char *argv[])
 {
@@ -10,7 +11,7 @@ int main(int argc, char *argv[])
     bool useUTM = false;
     bool zerosAsND = false;
 
-    msugeo msuObj;
+    MSUProj msuObj;
 
     string srcFile;
     string gcpFile;
@@ -22,25 +23,24 @@ int main(int argc, char *argv[])
         {
             if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
             {
-                printf("\nmsugeo-cli - a command line utility for projecting images\n"
-                       "             of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
-                       "Author:  Petr Tsymbarovich <tpr@ntsomz.ru>\n"
-                       "         Research Center for Earth Operative Monitoring\n"
-                       "         (NTs OMZ) <www.ntsomz.ru>\n\n"
-                       "Version: %s (%s) for %s\n\n"
-                       "Usage:   msugeo-cli [OPTIONS] -src input_file -gcp gcp_file [-dst output_file]\n\n"
-                       "Options:\n"
-                       "    -u              Produce an image in UTM projection\n"
-                       "                    (a zone number is calculated for center point)\n"
-                       "    -z              Set NoData value to zero\n"
-                       "    -v | --version  Print version number and exit\n"
-                       "    -h | --help     Print help message and exit\n",
-                       msuObj.getVersion(), msuObj.getVersion(1), msuObj.getVersion(2));
+                cout << "\nmsuproj-cli - a command line utility for projecting images\n"
+                        "             of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
+                        "Author:  Petr Tsymbarovich <tpr@ntsomz.ru>\n"
+                        "         Research Center for Earth Operative Monitoring\n"
+                        "         (NTs OMZ) <www.ntsomz.ru>\n\n"
+                        "Version: " << msuObj.getVersion() << " (" << msuObj.getVersion(1) << ") for " << msuObj.getVersion(2) << "\n\n"
+                        "Usage:   msuproj-cli [OPTIONS] -src input_file -gcp gcp_file [-dst output_file]\n\n"
+                        "Options:\n"
+                        "    -u              Produce an image in UTM projection\n"
+                        "                    (a zone number is calculated for center point)\n"
+                        "    -z              Set NoData value to zero\n"
+                        "    -v | --version  Print version number and exit\n"
+                        "    -h | --help     Print help message and exit" << endl;
                 return 0;
             }
             if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version"))
             {
-                printf("%s\n", msuObj.getVersion());
+                cout << msuObj.getVersion() << endl;
                 return 0;
             }
             else if (i + 1 < argc && !strcmp(argv[i], "-src"))
@@ -56,65 +56,68 @@ int main(int argc, char *argv[])
             else if (i + 1 < argc && !strcmp(argv[i], "-f"))
                 msuObj.setDSTFormat(argv[++i]);
             else
-                printf("WARNING: Unknown option \"%s\"\n", argv[i]);argv[i];
+                clog << "WARNING: Unknown option '" << argv[i] << "'" << endl;
         }
     }
 
     if (srcFile.empty() || gcpFile.empty())
     {
-        printf("ERROR: input files are not specified\n"
-               "print \"-h\" for help\n");
+        cerr << "ERROR: input files are not specified\n"
+                "print '-h' for help" << endl;
         return 1;
     }
 
     retCode code;
 
-    code = msuObj.setSRC(srcFile.c_str());
+    code = msuObj.setSRC(srcFile);
     if (code != success)
     {
-        printf("ERROR: can not read input file\n");
+        cerr << "ERROR: can not read input file" << endl;
         return code;
     }
 
-    code = msuObj.readGCP(gcpFile.c_str());
+    code = msuObj.readGCP(gcpFile);
     if (code != success)
     {
-        printf("ERROR: can not read gcp file\n");
+        cerr << "ERROR: can not read gcp file" << endl;
         return code;
     }
+
+    string UTMZone =  msuObj.getUTM();
 
     if (dstFile.empty())
     {
-        dstFile = srcFile;
+        auto extCut = srcFile.find_last_of('.');
+        dstFile = srcFile.substr(0, extCut) + "_proj";
         if (useUTM)
-            dstFile += "_" + string(msuObj.getUTM());
+            dstFile += "_" + UTMZone;
         dstFile += ".tif";
     }
 
-    msuObj.setDST(dstFile.c_str());
+    msuObj.setDST(dstFile);
 
-    printf("Processing warp operation");
+    cout << "Processing warp operation";
     if (useUTM)
-        printf(" in UTM mode using zone %s", msuObj.getUTM());
+        cout << " in UTM mode using zone " << UTMZone;
     else
-        printf(" in LatLon mode");
+        cout << " in LatLon mode";
     if (zerosAsND)
-        printf(" and NoData=0");
-    printf("\n");
+        cout << " and NoData=0";
+    cout << endl;
     code = msuObj.warp(useUTM, zerosAsND);
     switch (code) {
     case errSRC:
-        printf("ERROR: can not read input file\n");
+        cerr << "ERROR: can not read input file" << endl;
         break;
     case errDST:
-        printf("ERROR: can not write output file\n");
+        cerr << "ERROR: can not write output file" << endl;
         break;
     case errGCP:
-        printf("ERROR: can not read gcp file\n");
+        cerr << "ERROR: can not read gcp file" << endl;
         break;
     default:
-        printf("Finished successfully\n"
-               "Output raster: %s\n", dstFile.c_str());
+        cout << "Finished successfully\n"
+                "Output raster: " << dstFile << endl;
         break;
     }
 
