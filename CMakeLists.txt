@@ -79,13 +79,13 @@ if(WIN32)
     set(INSTALL_PATH_I18N i18n)
     set(INSTALL_PATH_DOCS doc/${CMAKE_PROJECT_NAME})
     set(INSTALL_PATH_DEV  include/${CMAKE_PROJECT_NAME})
-    set(INSTALL_PATH_LIB  lib)
 else()
     set(INSTALL_PATH_BIN  bin)
     set(INSTALL_PATH_I18N share/${CMAKE_PROJECT_NAME}/i18n)
     set(INSTALL_PATH_DOCS share/${CMAKE_PROJECT_NAME}/doc)
     set(INSTALL_PATH_DEV  share/include/${CMAKE_PROJECT_NAME})
 endif()
+set(INSTALL_PATH_LIB lib)
 
 
 ###################### CMake modules #######################
