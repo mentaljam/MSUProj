@@ -22,9 +22,6 @@ MSUMR::MSUProj::MSUProj() :
     gcpXStep(0),
     gcpYStep(0),
     gcpSize(0),
-    dstXSize(0),
-    dstYSize(0),
-    dstSize(0),
     geoTransform(new double[6])
 {}
 
@@ -145,6 +142,7 @@ const std::string MSUMR::MSUProj::getUTM() const
 
 const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosAsND)
 {
+
     if (!srcDS)
         return errSRC;
 
@@ -199,9 +197,9 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
             coords[maxLAT] = gcpsW[i].lat;
     }
 
-    dstXSize = (int)((coords[maxLON] - coords[minLON]) / geoTransform[1] + 0.5);
-    dstYSize = (int)((coords[maxLAT] - coords[minLAT]) / geoTransform[1] + 0.5);
-    dstSize = dstXSize * dstYSize;
+    unsigned int dstXSize = (int)((coords[maxLON] - coords[minLON]) / geoTransform[1] + 0.5);
+    unsigned int dstYSize = (int)((coords[maxLAT] - coords[minLAT]) / geoTransform[1] + 0.5);
+    unsigned int dstSize = dstXSize * dstYSize;
 
     geoTransform[0] = coords[minLON];
     geoTransform[2] = 0;
@@ -424,6 +422,37 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
 
     return success;
 }
+
+unsigned int MSUMR::MSUProj::getSrcYSize() const
+{
+    return srcYSize;
+}
+unsigned int MSUMR::MSUProj::getGcpYStep() const
+{
+    return gcpYStep;
+}
+
+unsigned int MSUMR::MSUProj::getGcpXStep() const
+{
+    return gcpXStep;
+}
+
+unsigned int MSUMR::MSUProj::getGcpYSize() const
+{
+    return gcpYSize;
+}
+
+unsigned int MSUMR::MSUProj::getGcpXSize() const
+{
+    return gcpXSize;
+}
+
+
+unsigned int MSUMR::MSUProj::getSrcXSize() const
+{
+    return srcXSize;
+}
+
 
 std::string MSUMR::MSUProj::comma2dot(std::string str) const
 {

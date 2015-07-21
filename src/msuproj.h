@@ -103,6 +103,18 @@ public:
      */
     const retCode warp(const bool &useUTM = false, const bool &zerosAsND = false);
 
+    unsigned int getSrcXSize() const;
+
+    unsigned int getSrcYSize() const;
+
+    unsigned int getGcpXSize() const;
+
+    unsigned int getGcpYSize() const;
+
+    unsigned int getGcpXStep() const;
+
+    unsigned int getGcpYStep() const;
+
 private:
 
     /**
@@ -142,10 +154,6 @@ private:
     unsigned int gcpXStep; ///< @ru Шаг столбцов геосетки относительно исходного растра
     unsigned int gcpYStep; ///< @ru Шаг строк геосетки относительно исходного растра
     unsigned int gcpSize;  ///< @ru Количество точек геосетки
-
-    unsigned int dstXSize; ///< @ru Количество столбцов выходного растра
-    unsigned int dstYSize; ///< @ru Количество строк выходного растра
-    unsigned int dstSize;  ///< @ru Количество пикселей выходного растра
 
     /**
      * @ru Указатель на массив 6 коэффициентов
