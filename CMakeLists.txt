@@ -32,13 +32,19 @@ set(GENERATE_XML      NO CACHE STRING "Documentation in XML")
 #### Build tools
 option(BUILD_TOOLS "Build additional tools" OFF)
 
+#### Build cli
+option(BUILD_CLI "Build command line application" OFF)
+
+#### Build qt
+option(BUILD_QT "Build qt application" OFF)
+
 #### Compiler flags
 set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 
 
 ############### Setting additional variables ###############
 
-set(QT NO)
+set(QT YES)
 set(VERSION_STATUS "")
 set(CMAKE_BUILD_TYPE "Release")
 
@@ -57,10 +63,6 @@ set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
                               "/\\\\.gitignore"
                               "/\\\\CMakeLists.txt.user")
 
-set(DOC_DIR         ${PROJECT_SOURCE_DIR}/doc)
-set(RESOURCES_DIR   ${PROJECT_SOURCE_DIR}/res)
-set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/3rd)
-
 #### GDAL paths (on Windows)
 set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")
 
@@ -74,10 +76,13 @@ set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/3rd)
 
 if(WIN32)
     set(INSTALL_PATH_BIN  .)
+    set(INSTALL_PATH_I18N i18n)
     set(INSTALL_PATH_DOCS doc/${CMAKE_PROJECT_NAME})
     set(INSTALL_PATH_DEV  include/${CMAKE_PROJECT_NAME})
+    set(INSTALL_PATH_LIB  lib)
 else()
     set(INSTALL_PATH_BIN  bin)
+    set(INSTALL_PATH_I18N share/${CMAKE_PROJECT_NAME}/i18n)
     set(INSTALL_PATH_DOCS share/${CMAKE_PROJECT_NAME}/doc)
     set(INSTALL_PATH_DEV  share/include/${CMAKE_PROJECT_NAME})
 endif()
@@ -85,8 +90,9 @@ endif()
 
 ###################### CMake modules #######################
 
-include(myProjectPreConf)
-include(myDoxyConf)
+include(OMZProjectPreConf)
+include(OMZDoxyConf)
+include(OMZFunctions)
 
 
 ####################### GDAL library #######################
@@ -107,8 +113,19 @@ include_directories(${GDAL_INCLUDE_DIRS})
 
 ########################## Targets #########################
 
+######## Library ########
+include_directories(src)
+add_subdirectory(src/ msuproj)
+
 ##### Applications ######
-add_subdirectory(src/ msuproj-cli)
+if(BUILD_CLI)
+    include_directories(src src/cli)
+    add_subdirectory(src/cli msuproj-cli)
+endif()
+if(BUILD_QT)
+    include_directories(src/qt ${CMAKE_BINARY_DIR}/msuproj-qt)
+    add_subdirectory(src/qt msuproj-qt)
+endif()
 
 ######### Tools #########
 if(BUILD_TOOLS)
@@ -119,4 +136,4 @@ endif()
 ##################### Post configuration ###################
 
 include(packaging)
-include(myProjectPostConf)
+include(OMZProjectPostConf)
