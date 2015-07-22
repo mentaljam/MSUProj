@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->modeUTMButton, &QRadioButton::clicked, this, &MainWindow::changeOutName);
     connect(ui->autoOutNameBox, &QCheckBox::toggled, this, &MainWindow::autoOutName);
     connect(ui->statusbar, &QStatusBar::messageChanged, this, &MainWindow::showStdStatus);
+    connect(ui->previewBox, &QCheckBox::clicked, this, &MainWindow::setPreview);
 }
 
 MainWindow::~MainWindow()
@@ -72,6 +73,23 @@ void MainWindow::autoOutName(bool state)
     ui->outPathButton->setEnabled(!state);
 }
 
+void MainWindow::setPreview()
+{
+    if (ui->previewBox->isChecked())
+    {
+        QString image(ui->imagePathEdit->text());
+        if (!image.isEmpty())
+        {
+            graphicsScene->clear();
+            graphicsScene->addPixmap(QPixmap(image));
+            ui->imageView->fitInView(graphicsScene->sceneRect(), Qt::KeepAspectRatio);
+        }
+    }
+    else
+        graphicsScene->clear();
+
+}
+
 void MainWindow::on_imagePathButton_clicked()
 {
     QFileDialog openImage(this, tr("Select input image"),
@@ -87,9 +105,7 @@ void MainWindow::on_imagePathButton_clicked()
         msuProjObj.setSRC(file.toStdString());
         ui->imageRowsLabel->setText(tr("Input Image Rows: %1").arg(msuProjObj.getSrcXSize()));
         ui->imageLinesLabel->setText(tr("Input Image Lines: %1").arg(msuProjObj.getSrcYSize()));
-        graphicsScene->clear();
-        graphicsScene->addPixmap(QPixmap(file));
-        ui->imageView->fitInView(graphicsScene->sceneRect(), Qt::KeepAspectRatio);
+        this->setPreview();
         fPreffix = file.remove(QRegularExpression("\\..*"));
 
         gcpFiles.append(fPreffix + ".gcp");

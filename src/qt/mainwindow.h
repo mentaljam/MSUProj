@@ -21,6 +21,7 @@ private slots:
     void loadGCPs(const QString &file);
     void changeOutName();
     void autoOutName(bool state);
+    void setPreview();
     void on_imagePathButton_clicked();
     void on_gcpPathButton_clicked();
     void on_imagePathEdit_editingFinished();

@@ -28,6 +28,19 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
+        <widget class="QCheckBox" name="previewBox">
+         <property name="toolTip">
+          <string>Show/Hide preview image</string>
+         </property>
+         <property name="text">
+          <string>Show Preview</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGraphicsView" name="imageView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -422,5 +435,22 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>previewBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>imageView</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
