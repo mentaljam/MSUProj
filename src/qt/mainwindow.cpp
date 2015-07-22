@@ -106,7 +106,7 @@ void MainWindow::on_imagePathButton_clicked()
         ui->imageRowsLabel->setText(tr("Input Image Rows: %1").arg(msuProjObj.getSrcXSize()));
         ui->imageLinesLabel->setText(tr("Input Image Lines: %1").arg(msuProjObj.getSrcYSize()));
         this->setPreview();
-        fPreffix = file.remove(QRegularExpression("\\..*"));
+        fPreffix = file.left(file.lastIndexOf('.'));
 
         gcpFiles.append(fPreffix + ".gcp");
         foreach (QString gcpFile, gcpFiles)
