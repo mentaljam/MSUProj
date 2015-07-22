@@ -54,6 +54,8 @@ void MSUMR::MSUProj::setDSTFormat(std::string format)
 
 const MSUMR::retCode MSUMR::MSUProj::setSRC(std::string file)
 {
+    if (srcDS)
+        GDALClose(srcDS);
     srcDS = (GDALDataset*)GDALOpen(file.c_str(), GA_ReadOnly);
     if (!srcDS)
         return errSRC;
@@ -419,6 +421,8 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
                                                      logo.width, logo.height, (unsigned char*)&logo.data[band][0],
                                                      logo.width, logo.height, GDT_Byte, 0, 0);
     }
+
+    GDALClose(dstDS);
 
     return success;
 }
