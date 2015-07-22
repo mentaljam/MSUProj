@@ -87,6 +87,7 @@ void MainWindow::on_imagePathButton_clicked()
         msuProjObj.setSRC(file.toStdString());
         ui->imageRowsLabel->setText(tr("Input Image Rows: %1").arg(msuProjObj.getSrcXSize()));
         ui->imageLinesLabel->setText(tr("Input Image Lines: %1").arg(msuProjObj.getSrcYSize()));
+        graphicsScene->clear();
         graphicsScene->addPixmap(QPixmap(file));
         ui->imageView->fitInView(graphicsScene->sceneRect(), Qt::KeepAspectRatio);
         fPreffix = file.remove(QRegularExpression("\\..*"));
