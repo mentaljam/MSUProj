@@ -3,30 +3,35 @@
 #include <msuproj.h>
 #include <QFileDialog>
 #include <QResizeEvent>
-#include <QThread>
+#include <QDebug>
+#include <QMessageBox>
 
-QThread warpThread;
 extern MSUMR::MSUProj msuProjObj;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     graphicsScene(new QGraphicsScene(this)),
-    warpingWindow(new QMessageBox(this)),
     fPreffix("")
 {
     ui->setupUi(this);
+    ui->statusbar->showMessage(tr("Select input files."));
     ui->imageView->setScene(graphicsScene);
-    warpingWindow->moveToThread(&warpThread);
     connect(ui->modeLatLonButton, &QRadioButton::clicked, this, &MainWindow::changeOutName);
     connect(ui->modeUTMButton, &QRadioButton::clicked, this, &MainWindow::changeOutName);
     connect(ui->autoOutNameBox, &QCheckBox::toggled, this, &MainWindow::autoOutName);
-    connect(&warpThread, &QThread::started, this, &MainWindow::warp);
+    connect(ui->statusbar, &QStatusBar::messageChanged, this, &MainWindow::showStdStatus);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::showStdStatus(const QString message)
+{
+    if (message.isEmpty())
+        ui->statusbar->showMessage(tr("Select input files."));
 }
 
 void MainWindow::loadGCPs(const QString &file)
@@ -131,27 +136,15 @@ void MainWindow::on_startButton_clicked()
         QMessageBox::critical(this, tr("Check fields"), tr("All fields must be filled"));
     else
     {
-        warpingWindow->setWindowTitle(tr("Transforming image..."));
-        warpingWindow->setText(tr("Transforming operation is in progress, please wait."));
-        warpingWindow->show();
+        ui->startButton->setEnabled(false);
+        ui->statusbar->showMessage(tr("Transforming image, please wait..."));
         msuProjObj.setDST(ui->outPathEdit->text().toStdString());
-        warpThread.start();
+        MSUMR::retCode code = msuProjObj.warp(ui->modeUTMButton->isChecked(), ui->modeNDZBox->isChecked());
+        if (code == MSUMR::success)
+            ui->statusbar->showMessage(tr("Transformation finished successfully."), 7000);
+        else
+            ui->statusbar->showMessage(tr("An error occured. Please check input data."), 7000);
+        this->changeOutName();
+        ui->startButton->setEnabled(true);
     }
-}
-
-void MainWindow::warp()
-{
-    MSUMR::retCode code = msuProjObj.warp(ui->modeUTMButton->isChecked(), ui->modeNDZBox->isChecked());
-    if (code == MSUMR::success)
-    {
-        warpingWindow->setWindowTitle(tr("Transformation finished!"));
-        warpingWindow->setText(tr("Transformation finished successfully."));
-    }
-    else
-    {
-        warpingWindow->setWindowTitle(tr("Error occured!"));
-        warpingWindow->setText(tr("The error occured while transforming image. Please check input data."));
-    }
-    warpThread.terminate();
-    this->changeOutName();
 }

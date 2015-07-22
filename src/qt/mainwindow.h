@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
-#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +17,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void showStdStatus(const QString);
     void loadGCPs(const QString &file);
     void changeOutName();
     void autoOutName(bool state);
@@ -29,9 +29,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *graphicsScene;
-    QMessageBox *warpingWindow;
     QString fPreffix;
-    void warp();
 
 protected:
     void resizeEvent(QResizeEvent *event);
