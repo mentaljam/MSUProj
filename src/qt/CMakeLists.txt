@@ -7,4 +7,4 @@ add_executable(msuproj-qt main.cpp
 target_link_libraries(msuproj-qt msuproj Qt5::Widgets)
 
 install(TARGETS msuproj-qt DESTINATION ${INSTALL_PATH_BIN} COMPONENT qt)
-set(COMPONENTS_ALL "${COMPONENTS_ALL} qt")
+set(CPACK_COMPONENT_QT_GROUP msuproj)

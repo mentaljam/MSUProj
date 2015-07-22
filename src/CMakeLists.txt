@@ -8,20 +8,18 @@ if(BUILD_SHARED_LIBS)
             RUNTIME DESTINATION ${INSTALL_PATH_BIN}
             LIBRARY DESTINATION ${INSTALL_PATH_LIB}
             COMPONENT lib)
-    set(COMPONENTS_ALL "${COMPONENTS_ALL} lib")
-else()
+elseif(INSTALL_DEV)
     install(TARGETS msuproj
             ARCHIVE DESTINATION ${INSTALL_PATH_LIB}
-            COMPONENT dev)
-    set(COMPONENTS_ALL "${COMPONENTS_ALL} lib-dev")
+            COMPONENT libdev)
 endif()
 
-set(HDR_OUT_FILE ${CMAKE_BINARY_DIR}/include/msuproj.h)
-if(NOT EXISTS ${HDR_OUT_FILE})
-    remove_comments(msuproj.h ${HDR_OUT_FILE})
+if(INSTALL_DEV)
+    set(HDR_OUT_FILE ${CMAKE_BINARY_DIR}/include/msuproj.h)
+    if(NOT EXISTS ${HDR_OUT_FILE})
+        remove_comments(msuproj.h ${HDR_OUT_FILE})
+    endif()
+    install(FILES ${HDR_OUT_FILE}
+            DESTINATION ${INSTALL_PATH_DEV}
+            COMPONENT headers)
 endif()
-
-install(FILES ${HDR_OUT_FILE}
-        DESTINATION ${INSTALL_PATH_DEV}
-        COMPONENT headers)
-set(COMPONENTS_ALL "${COMPONENTS_ALL} headers")

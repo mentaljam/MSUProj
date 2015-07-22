@@ -6,9 +6,6 @@ set(PROJECT_NAME "MSUProj")
 
 ####################### Build options ######################
 
-#### Build locale
-set(LOCALE "Russian" CACHE STRING "Build locale (English or Russian)")
-
 #### Build architecture
 # 32 - 32bit, 64 - 64bit
 set(ARCH "" CACHE STRING "Build x86 or x86-64 application")
@@ -29,14 +26,17 @@ set(GENERATE_MAN      NO CACHE STRING "Documentation in MAN")
 set(GENERATE_RTF      NO CACHE STRING "Documentation in RTF")
 set(GENERATE_XML      NO CACHE STRING "Documentation in XML")
 
-#### Build tools
-option(BUILD_TOOLS "Build additional tools" OFF)
+#### Install development files
+option(INSTALL_DEV "Install development files" OFF)
 
 #### Build cli
 option(BUILD_CLI "Build command line application" OFF)
 
 #### Build qt
 option(BUILD_QT "Build qt application" OFF)
+
+#### Build tools
+option(BUILD_TOOLS "Build additional tools" OFF)
 
 #### Compiler flags
 set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
@@ -45,23 +45,7 @@ set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 ############### Setting additional variables ###############
 
 set(QT YES)
-set(VERSION_STATUS "")
 set(CMAKE_BUILD_TYPE "Release")
-
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} Project
- ${PROJECT_NAME} is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.
- Data from Meteor-M MSU-MR equipment is broadcasted at frequencies of 137.1 and 137.9 MHz in the LRPT format and can be obtained by everyone under \\\"Free Space\\\" program.
- All additional information in English can be found on meteor.robonuka.ru.
- This package contains ${PROJECT_NAME} command line utility.")
-set(CPACK_PACKAGE_VENDOR "NTs OMZ")
-set(COPYRIGHT "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
-set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <tpr@ntsomz.ru>")
-set(WEB "http://www.ntsomz.ru")
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
-                              "/\\\\3rd/"
-                              "/\\\\cmake/"
-                              "/\\\\.gitignore"
-                              "/\\\\CMakeLists.txt.user")
 
 #### GDAL paths (on Windows)
 set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")

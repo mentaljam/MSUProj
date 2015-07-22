@@ -24,15 +24,16 @@ int main(int argc, char *argv[])
             if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
             {
                 cout << "\nmsuproj-cli - a command line utility for projecting images\n"
-                        "             of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
-                        "Author:  Petr Tsymbarovich <tpr@ntsomz.ru>\n"
-                        "         Research Center for Earth Operative Monitoring\n"
-                        "         (NTs OMZ) <www.ntsomz.ru>\n\n"
-                        "Version: " << msuObj.getVersion() << " (" << msuObj.getVersion(1) << ") for " << msuObj.getVersion(2) << "\n\n"
+                        "              of MSU-MR equipment of Russian ERS sattelite Meteor-M\n\n"
+                        "Author:        Petr Tsymbarovich <tpr@ntsomz.ru>\n"
+                        "               Research Center for Earth Operative Monitoring\n"
+                        "               (NTs OMZ) <www.ntsomz.ru>\n\n"
+                        "Project Page:  https://github.com/mentaljam/MSUProj\n\n"
+                        "Version:       " << msuObj.getVersion() << " (" << msuObj.getVersion(1) << ") for " << msuObj.getVersion(2) << "\n\n"
                         "Usage:   msuproj-cli [OPTIONS] -src input_file -gcp gcp_file [-dst output_file]\n\n"
                         "Options:\n"
                         "    -u              Produce an image in UTM projection\n"
-                        "                    (a zone number is calculated for center point)\n"
+                        "                    (a zone number is calculated for the center point)\n"
                         "    -z              Set NoData value to zero\n"
                         "    -v | --version  Print version number and exit\n"
                         "    -h | --help     Print help message and exit" << endl;
