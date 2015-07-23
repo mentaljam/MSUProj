@@ -75,6 +75,8 @@ void MainWindow::autoOutName(bool state)
 {
     ui->outPathEdit->setEnabled(!state);
     ui->outPathButton->setEnabled(!state);
+    if (state)
+        this->changeOutName();
 }
 
 void MainWindow::setPreview()
@@ -154,7 +156,7 @@ void MainWindow::on_gcpPathButton_clicked()
 
 void MainWindow::on_outPathButton_clicked()
 {
-    QString curPath = ui->outPathButton->text();
+    QString curPath = ui->outPathEdit->text();
     if (curPath.isEmpty())
         curPath = ui->imagePathEdit->text();
     QFileDialog outFile(this, tr("Specify output file"),
@@ -162,7 +164,12 @@ void MainWindow::on_outPathButton_clicked()
                          tr("GeoTiff images (*.tif)"));
     outFile.setFileMode(QFileDialog::AnyFile);
     if (outFile.exec())
-        ui->outPathEdit->setText(outFile.selectedFiles()[0]);
+    {
+        QString outFilePath(outFile.selectedFiles()[0]);
+        if (!outFilePath.contains(QRegularExpression(".*\\.tif")))
+            outFilePath += ".tif";
+        ui->outPathEdit->setText(outFilePath);
+    }
     emit ui->outPathEdit->editingFinished();
 }
 
