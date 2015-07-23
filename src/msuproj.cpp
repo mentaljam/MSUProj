@@ -40,6 +40,8 @@ const char *MSUMR::MSUProj::getVersion(const unsigned int &type) const
         return VER_DATE_MSUPROJ;
     else if (type == 2)
         return VER_ARCH_MSUPROJ;
+    else
+        return "";
 }
 
 void MSUMR::MSUProj::setDST(std::string file)
