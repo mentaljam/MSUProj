@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,30 +16,14 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QGroupBox" name="imageBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+     <widget class="QGroupBox" name="previewBox">
       <property name="title">
-       <string>Input Image</string>
+       <string>Show Preview</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QCheckBox" name="previewBox">
-         <property name="toolTip">
-          <string>Show/Hide preview image</string>
-         </property>
-         <property name="text">
-          <string>Show Preview</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QGraphicsView" name="imageView">
          <property name="sizePolicy">
@@ -50,101 +34,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <layout class="QGridLayout" name="imageInfo">
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="imageRowsLabel">
-           <property name="text">
-            <string>Input Image Rows</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="imageLinesLabel">
-           <property name="text">
-            <string>Input Image Lines</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>15</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="imagePathLayout">
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="imagePathLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Path to input image file</string>
-           </property>
-           <property name="text">
-            <string>Input File</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="imagePathEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string>Path to input image file</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="imagePathButton">
-           <property name="toolTip">
-            <string>Select file</string>
-           </property>
-           <property name="text">
-            <string notr="true">...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
     </item>
@@ -153,6 +42,95 @@
       <property name="bottomMargin">
        <number>9</number>
       </property>
+      <item>
+       <widget class="QGroupBox" name="imageBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string>Input Image</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QGridLayout" name="imageInfo">
+           <item row="0" column="0">
+            <widget class="QLabel" name="imageRowsLabel">
+             <property name="text">
+              <string>Input Image Rows</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="imageLinesLabel">
+             <property name="text">
+              <string>Input Image Lines</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Minimum</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>9</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="imagePathLabel">
+           <property name="toolTip">
+            <string>Path to input image file</string>
+           </property>
+           <property name="text">
+            <string>Input Image File</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="imagePathLayout">
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="imagePathEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Path to input image file</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="imagePathButton">
+             <property name="toolTip">
+              <string>Select file</string>
+             </property>
+             <property name="text">
+              <string notr="true">...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
       <item>
        <widget class="QGroupBox" name="gcpBox">
         <property name="enabled">
@@ -202,48 +180,36 @@
           </layout>
          </item>
          <item>
-          <spacer name="verticalSpacer">
+          <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>15</height>
+             <height>9</height>
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="gcpPathLabel">
+           <property name="toolTip">
+            <string>Path to input GCP file</string>
+           </property>
+           <property name="text">
+            <string>GCPs File</string>
+           </property>
+          </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="gcpPathLayout">
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item>
-            <widget class="QLabel" name="gcpPathLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>70</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Path to input GCP file</string>
-             </property>
-             <property name="text">
-              <string>GCPs File</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QLineEdit" name="gcpPathEdit">
              <property name="sizePolicy">
@@ -279,21 +245,28 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QRadioButton" name="modeLatLonButton">
-           <property name="text">
-            <string>Lat/Lon mode</string>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="bottomMargin">
+            <number>0</number>
            </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="modeUTMButton">
-           <property name="text">
-            <string>UTM mode</string>
-           </property>
-          </widget>
+           <item>
+            <widget class="QRadioButton" name="modeLatLonButton">
+             <property name="text">
+              <string>Lat/Lon Mode</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="modeUTMButton">
+             <property name="text">
+              <string>UTM Mode</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QCheckBox" name="modeNDZBox">
@@ -303,28 +276,28 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_2">
+          <spacer name="verticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
+            <enum>QSizePolicy::Minimum</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>15</height>
+             <height>9</height>
             </size>
            </property>
           </spacer>
          </item>
          <item>
-          <widget class="QCheckBox" name="autoOutNameBox">
-           <property name="text">
-            <string>Automatic Output name</string>
+          <widget class="QLabel" name="outPathLabel">
+           <property name="toolTip">
+            <string>Path to output image file</string>
            </property>
-           <property name="checked">
-            <bool>true</bool>
+           <property name="text">
+            <string>Output Image File</string>
            </property>
           </widget>
          </item>
@@ -333,28 +306,6 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item>
-            <widget class="QLabel" name="outPathLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>70</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>Path to output image file</string>
-             </property>
-             <property name="text">
-              <string>Output File</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QLineEdit" name="outPathEdit">
              <property name="enabled">
@@ -386,6 +337,16 @@
            </item>
           </layout>
          </item>
+         <item>
+          <widget class="QCheckBox" name="autoOutNameBox">
+           <property name="text">
+            <string>Automatic Output Name</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -396,8 +357,8 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
-          <height>40</height>
+          <width>0</width>
+          <height>0</height>
          </size>
         </property>
        </spacer>
@@ -478,22 +439,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>previewBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>imageView</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>202</x>
-     <y>61</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>202</x>
-     <y>283</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>actionExit</sender>
    <signal>triggered()</signal>
