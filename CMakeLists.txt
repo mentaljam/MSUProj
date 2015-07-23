@@ -44,7 +44,7 @@ set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 
 ############### Setting additional variables ###############
 
-set(QT YES)
+set(QT ${BUILD_QT})
 set(CMAKE_BUILD_TYPE "Release")
 
 #### GDAL paths (on Windows)
