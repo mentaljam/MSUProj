@@ -27,6 +27,8 @@ private slots:
     void on_imagePathEdit_editingFinished();
     void on_startButton_clicked();
 
+    void on_actionAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *graphicsScene;

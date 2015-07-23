@@ -1,3 +1,4 @@
+#include <msuproj_version.h>
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 #include <msuproj.h>
@@ -164,4 +165,20 @@ void MainWindow::on_startButton_clicked()
         this->changeOutName();
         ui->startButton->setEnabled(true);
     }
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox::about(this, tr("About MSUProj-Qt"),
+                       QString("<p>%1</p><p>%2</p>"
+                               "<p><tr><td><i>%3:</i></td><td></td><td>" VERSION_MSUPROJ " (" VER_DATE_MSUPROJ ")</td></tr>"
+                               "<tr><td><i>%4:</i></td><td></td><td>%5 &lt;<a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
+                                                                    "&body=Version: " VERSION_MSUPROJ "\nPlatform: " VER_PLATFORM_MSUPROJ "\n"
+                                                                    "Architecture: " VER_ARCH_MSUPROJ "\n\n'>tpr@ntsomz.ru</a>&gt;</td></tr>"
+                               "<tr><td><i>%6 </i></td><td></td><td><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr></p>")
+                       .arg(tr("MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M."),
+                            tr("This is a Qt graphical interface for MSUProj."),
+                            tr("Version"),
+                            tr("Author"), tr("Petr Tsymbarovich"),
+                            tr("Progect page on")));
 }
