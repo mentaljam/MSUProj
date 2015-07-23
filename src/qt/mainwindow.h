@@ -22,12 +22,14 @@ private slots:
     void changeOutName();
     void autoOutName(bool state);
     void setPreview();
+    void changeStartButtonState();
     void on_imagePathButton_clicked();
     void on_gcpPathButton_clicked();
+    void on_outPathButton_clicked();
     void on_imagePathEdit_editingFinished();
     void on_startButton_clicked();
-
     void on_actionAbout_triggered();
+    void on_actionReference_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -36,6 +38,7 @@ private:
 
 protected:
     void resizeEvent(QResizeEvent *event);
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H
