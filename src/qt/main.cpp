@@ -15,8 +15,16 @@ int main(int argc, char *argv[])
     MSUProjQt.setOrganizationDomain("www.ntsomz.ru");
 
     QTranslator appTranslation;
-        if (appTranslation.load(":/translations/MSUProjQt_" + QLocale::system().name()))
+    QStringList qmPaths;
+    qmPaths << "i18n/msuproj-qt_"
+            << "/usr/share/msuproj/i18n/msuproj-qt_"
+            << "/usr/local/share/msuproj/i18n/msuproj-qt_";
+    foreach (QString qmPath, qmPaths)
+        if (appTranslation.load(qmPath + QLocale::system().name()))
+        {
             MSUProjQt.installTranslator(&appTranslation);
+            break;
+        }
 
     MainWindow MSUProjMainWindow;
     MSUProjMainWindow.show();

@@ -139,7 +139,7 @@
             <string>Select file</string>
            </property>
            <property name="text">
-            <string>...</string>
+            <string notr="true">...</string>
            </property>
           </widget>
          </item>
@@ -263,7 +263,7 @@
               <string>Select file</string>
              </property>
              <property name="text">
-              <string>...</string>
+              <string notr="true">...</string>
              </property>
             </widget>
            </item>
@@ -380,7 +380,7 @@
               <string>Specify file</string>
              </property>
              <property name="text">
-              <string>...</string>
+              <string notr="true">...</string>
              </property>
             </widget>
            </item>
@@ -459,7 +459,7 @@
     <string>Exit application</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string notr="true">Ctrl+Q</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -472,7 +472,7 @@
     <string>Reference</string>
    </property>
    <property name="shortcut">
-    <string>F1</string>
+    <string notr="true">F1</string>
    </property>
   </action>
  </widget>
