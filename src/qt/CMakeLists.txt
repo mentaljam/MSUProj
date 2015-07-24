@@ -18,10 +18,17 @@ endif()
 
 ################## MSUProj-GUI executable ##################
 
-add_executable(msuproj-qt main.cpp
-                          mainwindow.cpp
-                          mainwindow.ui
-                          ${QM_FILES}  ${TS_FILES})
+set(MSUPROJQT_SOURCES main.cpp
+                      mainwindow.cpp
+                      mainwindow.ui
+                      ${QM_FILES} ${TS_FILES})
+
+if(MSVC)
+    add_executable(msuproj-qt WIN32 ${MSUPROJQT_SOURCES})
+    set_target_properties(msuproj-qt PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+else()
+    add_executable(msuproj-qt WIN32 ${MSUPROJQT_SOURCES})
+endif()
 target_link_libraries(msuproj-qt msuproj Qt5::Widgets)
 
 install(TARGETS msuproj-qt DESTINATION ${INSTALL_PATH_BIN} COMPONENT qt)

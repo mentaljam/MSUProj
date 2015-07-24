@@ -38,6 +38,9 @@ option(BUILD_QT "Build qt application" OFF)
 #### Build tools
 option(BUILD_TOOLS "Build additional tools" OFF)
 
+#### Install runtime
+option(INSTALL_RUNTIME "Install runtime libraries on Windows" ON)
+
 #### Compiler flags
 set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 
@@ -74,6 +77,9 @@ set(INSTALL_PATH_LIB lib)
 
 ###################### CMake modules #######################
 
+if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/OMZModules)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/OMZModules)
+endif()
 include(OMZProjectPreConf)
 include(OMZDoxyConf)
 include(OMZFunctions)
@@ -81,7 +87,7 @@ include(OMZFunctions)
 
 ####################### GDAL library #######################
 
-if(WIN32 AND CMAKE_COMPILER_IS_GNUCC)
+if(SEARCH_PREFIX)
     list(APPEND CMAKE_SYSTEM_PREFIX_PATH ${SEARCH_PREFIX})
 endif()
 
@@ -89,7 +95,7 @@ find_package(GDAL)
 
 if(NOT GDAL_FOUND)
     message(FATAL_ERROR "Could not find GDAL, try to install gdal-dev "
-                        "or specify CMAKE_SYSTEM_PREFIX_PATH")
+                        "or specify SEARCH_PREFIX")
 endif()
 
 include_directories(${GDAL_INCLUDE_DIRS})
