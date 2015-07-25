@@ -1,6 +1,7 @@
 Current:
+    - FIX:    Fix shared library building
 
-0.4:
+0.4 (2015-07-25):
     - FIX:    UTM zone calculation
     - CHANGE: Use iostream instead of printf
     - CHANGE: Use strings instead of char arrays
@@ -8,7 +9,7 @@ Current:
     - NEW:    Qt GUI application
     - UPDATE: CPack packaging rules - components based installer (NSIS, WIX), automatic runtime gathering
 
-0.3:
+0.3 (2015-04-16):
     - UPDATE: GTiff creation options and metadata - JPEG compression
     - NEW:    Added getUTM() method which returns UTM zone number in {N,S}No format
     - REMOVE: Removed setUTM()

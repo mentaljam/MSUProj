@@ -102,6 +102,7 @@ set(CPACK_COMPONENT_DOC_HIDDEN ON)
 ################# Installation components ##################
 
 set(CPACK_COMPONENT_GROUP_MSUPROJ_DISPLAY_NAME "MSUProj")
+set(CPACK_COMPONENT_GROUP_MSUPROJ_EXPANDED TRUE)
 
     set(CPACK_COMPONENT_LIB_GROUP        msuproj)
     set(CPACK_COMPONENT_LIB_DISPLAY_NAME "Shared Library")

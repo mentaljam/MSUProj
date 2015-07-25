@@ -2,6 +2,11 @@
 #define MSUPROJ_H
 
 #include <gdal_priv.h>
+#ifdef _WIN32
+#   include <msuproj/msuproj_export.h>
+#else
+#   define MSUPROJ_EXPORT
+#endif
 
 namespace MSUMR {
 
@@ -31,7 +36,7 @@ struct gcp
  * @brief The class for reprojecting geo data
  * of sensing equipment MSU-MR of ERS satellite Meteor-M
  */
-class MSUProj
+class MSUPROJ_EXPORT MSUProj
 {
 public:
 

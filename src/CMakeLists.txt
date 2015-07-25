@@ -1,32 +1,93 @@
 ##################### MSUProj Library ######################
 
+if(NOT BUILD_CLI OR NOT BUILD_QT OR NOT BUILD_TOOLS)
+    set(BUILD_SHARED_LIBS ON)
+endif()
+
 add_library(msuproj msuproj.cpp logoimage.hpp)
 target_link_libraries(msuproj ${GDAL_LIBRARIES})
 
-set_target_properties(msuproj PROPERTIES VERSION ${V_VERSION}
-                                         SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
-                                         OUTPUT_NAME msuproj)
+if(MSVC)
+    include(GenerateExportHeader)
+    generate_export_header(msuproj)
+endif()
 
 if(BUILD_SHARED_LIBS)
-    install(TARGETS msuproj
-            RUNTIME DESTINATION ${INSTALL_PATH_BIN}
-            LIBRARY DESTINATION ${INSTALL_PATH_LIB}
-            COMPONENT lib)
+
+    set_target_properties(msuproj
+                          PROPERTIES VERSION ${V_VERSION}
+                                     SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+                                     OUTPUT_NAME msuproj)
     if(WIN32)
         set_target_properties(msuproj PROPERTIES SUFFIX -${CPACK_PACKAGE_VERSION_MAJOR}.dll)
+        install(TARGETS msuproj
+                RUNTIME DESTINATION ${INSTALL_PATH_BIN}
+                COMPONENT lib)
+    else()
+        set(CMAKE_INSTALL_RPATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} PARENT_SCOPE)
+        set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE PARENT_SCOPE)
+        install(TARGETS msuproj
+                EXPORT  MSUProjSharedConfig
+                LIBRARY DESTINATION ${INSTALL_PATH_LIB}
+                COMPONENT lib)
     endif()
-elseif(INSTALL_DEV)
-    install(TARGETS msuproj
-            ARCHIVE DESTINATION ${INSTALL_PATH_LIB}
-            COMPONENT libdev)
+
+    if(INSTALL_DEV)
+
+        if(WIN32)
+            install(TARGETS msuproj
+                    EXPORT  MSUProjSharedConfig
+                    ARCHIVE DESTINATION ${INSTALL_PATH_LIB}
+                    COMPONENT lib)
+        endif()
+        install(EXPORT MSUProjSharedConfig
+                DESTINATION ${INSTALL_PATH_CMAKE}
+                COMPONENT libdev)
+
+        add_library(msuproj-dev STATIC msuproj.cpp logoimage.hpp)
+        target_compile_definitions(msuproj-dev  PRIVATE "-DMSUPROJ_STATIC_DEFINE=1")
+        target_link_libraries(msuproj-dev ${GDAL_LIBRARIES})
+        set_target_properties(msuproj-dev
+                              PROPERTIES VERSION ${V_VERSION}
+                                         SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+                                         OUTPUT_NAME msuproj-dev)
+        set(MSUPROJ_DEV msuproj-dev)
+
+    endif()
+
+else()
+
+    set_target_properties(msuproj
+                          PROPERTIES VERSION ${V_VERSION}
+                                     SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+                                     OUTPUT_NAME msuproj-dev)
+    set(MSUPROJ_DEV msuproj)
+
 endif()
 
 if(INSTALL_DEV)
-    set(HDR_OUT_FILE ${CMAKE_BINARY_DIR}/include/msuproj.h)
-    if(NOT EXISTS ${HDR_OUT_FILE})
-        remove_comments(msuproj.h ${HDR_OUT_FILE})
+
+    install(TARGETS ${MSUPROJ_DEV}
+            EXPORT  MSUProjStaticConfig
+            DESTINATION ${INSTALL_PATH_LIB}
+            COMPONENT libdev)
+    install(EXPORT MSUProjStaticConfig
+            DESTINATION ${INSTALL_PATH_CMAKE}
+            COMPONENT libdev)
+
+    list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/include/msuproj.h)
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/include/msuproj.h)
+        remove_comments(msuproj.h ${CMAKE_BINARY_DIR}/include/msuproj.h)
     endif()
-    install(FILES ${HDR_OUT_FILE}
+    if(MSVC)
+        list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
+        if(NOT EXISTS ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
+            remove_comments(${CMAKE_CURRENT_BINARY_DIR}/msuproj_export.h
+                            ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
+        endif()
+    endif()
+    install(FILES ${HDR_OUT_FILES}
             DESTINATION ${INSTALL_PATH_DEV}
             COMPONENT headers)
+
 endif()

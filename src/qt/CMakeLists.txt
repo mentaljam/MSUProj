@@ -2,7 +2,7 @@
 
 if(Qt5LinguistTools_FOUND)
     message(STATUS "To update translations run \"make update_translations\"")
-    file(GLOB TS_FILES ${PROJECT_SOURCE_DIR}/i18n/msuproj-qt*.ts)
+    file(GLOB TS_FILES ${PROJECT_SOURCE_DIR}/i18n/msuproj-qt_*.ts)
     set_property(SOURCE ${TS_FILES} PROPERTY OUTPUT_LOCATION ${CMAKE_BINARY_DIR}/i18n)
     add_custom_target(update_translations
                       COMMAND lupdate ${PROJECT_SOURCE_DIR}/src/ -ts ${TS_FILES}

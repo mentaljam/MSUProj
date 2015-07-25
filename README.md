@@ -11,7 +11,7 @@ It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for
 ## Precompiled binaries ##
 
 - All stable binaries for Windows are in [Releases](https://github.com/mentaljam/MSUProj/releases)
-- You also can grab latest development binaries for Windows from [Yandex Disk](https://disk.yandex.ru/client/disk/MSUProj-Qt)
+- You also can grab latest development binaries for Windows from [Yandex Disk](https://yadi.sk/d/5Lbb-1y5hzZdW)
 
 ## Localisation ##
 
