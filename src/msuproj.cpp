@@ -233,13 +233,17 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
         for (band = 1; band <= bands; ++band)
             dstDS->GetRasterBand(band)->SetNoDataValue(0);
 
-    unsigned char **srcData = new unsigned char*[bands];
-    unsigned char **tmpData = new unsigned char*[bands];
+    unsigned char *pxsData[bands];
+    unsigned char *tmpData[bands];
+
+    unsigned int pxsSize = dstSize;
+    if (pxsSize < srcSize)
+        pxsSize = srcSize;
 
     for (band = 0; band < bands; ++band)
     {
-        srcData[band] = new unsigned char[srcSize];
-        srcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize, srcData[band],
+        pxsData[band] = new unsigned char[pxsSize];
+        srcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize, pxsData[band],
                                                  srcXSize, srcYSize, GDT_Byte, 0, 0);
         tmpData[band] = new unsigned char[dstSize]();
     }
@@ -280,20 +284,15 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
             for (band = 0; band < bands; ++band)
             {
                 if (tmpData[band][dCount] == 0)
-                    tmpData[band][dCount] = srcData[band][pCount];
+                    tmpData[band][dCount] = pxsData[band][pCount];
                 else
-                    tmpData[band][dCount] = (unsigned char)((tmpData[band][dCount] + srcData[band][pCount]) / 2 + 0.5);
+                    tmpData[band][dCount] = (unsigned char)((tmpData[band][dCount] + pxsData[band][pCount]) / 2 + 0.5);
             }
         }
     }
 
-    unsigned char **dstData = new unsigned char*[bands];
     for (band = 0; band < bands; ++band)
-    {
-        delete[] srcData[band];
-        dstData[band] = new unsigned char[dstSize]();
-    }
-    delete[] srcData;
+        memset(pxsData[band], 0, pxsSize);
 
     double vl, wDelim;
     double *sum = new double[bands];
@@ -397,7 +396,7 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
                     break;
             }
             for (band = 0; band < bands; ++band)
-                dstData[band][pCount] = (unsigned char)(sum[band] / wDelim + 0.5);
+                pxsData[band][pCount] = (unsigned char)(sum[band] / wDelim + 0.5);
         }
     }
 
@@ -406,13 +405,11 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
 
     for (band = 0; band < bands; ++band)
     {
-        dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, 0, 0, dstXSize, dstYSize, dstData[band],
+        dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, 0, 0, dstXSize, dstYSize, pxsData[band],
                                                  dstXSize, dstYSize, GDT_Byte, 0, 0);
         delete[] tmpData[band];
-        delete[] dstData[band];
+        delete[] pxsData[band];
     }
-    delete[] tmpData;
-    delete[] dstData;
 
     logoImage logo;
     dstXSize -= logo.width;
