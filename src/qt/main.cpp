@@ -1,9 +1,11 @@
 #include "mainwindow.h"
+#include "settings.h"
 #include <msuproj.h>
 #include <QApplication>
 #include <QTranslator>
 
 MSUMR::MSUProj msuProjObj;
+settings settingsObj;
 
 int main(int argc, char *argv[])
 {
@@ -15,16 +17,8 @@ int main(int argc, char *argv[])
     MSUProjQt.setOrganizationDomain("www.ntsomz.ru");
 
     QTranslator appTranslation;
-    QStringList qmPaths;
-    qmPaths << "i18n/msuproj-qt_"
-            << "/usr/share/msuproj/i18n/msuproj-qt_"
-            << "/usr/local/share/msuproj/i18n/msuproj-qt_";
-    foreach (QString qmPath, qmPaths)
-        if (appTranslation.load(qmPath + QLocale::system().name()))
-        {
-            MSUProjQt.installTranslator(&appTranslation);
-            break;
-        }
+    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getQmPath()))
+        MSUProjQt.installTranslator(&appTranslation);
 
     MainWindow MSUProjMainWindow;
     MSUProjMainWindow.show();
