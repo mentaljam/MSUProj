@@ -136,7 +136,6 @@ private:
     };
 
     GDALDataset* srcDS; ///< @ru Исходный растр
-    GDALDataset* dstDS; ///< @ru Выходной растр
 
     gcp* gcps;          ///< @ru Массив точек геосетки
 

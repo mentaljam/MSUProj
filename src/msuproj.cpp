@@ -7,7 +7,6 @@
 
 MSUMR::MSUProj::MSUProj() :
     srcDS(NULL),
-    dstDS(NULL),
     gcps(NULL),
     dstFile(),
     dstFormat("GTiff"),
@@ -223,7 +222,10 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "MSUProj v" VERSION_MSUPROJ);
     }
-    dstDS = dstDriver->Create(dstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
+    GDALDataset *dstDS = dstDriver->Create(dstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
+    if (dstDS == NULL)
+        return errDST;
+
     dstDS->SetMetadata(dstMetadata);
     dstDS->SetProjection(srsWKT);
     dstDS->SetGeoTransform(geoTransform);
