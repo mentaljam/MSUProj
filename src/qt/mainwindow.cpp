@@ -7,6 +7,7 @@
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QTextBrowser>
+#include <QDesktopWidget>
 
 extern MSUMR::MSUProj msuProjObj;
 //extern settings settingsObj;
@@ -322,7 +323,7 @@ void MainWindow::on_actionReference_triggered()
     QDialog *refWindow = new QDialog;
     connect(refWindow, &QDialog::destroyed, ui->actionReference, &QAction::setEnabled);
     refWindow->setAttribute(Qt::WA_DeleteOnClose);
-    refWindow->resize(650, 100);
+    refWindow->resize(800, 100);
     refWindow->setWindowTitle(tr("MSUProj-Qt Reference"));
 
     QTextBrowser *refBrowser = new QTextBrowser(refWindow);
@@ -331,7 +332,12 @@ void MainWindow::on_actionReference_triggered()
     QVBoxLayout *refLayout = new QVBoxLayout(refWindow);
     refLayout->addWidget(refBrowser);
     refWindow->show();
-    refWindow->resize(650, refBrowser->document()->size().height() + 50);
+    int height = refBrowser->document()->size().height() + 50;
+    if (height > 600)
+        height = 600;
+    refWindow->resize(800, height);
+    QSize point((QApplication::desktop()->screen()->rect().size() - refWindow->size()) / 2);
+    refWindow->move(point.width(), point.height());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
