@@ -105,7 +105,9 @@ int main(int argc, char *argv[])
     if (zerosAsND)
         cout << " and NoData=0";
     cout << endl;
+    clock_t sTime = clock();
     code = msuObj.warp(useUTM, zerosAsND);
+    int exeTime = (clock() - sTime) / CLOCKS_PER_SEC;
     switch (code) {
     case errSRC:
         cerr << "ERROR: can not read input file" << endl;
@@ -117,7 +119,8 @@ int main(int argc, char *argv[])
         cerr << "ERROR: can not read gcp file" << endl;
         break;
     default:
-        cout << "Finished successfully\n"
+        cout << "Finished successfully in " << (int)(exeTime / 60)
+             << " min " << exeTime - ((int)(exeTime / 60)) * 60 << " sec\n"
                 "Output raster: " << dstFile << endl;
         break;
     }
