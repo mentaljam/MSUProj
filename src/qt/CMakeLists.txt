@@ -21,6 +21,9 @@ endif()
 set(MSUPROJQT_SOURCES main.cpp
                       mainwindow.cpp
                       mainwindow.ui
+                      settings.cpp
+                      settingswindow.cpp
+                      settingswindow.ui
                       ${QM_FILES} ${TS_FILES})
 
 if(MSVC)

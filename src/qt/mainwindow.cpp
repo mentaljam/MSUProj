@@ -2,11 +2,14 @@
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 #include <msuproj.h>
+//#include <settings.h>
+#include <settingswindow.h>
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QTextBrowser>
 
 extern MSUMR::MSUProj msuProjObj;
+//extern settings settingsObj;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -260,6 +263,12 @@ void MainWindow::on_startButton_clicked()
         ui->statusbar->showMessage(tr("Output file name is empty"), 7000);
         ui->outPathEdit->clear();
     }
+}
+
+void MainWindow::on_actionSettings_triggered()
+{
+    SettingsWindow settingsWindow(this);
+    settingsWindow.exec();
 }
 
 void MainWindow::on_actionAbout_triggered()

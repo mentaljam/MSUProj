@@ -29,6 +29,7 @@ private slots:
     void setPreview();
     void changeStartButtonState();
     void on_startButton_clicked();
+    void on_actionSettings_triggered();
     void on_actionAbout_triggered();
     void on_actionReference_triggered();
 
