@@ -16,6 +16,7 @@ if(Qt5LinguistTools_FOUND)
             COMPONENT qt)
 endif()
 
+
 ################## MSUProj-GUI executable ##################
 
 set(MSUPROJQT_SOURCES main.cpp
@@ -24,7 +25,13 @@ set(MSUPROJQT_SOURCES main.cpp
                       settings.cpp
                       settingswindow.cpp
                       settingswindow.ui
-                      ${QM_FILES} ${TS_FILES})
+                      ${QM_FILES} ${TS_FILES}
+                      ${PNG_QRC})
+if(WIN32)
+    set(WIN_RC ${CMAKE_BINARY_DIR}/res/win32/icons.rc)
+    configure_file(${RESOURCES_DIR}/win32/icons.rc.in ${WIN_RC})
+    list(APPEND MSUPROJQT_SOURCES ${WIN_RC})
+endif(WIN32)
 
 if(MSVC)
     add_executable(msuproj-qt WIN32 ${MSUPROJQT_SOURCES})
@@ -46,4 +53,6 @@ if(UNIX)
     install(FILES ${CMAKE_BINARY_DIR}/res/linux/msuproj-qt.desktop
             DESTINATION share/applications
             COMPONENT qt)
+    install(FILES ${RESOURCES_DIR}/icons/${CMAKE_PROJECT_NAME}.svg
+            DESTINATION share/icons/hicolor/scalable/apps)
 endif()

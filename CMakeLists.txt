@@ -88,6 +88,7 @@ endif()
 include(OMZProjectPreConf)
 include(OMZDoxyConf)
 include(OMZFunctions)
+include(icons)
 
 
 ####################### GDAL library #######################
