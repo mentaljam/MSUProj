@@ -233,8 +233,8 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
         for (band = 1; band <= bands; ++band)
             dstDS->GetRasterBand(band)->SetNoDataValue(0);
 
-    unsigned char *pxsData[bands];
-    unsigned char *tmpData[bands];
+    unsigned char **pxsData = new unsigned char*[bands];
+    unsigned char **tmpData = new unsigned char*[bands];
 
     unsigned int pxsSize = dstSize;
     if (pxsSize < srcSize)
@@ -410,6 +410,8 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
         delete[] tmpData[band];
         delete[] pxsData[band];
     }
+    delete[] tmpData;
+    delete[] pxsData;
 
     logoImage logo;
     dstXSize -= logo.width;

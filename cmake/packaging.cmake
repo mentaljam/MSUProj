@@ -33,7 +33,7 @@ set(CPACK_RPM_PACKAGE_LICENSE "Zlib")
 set(CPACK_RPM_PACKAGE_URL     ${WEB})
 
 #### NSIS
-#set(CPACK_NSIS_MUI_ICON)
+set(CPACK_NSIS_MUI_ICON ${CMAKE_BINARY_DIR}/res/win32/${CMAKE_PROJECT_NAME}.ico)
 set(CPACK_NSIS_MODIFY_PATH ON)
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
 set(CPACK_NSIS_MUI_FINISHPAGE_RUN msuproj-qt)
@@ -51,9 +51,16 @@ if(WIN32)
 
     if(INSTALL_RUNTIME)
 
-        get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
+
+        get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
+        string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
+        file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
+                            ${DLL_PATH}/*geos*.dll
+                            ${DLL_PATH}/*proj*.dll)
+        list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GDAL_DLLS})
 
         if(MINGW)
+            get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
             if(ARCH EQUAL 64)
                 set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64*.dll
                                      ${CXX_PATH}/libgcc*64*.dll)
@@ -63,27 +70,20 @@ if(WIN32)
             endif()
             file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
             list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GCC_RUNTIME})
+            if(CMAKE_BUILD_TYPE STREQUAL "Release")
+                install(CODE "message(STATUS \"Stripping runtime libraries\")
+                             file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
+                             execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
+                        COMPONENT runtime)
+            endif()
         endif()
 
-        get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
-        string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
-        file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
-                            ${DLL_PATH}/*geos*.dll
-                            ${DLL_PATH}/*proj*.dll)
-        if(GDAL_DLLS)
-            list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GDAL_DLLS})
+        if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+            set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
+            set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT runtime)
+            include(InstallRequiredSystemLibraries)
         else()
-            message(AUTHOR_WARNING "Could not find GDAL shared libraries for package forming")
-        endif()
-        set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
-        set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT runtime)
-        include(InstallRequiredSystemLibraries)
-
-        if(CMAKE_BUILD_TYPE STREQUAL "Release")
-            install(CODE "message(STATUS \"Stripping runtime libraries\")
-                         file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
-                         execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
-                    COMPONENT runtime)
+            message(AUTHOR_WARNING "Could not find runtime shared libraries for package forming")
         endif()
 
         set(QTDIR $ENV{QTDIR})
