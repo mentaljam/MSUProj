@@ -1,6 +1,7 @@
 ##################### MSUProj Library ######################
 
-if(NOT BUILD_CLI OR NOT BUILD_QT OR NOT BUILD_TOOLS)
+if(NOT BUILD_CLI AND NOT BUILD_QT AND NOT BUILD_TOOLS AND NOT BUILD_SHARED_LIBS)
+    message(AUTHOR_WARNING "No targets were provided - building shared library")
     set(BUILD_SHARED_LIBS ON)
 endif()
 

@@ -50,22 +50,45 @@ set(CPACK_NSIS_MENU_LINKS
 if(WIN32)
 
     if(INSTALL_RUNTIME)
+
+        get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
+
+        if(MINGW)
+            if(ARCH EQUAL 64)
+                set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64*.dll
+                                     ${CXX_PATH}/libgcc*64*.dll)
+            else()
+                set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++*.dll
+                                     ${CXX_PATH}/libgcc*sjlj*.dll)
+            endif()
+            file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
+            list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GCC_RUNTIME})
+        endif()
+
         get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
         string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
         file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
                             ${DLL_PATH}/*geos*.dll
                             ${DLL_PATH}/*proj*.dll)
         if(GDAL_DLLS)
-            set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GDAL_DLLS})
+            list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GDAL_DLLS})
         else()
             message(AUTHOR_WARNING "Could not find GDAL shared libraries for package forming")
         endif()
         set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
         set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT runtime)
         include(InstallRequiredSystemLibraries)
+
+        if(CMAKE_BUILD_TYPE STREQUAL "Release")
+            install(CODE "message(STATUS \"Stripping runtime libraries\")
+                         file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
+                         execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
+                    COMPONENT runtime)
+        endif()
+
         set(QTDIR $ENV{QTDIR})
         string(REPLACE "\\" "/" QTDIR ${QTDIR})
-        if(QT AND QTDIR)
+        if(BUILD_QT AND QTDIR)
             install(FILES ${QTDIR}/bin/Qt5Core.dll
                           ${QTDIR}/bin/Qt5Gui.dll
                           ${QTDIR}/bin/Qt5Widgets.dll
@@ -83,6 +106,7 @@ if(WIN32)
                     DESTINATION ${INSTALL_PATH_I18N}
                     COMPONENT runtime)
         endif()
+
     endif()
 
     if(DOXYGEN_FOUND AND HHC)
