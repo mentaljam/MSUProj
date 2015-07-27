@@ -2,7 +2,7 @@
 #define MSUPROJ_H
 
 #include <gdal_priv.h>
-#ifdef _WIN32
+#if _MSC_VER && !__INTEL_COMPILER
 #   include <msuproj/msuproj_export.h>
 #else
 #   define MSUPROJ_EXPORT
