@@ -34,6 +34,7 @@ set(CPACK_RPM_PACKAGE_URL     ${WEB})
 
 #### NSIS
 set(CPACK_NSIS_MUI_ICON ${CMAKE_BINARY_DIR}/res/win32/${CMAKE_PROJECT_NAME}.ico)
+set(CPACK_NSIS_INSTALLED_ICON_NAME "msuproj-qt.exe")
 set(CPACK_NSIS_MODIFY_PATH ON)
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
 set(CPACK_NSIS_MUI_FINISHPAGE_RUN msuproj-qt)
@@ -50,7 +51,6 @@ set(CPACK_NSIS_MENU_LINKS
 if(WIN32)
 
     if(INSTALL_RUNTIME)
-
 
         get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
         string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
@@ -70,18 +70,18 @@ if(WIN32)
             endif()
             file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
             list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GCC_RUNTIME})
-            if(CMAKE_BUILD_TYPE STREQUAL "Release")
-                install(CODE "message(STATUS \"Stripping runtime libraries\")
-                             file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
-                             execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
-                        COMPONENT runtime)
-            endif()
         endif()
 
         if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
             set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
             set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT runtime)
             include(InstallRequiredSystemLibraries)
+            if(MINGW AND CMAKE_BUILD_TYPE STREQUAL "Release")
+                install(CODE "message(STATUS \"Stripping runtime libraries\")
+                             file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
+                             execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
+                        COMPONENT runtime)
+            endif()
         else()
             message(AUTHOR_WARNING "Could not find runtime shared libraries for package forming")
         endif()
