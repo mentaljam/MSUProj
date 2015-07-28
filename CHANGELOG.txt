@@ -1,5 +1,13 @@
 Current:
+
+0.5 (2015-07-28)
     - FIX:    Fix shared library building
+    - New:    Franch translation (thanks Christophe Tof <zetofzone@gmail.com>)
+    - New:    Russian translation
+    - New:    Settings window with ability to change language
+    - New:    Project icon
+    - New:    Windows RC files for runtime targets
+    - UPDATE: GUI
 
 0.4 (2015-07-25):
     - FIX:    UTM zone calculation

@@ -280,12 +280,14 @@ void MainWindow::on_actionAbout_triggered()
                                "<tr><td><i>%4:</i></td><td></td><td>%5 &lt;<a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
                                                                     "&body=Version: " VERSION_MSUPROJ "\nPlatform: " VER_PLATFORM_MSUPROJ "\n"
                                                                     "Architecture: " VER_ARCH_MSUPROJ "\n\n'>tpr@ntsomz.ru</a>&gt;</td></tr>"
-                               "<tr><td><i>%6 </i></td><td></td><td><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr></p>")
+                               "<tr><td><i>%6 </i></td><td></td><td><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr>"
+                               "<tr><td><i>%7 </i></td><td></td><td><a href='https://www.transifex.com/projects/p/msuproj/'>Transifex</a></td></tr></p>")
                        .arg(tr("MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M."),
                             tr("This is a Qt graphical interface for MSUProj."),
                             tr("Version"),
                             tr("Author"), tr("Petr Tsymbarovich"),
-                            tr("Progect page on")));
+                            tr("Progect page on"),
+                            tr("Translations on")));
 }
 
 void MainWindow::on_actionReference_triggered()
