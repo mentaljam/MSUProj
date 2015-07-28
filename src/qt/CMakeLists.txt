@@ -28,10 +28,15 @@ set(MSUPROJQT_SOURCES main.cpp
                       ${QM_FILES} ${TS_FILES}
                       ${PNG_QRC})
 if(WIN32)
-    set(WIN_RC ${CMAKE_BINARY_DIR}/res/win32/icons.rc)
-    configure_file(${RESOURCES_DIR}/win32/icons.rc.in ${WIN_RC})
+    set(WIN_RC ${CMAKE_BINARY_DIR}/res/win32/msuproj-qt.rc)
+    set(IDI_ICON                 "IDI_ICON1 ICON DISCARDABLE \"msuproj.ico\"")
+    set(VER_FILEDESCRIPTION_STR  "MSUProj Qt Interface")
+    set(VER_INTERNALNAME_STR     "msuproj-qt")
+    set(VER_ORIGINALFILENAME_STR "msuproj-qt.exe")
+    set(VER_PRODUCTNAME_STR      "MSUProj-Qt")
+    configure_file(${RESOURCES_DIR}/win32/msuproj.rc.in ${WIN_RC})
     list(APPEND MSUPROJQT_SOURCES ${WIN_RC})
-endif(WIN32)
+endif()
 
 if(MSVC)
     add_executable(msuproj-qt WIN32 ${MSUPROJQT_SOURCES})

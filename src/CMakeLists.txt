@@ -1,11 +1,24 @@
 ##################### MSUProj Library ######################
 
-if(NOT BUILD_CLI AND NOT BUILD_QT AND NOT BUILD_TOOLS AND NOT BUILD_SHARED_LIBS)
+if(NOT BUILD_CLI AND NOT BUILD_QT AND NOT BUILD_TOOLS AND NOT INSTALL_DEV)
     message(AUTHOR_WARNING "No targets were provided - building shared library")
-    set(BUILD_SHARED_LIBS ON)
+    set(INSTALL_DEV ON)
 endif()
 
-add_library(msuproj msuproj.cpp logoimage.hpp)
+set(MSUPROJ_SOURCES msuproj.cpp logoimage.hpp)
+
+if(WIN32)
+    set(WIN_RC ${CMAKE_BINARY_DIR}/res/win32/msuproj.dll.rc)
+    unset(IDI_ICON)
+    set(VER_FILEDESCRIPTION_STR  "MSUProj Shared Library")
+    set(VER_INTERNALNAME_STR     "msuproj_dll")
+    set(VER_ORIGINALFILENAME_STR "msuproj-${CPACK_PACKAGE_VERSION_MAJOR}.dll")
+    set(VER_PRODUCTNAME_STR      "MSUProj")
+    configure_file(${RESOURCES_DIR}/win32/msuproj.rc.in ${WIN_RC})
+    list(APPEND MSUPROJ_SOURCES ${WIN_RC})
+endif()
+
+add_library(msuproj ${MSUPROJ_SOURCES})
 target_link_libraries(msuproj ${GDAL_LIBRARIES})
 
 if(MSVC)
