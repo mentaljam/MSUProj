@@ -53,6 +53,9 @@ set(CMAKE_BUILD_TYPE "Release")
 #### GDAL paths (on Windows)
 set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")
 
+#### Generate .ico file on windows
+set(WIN_ICONS msuproj)
+
 
 ####################### Setting paths ######################
 
@@ -88,7 +91,7 @@ endif()
 include(OMZProjectPreConf)
 include(OMZDoxyConf)
 include(OMZFunctions)
-include(icons)
+include(OMZIconsConf)
 
 
 ####################### GDAL library #######################
