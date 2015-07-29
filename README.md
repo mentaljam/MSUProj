@@ -13,7 +13,7 @@ It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for
 - All stable binaries for Windows are in [Releases](https://github.com/mentaljam/MSUProj/releases)
 - You also can grab latest development binaries for Windows from [Yandex Disk](https://yadi.sk/d/5Lbb-1y5hzZdW)
 
-## Localisation ##
+## Localization ##
 
 You can translate MSUProj-Qt to your language with [Transifex](https://www.transifex.com/projects/p/msuproj/).
 
@@ -26,6 +26,7 @@ You can translate MSUProj-Qt to your language with [Transifex](https://www.trans
 - *make* or *Ninja* for GCC
 - *GDAL* development package with geos and proj support (libgdal-dev in debian)
 - *WIX* or *NSIS* for building installer packages on Windows
+- *ImageMagick* for generating icons
 
 #### 2. Clone ###
 
