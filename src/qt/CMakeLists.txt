@@ -46,6 +46,8 @@ else()
 endif()
 target_link_libraries(msuproj-qt msuproj Qt5::Widgets)
 
+add_dependencies(msuproj-qt update_icons)
+
 install(TARGETS msuproj-qt DESTINATION ${INSTALL_PATH_BIN} COMPONENT qt)
 set(CPACK_COMPONENT_QT_GROUP msuproj)
 
