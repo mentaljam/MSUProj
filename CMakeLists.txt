@@ -113,12 +113,12 @@ include_directories(${GDAL_INCLUDE_DIRS})
 ########################## Targets #########################
 
 ######## Library ########
-include_directories(src)
-add_subdirectory(src/ msuproj)
+include_directories(src/msuproj)
+add_subdirectory(src/msuproj msuproj)
 
 ##### Applications ######
 if(BUILD_CLI)
-    include_directories(src src/cli)
+    include_directories(src/cli)
     add_subdirectory(src/cli msuproj-cli)
 endif()
 if(BUILD_QT)
