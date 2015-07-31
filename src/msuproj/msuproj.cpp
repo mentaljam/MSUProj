@@ -1,5 +1,5 @@
-#include "msuproj.h"
-#include "logoimage.hpp"
+#include <msuproj.h>
+#include <logoimage.hpp>
 #include <msuproj_version.h>
 #include <ogrsf_frmts.h>
 #include <fstream>
@@ -458,15 +458,4 @@ unsigned int MSUMR::MSUProj::getGcpXSize() const
 unsigned int MSUMR::MSUProj::getSrcXSize() const
 {
     return srcXSize;
-}
-
-
-std::string MSUMR::MSUProj::comma2dot(std::string str) const
-{
-    unsigned int size = str.size();
-    for (unsigned int i = 0; i < size; ++i)
-        if (str[i] == ',')
-            str[i] = '.';
-
-    return str;
 }

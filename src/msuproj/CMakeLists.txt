@@ -5,7 +5,7 @@ if(NOT BUILD_CLI AND NOT BUILD_QT AND NOT BUILD_TOOLS AND NOT INSTALL_DEV)
     set(INSTALL_DEV ON)
 endif()
 
-set(MSUPROJ_SOURCES msuproj.cpp logoimage.hpp)
+file(GLOB MSUPROJ_SOURCES *.cpp *.hpp)
 
 if(WIN32)
     set(WIN_RC ${CMAKE_BINARY_DIR}/res/win32/msuproj.dll.rc)
