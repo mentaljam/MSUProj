@@ -45,7 +45,12 @@ MainWindow::~MainWindow()
 void MainWindow::showStdStatus(const QString message)
 {
     if (message.isEmpty())
-        ui->statusbar->showMessage(tr("Select input files."));
+    {
+        if (ui->startButton->isEnabled())
+            ui->statusbar->showMessage(tr("Ready to transform."));
+        else
+            ui->statusbar->showMessage(tr("Select input files."));
+    }
 }
 
 void MainWindow::on_imagePathButton_clicked()
@@ -236,6 +241,7 @@ void MainWindow::changeStartButtonState()
         ui->startButton->setEnabled(true);
     else
         ui->startButton->setEnabled(false);
+    this->showStdStatus(NULL);
 }
 
 void MainWindow::on_startButton_clicked()
