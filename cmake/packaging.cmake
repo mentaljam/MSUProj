@@ -1,50 +1,64 @@
-##################### Packaging rules ######################
+#################### Common information ####################
 
-#### Common
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MSUProj Project")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/description.txt)
 set(CPACK_PACKAGE_VENDOR  "NTs OMZ")
-set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <tpr@ntsomz.ru>")
+set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <petr@tsymbarovich.ru>")
 set(COPYRIGHT             "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
 set(WEB                   "https://github.com/mentaljam/MSUProj")
 
-set(CPACK_PACKAGE_EXECUTABLES  "msuproj-qt;MSUProj-Qt")
-set(CPACK_CREATE_DESKTOP_LINKS "msuproj-qt")
 
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
-                              "/\\\\3rd/"
-                              "/\\\\cmake/"
-                              "/\\\\.gitignore"
-                              "/\\\\CMakeLists.txt.user")
+################# Installation components ##################
 
-#### DEB
-file(STRINGS ${CPACK_PACKAGE_DESCRIPTION_FILE} PACKAGE_DESCRIPTION)
-set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n")
-foreach(STRING ${PACKAGE_DESCRIPTION})
-    string(REPLACE "\"" "\\\"" STRING ${STRING})
-    set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_DEBIAN_PACKAGE_DESCRIPTION} ${STRING}\n")
-endforeach()
+set(CPACK_COMPONENT_GROUP_MSUPROJ_DISPLAY_NAME "MSUProj")
+set(CPACK_COMPONENT_GROUP_MSUPROJ_EXPANDED TRUE)
 
-set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${WEB})
-set(CPACK_DEBIAN_PACKAGE_SECTION  "Science")
+    set(CPACK_COMPONENT_LIB_GROUP        msuproj)
+    set(CPACK_COMPONENT_LIB_DEPENDS      doc)
+    set(CPACK_COMPONENT_LIB_DISPLAY_NAME "Shared Library")
+    set(CPACK_COMPONENT_LIB_DESCRIPTION  "MSUProj shared library")
 
-#### RPM
-set(CPACK_RPM_PACKAGE_LICENSE "Zlib")
-set(CPACK_RPM_PACKAGE_URL     ${WEB})
+    set(CPACK_COMPONENT_CLI_GROUP        msuproj)
+    set(CPACK_COMPONENT_CLI_DEPENDS      doc)
+    set(CPACK_COMPONENT_CLI_DISPLAY_NAME "MSUProj-CLI")
+    set(CPACK_COMPONENT_CLI_DESCRIPTION  "MSUProj command line interface application")
 
-#### NSIS
-set(CPACK_NSIS_MUI_ICON ${CMAKE_BINARY_DIR}/res/win32/${CMAKE_PROJECT_NAME}.ico)
-set(CPACK_NSIS_INSTALLED_ICON_NAME "msuproj-qt.exe")
-set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-set(CPACK_NSIS_MODIFY_PATH ON)
-set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
-set(CPACK_NSIS_MUI_FINISHPAGE_RUN msuproj-qt)
-set(CPACK_NSIS_CONTACT ${CPACK_PACKAGE_CONTACT})
-set(CPACK_NSIS_URL_INFO_ABOUT ${WEB})
-set(CPACK_NSIS_MENU_LINKS
-    "https://github.com/mentaljam/MSUProj"        "Project Page"
-    "https://github.com/mentaljam/MSUProj/issues" "Issues and Suggestions"
-    "http://meteor.robonuka.ru/"                  "Robonuka Meteor-M N2 Site")
+    set(CPACK_COMPONENT_QT_GROUP         msuproj)
+    set(CPACK_COMPONENT_QT_DEPENDS       doc)
+    set(CPACK_COMPONENT_QT_DISPLAY_NAME  "MSUProj-Qt")
+    set(CPACK_COMPONENT_QT_DESCRIPTION   "MSUProj graphical user interface application")
+
+    set(CPACK_COMPONENT_RUNTIME_GROUP        msuproj)
+    set(CPACK_COMPONENT_RUNTIME_DEPENDS      doc)
+    set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "Runtime")
+    set(CPACK_COMPONENT_RUNTIME_DESCRIPTION  "Thirdparty runtime libraries (GDAL, GEOS, Proj, Qt, C++ standard library)")
+
+set(CPACK_COMPONENT_GROUP_DEV_DISPLAY_NAME "Development")
+
+    set(CPACK_COMPONENT_LIBDEV_GROUP         dev)
+    set(CPACK_COMPONENT_LIBDEV_DISABLED      ON)
+    set(CPACK_COMPONENT_LIBDEV_DEPENDS       doc)
+    set(CPACK_COMPONENT_LIBDEV_DISPLAY_NAME  "Static Library")
+    set(CPACK_COMPONENT_LIBDEV_DESCRIPTION   "MSUProj static library")
+
+    set(CPACK_COMPONENT_HEADERS_GROUP        dev)
+    set(CPACK_COMPONENT_HEADERS_DISABLED     ON)
+    set(CPACK_COMPONENT_HEADERS_DEPENDS      doc)
+    set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Headers")
+    set(CPACK_COMPONENT_HEADERS_DESCRIPTION  "MSUProj library headers")
+
+set(CPACK_COMPONENT_GROUP_TOOLS_DISPLAY_NAME "Tools")
+
+    set(CPACK_COMPONENT_GCPTHINER_GROUP        tools)
+    set(CPACK_COMPONENT_GCPTHINER_DISABLED     ON)
+    set(CPACK_COMPONENT_GCPTHINER_DEPENDS      doc)
+    set(CPACK_COMPONENT_GCPTHINER_DISPLAY_NAME "GCPThiner")
+    set(CPACK_COMPONENT_GCPTHINER_DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files")
+
+if(BUILD_SHARED_LIBS)
+    list(APPEND CPACK_COMPONENT_CLI_DEPENDS lib)
+    list(APPEND CPACK_COMPONENT_QT_DEPENDS lib)
+endif()
 
 
 #################### Additional targets ####################
@@ -53,6 +67,7 @@ if(WIN32)
 
     if(INSTALL_RUNTIME)
 
+        list(APPEND CPACK_COMPONENTS_ALL runtime)
         get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
         string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
         file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
@@ -114,57 +129,57 @@ if(WIN32)
         message(STATUS "WARNING! Before building package make shure manual have been compiled")
         install(CODE "execute_process(COMMAND ${CMAKE_BUILD_TOOL} manual)" COMPONENT man)
         install(FILES ${CHM_FILE} DESTINATION ${INSTALL_PATH_DOCS} COMPONENT man OPTIONAL)
+        list(APPEND CPACK_COMPONENTS_ALL man)
     endif()
 
 endif()
 
 file(GLOB LICENSE_FILES LICENSE*)
 install(FILES ${LICENSE_FILES} TODO.txt CHANGELOG.txt
-        DESTINATION ${INSTALL_PATH_DOCS} COMPONENT doc)
+        DESTINATION ${INSTALL_PATH_DOCS}
+        COMPONENT doc)
 set(CPACK_COMPONENT_DOC_HIDDEN ON)
+list(APPEND CPACK_COMPONENTS_ALL doc)
 
 
-################# Installation components ##################
+##################### Packaging rules ######################
 
-set(CPACK_COMPONENT_GROUP_MSUPROJ_DISPLAY_NAME "MSUProj")
-set(CPACK_COMPONENT_GROUP_MSUPROJ_EXPANDED TRUE)
+#### Common
+set(CPACK_PACKAGE_EXECUTABLES  "msuproj-qt;MSUProj-Qt")
+set(CPACK_CREATE_DESKTOP_LINKS "msuproj-qt")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
+                              "/\\\\.tx/"
+                              "/\\\\3rd/"
+                              "/\\\\cmake/OMZModules/OMZDebuildConf.cmake"
+                              "/\\\\.gitignore"
+                              "/\\\\.gitmodules"
+                              "/\\\\CMakeLists.txt.user")
 
-    set(CPACK_COMPONENT_LIB_GROUP        msuproj)
-    set(CPACK_COMPONENT_LIB_DISPLAY_NAME "Shared Library")
-    set(CPACK_COMPONENT_LIB_DESCRIPTION  "MSUProj shared library")
-
-    set(CPACK_COMPONENT_CLI_GROUP        msuproj)
-    set(CPACK_COMPONENT_CLI_DISPLAY_NAME "MSUProj-CLI")
-    set(CPACK_COMPONENT_CLI_DESCRIPTION  "MSUProj command line interface application")
-
-    set(CPACK_COMPONENT_QT_GROUP         msuproj)
-    set(CPACK_COMPONENT_QT_DISPLAY_NAME  "MSUProj-Qt")
-    set(CPACK_COMPONENT_QT_DESCRIPTION   "MSUProj graphical user interface application")
-
-    set(CPACK_COMPONENT_RUNTIME_GROUP        msuproj)
-    set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "Runtime")
-    set(CPACK_COMPONENT_RUNTIME_DESCRIPTION  "Thirdparty runtime libraries (GDAL, GEOS, Proj, Qt, C++ standard library)")
-
-set(CPACK_COMPONENT_GROUP_DEV_DISPLAY_NAME "Development")
-
-    set(CPACK_COMPONENT_LIBDEV_GROUP         dev)
-    set(CPACK_COMPONENT_LIBDEV_DISABLED      ON)
-    set(CPACK_COMPONENT_LIBDEV_DISPLAY_NAME  "Static Library")
-    set(CPACK_COMPONENT_LIBDEV_DESCRIPTION   "MSUProj static library")
-
-    set(CPACK_COMPONENT_HEADERS_GROUP        dev)
-    set(CPACK_COMPONENT_HEADERS_DISABLED     ON)
-    set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Headers")
-    set(CPACK_COMPONENT_HEADERS_DESCRIPTION  "MSUProj library headers")
-
-set(CPACK_COMPONENT_GROUP_TOOLS_DISPLAY_NAME "Tools")
-
-    set(CPACK_COMPONENT_GCPTHINER_GROUP        tools)
-    set(CPACK_COMPONENT_GCPTHINER_DISABLED     ON)
-    set(CPACK_COMPONENT_GCPTHINER_DISPLAY_NAME "GCPThiner")
-    set(CPACK_COMPONENT_GCPTHINER_DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files")
-
-if(BUILD_SHARED_LIBS)
-    set(CPACK_COMPONENT_CLI_DEPENDS lib)
-    set(CPACK_COMPONENT_QT_DEPENDS lib)
+#### DEB
+read_debian_description()
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${WEB})
+if(BUILD_PPA_PACKAGE)
+    set(CPACK_DEBIAN_BUILD_DEPENDS debhelper cmake qtbase5-dev qtchooser libgdal-dev)
+    set(CPACK_DEBIAN_DISTRIBUTION_NAMES vivid)
+    set(CPACK_DEBIAN_CHANGELOG "  * Read on project page ${WEB}")
+    include(OMZDebuildConf)
 endif()
+set(CPACK_DEBIAN_PACKAGE_SECTION  "Science")
+
+#### RPM
+set(CPACK_RPM_PACKAGE_LICENSE "Zlib")
+set(CPACK_RPM_PACKAGE_URL     ${WEB})
+
+#### NSIS
+set(CPACK_NSIS_MUI_ICON ${CMAKE_BINARY_DIR}/res/win32/${CMAKE_PROJECT_NAME}.ico)
+set(CPACK_NSIS_INSTALLED_ICON_NAME "msuproj-qt.exe")
+set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+set(CPACK_NSIS_MODIFY_PATH ON)
+set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
+set(CPACK_NSIS_MUI_FINISHPAGE_RUN msuproj-qt)
+set(CPACK_NSIS_CONTACT ${CPACK_PACKAGE_CONTACT})
+set(CPACK_NSIS_URL_INFO_ABOUT ${WEB})
+set(CPACK_NSIS_MENU_LINKS
+    "https://github.com/mentaljam/MSUProj"        "Project Page"
+    "https://github.com/mentaljam/MSUProj/issues" "Issues and Suggestions"
+    "http://meteor.robonuka.ru/"                  "Robonuka Meteor-M N2 Site")

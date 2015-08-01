@@ -48,8 +48,10 @@ target_link_libraries(msuproj-qt msuproj Qt5::Widgets)
 
 add_dependencies(msuproj-qt update_icons)
 
-install(TARGETS msuproj-qt DESTINATION ${INSTALL_PATH_BIN} COMPONENT qt)
-set(CPACK_COMPONENT_QT_GROUP msuproj)
+install(TARGETS msuproj-qt
+        DESTINATION ${INSTALL_PATH_BIN}
+        COMPONENT qt)
+set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} qt PARENT_SCOPE)
 
 
 #################### Linux desktop entry ###################
@@ -61,5 +63,6 @@ if(UNIX)
             DESTINATION share/applications
             COMPONENT qt)
     install(FILES ${RESOURCES_DIR}/icons/${CMAKE_PROJECT_NAME}.svg
-            DESTINATION share/icons/hicolor/scalable/apps)
+            DESTINATION share/icons/hicolor/scalable/apps
+            COMPONENT qt)
 endif()

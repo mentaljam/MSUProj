@@ -16,4 +16,7 @@ endif()
 add_executable(msuproj-cli ${MSUPROJCLI_SOURCES})
 target_link_libraries(msuproj-cli msuproj)
 
-install(TARGETS msuproj-cli DESTINATION ${INSTALL_PATH_BIN} COMPONENT cli)
+install(TARGETS msuproj-cli
+        DESTINATION ${INSTALL_PATH_BIN}
+        COMPONENT cli)
+set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} cli PARENT_SCOPE)
