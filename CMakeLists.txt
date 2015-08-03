@@ -16,6 +16,7 @@ set(DOXYGEN_EXECUTABLE "" CACHE FILEPATH "Doxygen path")
 set(GIT      "" CACHE FILEPATH "Git path (need for version number defining)")
 set(HHC      "" CACHE FILEPATH "HTML Help generator path")
 set(PDFLATEX "" CACHE FILEPATH "PDFLatex path")
+set(CONVERT  "" CACHE FILEPATH "ImageMagick convert utility")
 
 #### Documentation
 set(GENERATE_HTML     NO CACHE STRING "Documentation in HTML")
@@ -85,13 +86,10 @@ set(INSTALL_PATH_LIB lib)
 
 ###################### CMake modules #######################
 
-if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/OMZModules)
-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/OMZModules)
-endif()
+find_package(OMZModules)
 include(OMZProjectPreConf)
 include(OMZDoxyConf)
 include(OMZFunctions)
-include(OMZIconsConf)
 
 
 ####################### GDAL library #######################

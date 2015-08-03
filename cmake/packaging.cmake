@@ -150,18 +150,30 @@ set(CPACK_CREATE_DESKTOP_LINKS "msuproj-qt")
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
                               "/\\\\.tx/"
                               "/\\\\3rd/"
-                              "/\\\\cmake/OMZModules/OMZDebuildConf.cmake"
+                              "/\\\\cmake/OMZModules/"
                               "/\\\\.gitignore"
                               "/\\\\.gitmodules"
                               "/\\\\CMakeLists.txt.user")
 
 #### DEB
 read_debian_description()
-set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${WEB})
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE  ${WEB})
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 if(BUILD_PPA_PACKAGE)
-    set(CPACK_DEBIAN_BUILD_DEPENDS debhelper cmake qtbase5-dev qtchooser libgdal-dev)
-    set(CPACK_DEBIAN_DISTRIBUTION_NAMES vivid)
+    set(CPACK_DEBIAN_BUILD_DEPENDS omzmodules libgdal-dev
+        CACHE STRING "Common debian source build dependencies")
+    set(CPACK_DEBIAN_QT_BUILD_DEPENDS imagemagick qttools5-dev-tools qtbase5-dev librsvg2-bin libxml2
+        CACHE STRING "Qt debian source build dependencies")
+    set(CPACK_DEBIAN_DISTRIBUTION_NAMES vivid wily
+        CACHE STRING "PPA distributions names")
+    set(CPACK_DEBIAN_PPA "ppa:mentaljam/amigos"
+        CACHE STRING "PPA name")
     set(CPACK_DEBIAN_CHANGELOG "  * Read on project page ${WEB}")
+    set(CPACK_DEBIAN_CMAKE_ARGUMENTS -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+                                     -DBUILD_CLI=${BUILD_CLI}
+                                     -DBUILD_QT=${BUILD_QT}
+                                     -DBUILD_TOOLS=${BUILD_TOOLS}
+                                     -DV_DATE=${V_DATE})
     include(OMZDebuildConf)
 endif()
 set(CPACK_DEBIAN_PACKAGE_SECTION  "Science")
