@@ -45,7 +45,6 @@ if(BUILD_SHARED_LIBS)
                 LIBRARY DESTINATION ${INSTALL_PATH_LIB}
                 COMPONENT lib)
     endif()
-    set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} lib PARENT_SCOPE)
 
     if(INSTALL_DEV)
 
@@ -89,7 +88,6 @@ if(INSTALL_DEV)
     install(EXPORT MSUProjStaticConfig
             DESTINATION ${INSTALL_PATH_CMAKE}
             COMPONENT libdev)
-    set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} libdev PARENT_SCOPE)
 
     list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/include/msuproj.h)
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/include/msuproj.h)
@@ -105,6 +103,5 @@ if(INSTALL_DEV)
     install(FILES ${HDR_OUT_FILES}
             DESTINATION ${INSTALL_PATH_DEV}
             COMPONENT headers)
-    set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} headers PARENT_SCOPE)
 
 endif()

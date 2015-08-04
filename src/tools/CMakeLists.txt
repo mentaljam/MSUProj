@@ -8,4 +8,3 @@ add_executable(gcp-thiner gcp-thiner.cpp)
 install(TARGETS gcp-thiner
         DESTINATION ${INSTALL_PATH_BIN}
         COMPONENT gcpthiner OPTIONAL)
-set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} gcpthiner PARENT_SCOPE)

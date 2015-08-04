@@ -55,11 +55,6 @@ set(CPACK_COMPONENT_GROUP_TOOLS_DISPLAY_NAME "Tools")
     set(CPACK_COMPONENT_GCPTHINER_DISPLAY_NAME "GCPThiner")
     set(CPACK_COMPONENT_GCPTHINER_DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files")
 
-if(BUILD_SHARED_LIBS)
-    list(APPEND CPACK_COMPONENT_CLI_DEPENDS lib)
-    list(APPEND CPACK_COMPONENT_QT_DEPENDS lib)
-endif()
-
 
 #################### Additional targets ####################
 
@@ -67,7 +62,6 @@ if(WIN32)
 
     if(INSTALL_RUNTIME)
 
-        list(APPEND CPACK_COMPONENTS_ALL runtime)
         get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
         string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
         file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
@@ -129,7 +123,6 @@ if(WIN32)
         message(STATUS "WARNING! Before building package make shure manual have been compiled")
         install(CODE "execute_process(COMMAND ${CMAKE_BUILD_TOOL} manual)" COMPONENT man)
         install(FILES ${CHM_FILE} DESTINATION ${INSTALL_PATH_DOCS} COMPONENT man OPTIONAL)
-        list(APPEND CPACK_COMPONENTS_ALL man)
     endif()
 
 endif()
@@ -139,7 +132,6 @@ install(FILES ${LICENSE_FILES} TODO.txt CHANGELOG.txt
         DESTINATION ${INSTALL_PATH_DOCS}
         COMPONENT doc)
 set(CPACK_COMPONENT_DOC_HIDDEN ON)
-list(APPEND CPACK_COMPONENTS_ALL doc)
 
 
 ##################### Packaging rules ######################
@@ -154,6 +146,10 @@ set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/"
                               "/\\\\.gitignore"
                               "/\\\\.gitmodules"
                               "/\\\\CMakeLists.txt.user")
+if(BUILD_SHARED_LIBS)
+    list(APPEND CPACK_COMPONENT_CLI_DEPENDS lib)
+    list(APPEND CPACK_COMPONENT_QT_DEPENDS lib)
+endif()
 
 #### DEB
 read_debian_description()

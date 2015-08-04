@@ -80,7 +80,6 @@ target_link_libraries(msuproj-qt msuproj Qt5::Widgets)
 install(TARGETS msuproj-qt
         DESTINATION ${INSTALL_PATH_BIN}
         COMPONENT qt)
-set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} qt PARENT_SCOPE)
 
 
 #################### Linux desktop entry ###################
