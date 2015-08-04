@@ -2,7 +2,7 @@
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 #include <msuproj.h>
-//#include <settings.h>
+#include <settings.h>
 #include <settingswindow.h>
 #include <QResizeEvent>
 #include <QMessageBox>
@@ -10,7 +10,7 @@
 #include <QDesktopWidget>
 
 extern MSUMR::MSUProj msuProjObj;
-//extern settings settingsObj;
+extern settings settingsObj;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,6 +24,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statusbar->showMessage(tr("Select input files."));
     ui->imageView->setScene(graphicsScene);
     openImageDialog->setFileMode(QFileDialog::ExistingFile);
+    QString curPath;
+    if (settingsObj.usePreferedInputPath())
+        curPath = settingsObj.getPath(settings::INPUT_PREFERED);
+    else
+        curPath = settingsObj.getPath(settings::INPUT_PREVIOUS);
+    openImageDialog->setDirectory(curPath);
 
     connect(ui->statusbar, &QStatusBar::messageChanged, this, &MainWindow::showStdStatus);
     connect(ui->previewBox, &QGroupBox::toggled, this, &MainWindow::setPreview);
@@ -39,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    settingsObj.setPath(settings::INPUT_PREVIOUS, openImageDialog->directory().path());
     delete ui;
 }
 
@@ -114,7 +121,12 @@ void MainWindow::on_gcpPathButton_clicked()
 {
     QString curPath = ui->gcpPathEdit->text();
     if (curPath.isEmpty())
-        curPath = ui->imagePathEdit->text();
+    {
+        if (settingsObj.usePreferedInputPath())
+            curPath = settingsObj.getPath(settings::INPUT_PREFERED);
+        else
+            curPath = settingsObj.getPath(settings::INPUT_PREVIOUS);
+    }
     QFileDialog openGCPs(this, tr("Select input GCP file"),
                          QFileInfo(curPath).path(),
                          tr("Meteor-M2 GCP file (*.gcp);;All files (*.*)"));
@@ -169,7 +181,12 @@ void MainWindow::on_outPathButton_clicked()
 {
     QString curPath = ui->outPathEdit->text();
     if (curPath.isEmpty())
-        curPath = ui->imagePathEdit->text();
+    {
+        if (settingsObj.usePreferedInputPath())
+            curPath = settingsObj.getPath(settings::INPUT_PREFERED);
+        else
+            curPath = settingsObj.getPath(settings::INPUT_PREVIOUS);
+    }
     QFileDialog outFile(this, tr("Specify output file"),
                         QFileInfo(curPath).path(),
                         tr("GeoTiff images (*.tif)"));

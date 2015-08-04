@@ -3,10 +3,15 @@
 #include <QLocale>
 #include <QDir>
 
+
 settings::settings() :
     _settings(QSettings::IniFormat, QSettings::UserScope,
               "NTsOMZ", "MSUProj-Qt"),
-    _qmPath("")
+    _qmPath(""),
+    _pathsKeys{
+                  "History/InputPath",
+                  "InputPath"
+              }
 {
     QStringList qmPaths;
     qmPaths << "i18n"
@@ -18,6 +23,11 @@ settings::settings() :
             _qmPath = qmPath;
             break;
         }
+}
+
+void settings::clearSettings()
+{
+    _settings.clear();
 }
 
 QStringList settings::getLocalesList() const
@@ -58,4 +68,28 @@ void settings::setLocale(const QString &locale)
 void settings::unsetLocale()
 {
     _settings.remove("locale");
+}
+
+QString settings::getPath(const settings::PATHS_TYPES type) const
+{
+    if (type < PATHS_TYPES_SIZE)
+        return _settings.value(_pathsKeys[type]).toString();
+    else
+        return QString();
+}
+
+void settings::setPath(const settings::PATHS_TYPES type, const QString &value)
+{
+    if (type < PATHS_TYPES_SIZE)
+        _settings.setValue(_pathsKeys[type], value);
+}
+
+bool settings::usePreferedInputPath() const
+{
+    return _settings.value("UsePreferedPath").toBool();
+}
+
+void settings::setUsePreferedInputPath(const bool value)
+{
+    _settings.setValue("UsePreferedPath", value);
 }

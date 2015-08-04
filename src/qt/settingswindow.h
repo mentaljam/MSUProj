@@ -18,6 +18,9 @@ public:
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
+    void on_inputPathPreferedButton_toggled(bool checked);
+
+    void on_inputPathButton_clicked();
 
 private:
     Ui::SettingsWindow *ui;

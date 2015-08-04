@@ -1,6 +1,8 @@
 #include "settingswindow.h"
 #include "ui_settingswindow.h"
 #include "settings.h"
+#include <QFileDialog>
+
 
 extern settings settingsObj;
 
@@ -24,6 +26,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
         if (hasLocaleSet && localeStr == curLocale)
             ui->langBox->setCurrentIndex(ui->langBox->count() - 1);
     }
+
+    ui->inputPathEdit->setText(settingsObj.getPath(settings::INPUT_PREFERED));
+    ui->inputPathPreferedButton->setChecked(settingsObj.usePreferedInputPath());
 }
 
 SettingsWindow::~SettingsWindow()
@@ -41,8 +46,24 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
             settingsObj.setLocale(locales[curIndex - 1]);
         else
             settingsObj.unsetLocale();
+        settingsObj.setUsePreferedInputPath(ui->inputPathPreferedButton->isChecked());
+        settingsObj.setPath(settings::INPUT_PREFERED, ui->inputPathEdit->text());
         break;
     default:
         break;
     }
+}
+
+void SettingsWindow::on_inputPathPreferedButton_toggled(bool checked)
+{
+    ui->inputPathEdit->setEnabled(checked);
+    ui->inputPathButton->setEnabled(checked);
+}
+
+void SettingsWindow::on_inputPathButton_clicked()
+{
+    QFileDialog inputPathDialog(this, tr("Select prefered input folder"), ui->inputPathEdit->text());
+    inputPathDialog.setFileMode(QFileDialog::DirectoryOnly);
+    if(inputPathDialog.exec())
+        ui->inputPathEdit->setText(inputPathDialog.selectedUrls()[0].path());
 }
