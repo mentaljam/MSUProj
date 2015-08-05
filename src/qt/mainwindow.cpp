@@ -162,6 +162,7 @@ void MainWindow::onGCPPathChanged()
             ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step") + QString(" %1").arg(msuProjObj.getGcpYStep()));
             ui->utmZone->setText(tr("UTM zone") + QString(" %1").arg(msuProjObj.getUTM().c_str()));
             this->changeStartButtonState();
+            this->changeOutName();
         }
         else
         {
