@@ -8,10 +8,10 @@ settings::settings() :
     _settings(QSettings::IniFormat, QSettings::UserScope,
               "NTsOMZ", "MSUProj-Qt"),
     _qmPath(""),
-    _pathsKeys{
+    _pathsKeys({
                   "History/InputPath",
                   "InputPath"
-              }
+              })
 {
     QStringList qmPaths;
     qmPaths << "i18n"
