@@ -133,4 +133,5 @@ endif()
 ##################### Post configuration ###################
 
 include(packaging)
+include(gh-page)
 include(OMZProjectPostConf)

@@ -12,37 +12,37 @@
 
 namespace MSUMR {
 
-static const unsigned short lineWidth = 1568;
+static const unsigned short lineWidth = 1568; ///< The MSU-MR line width
 
 /**
- * @brief Enumeration of exit codes
+ * @brief The enumeration of exit codes
  */
 enum retCode
 {
     success, ///< Successful exit
-    errSRC,  ///< Error of reading of source raster
-    errDST,  ///< Error of creation of destination raster
-    errGCP,  ///< Error of reading of GCP file
-    errStat  ///< Error of reading stat file
+    errSRC,  ///< Error of reading of a source raster
+    errDST,  ///< Error of creation of a destination raster
+    errGCP,  ///< Error of reading of a GCP file
+    errStat  ///< Error of reading a stat file
 };
 
 /**
- * @brief Ground control point (GCP) structure
+ * @brief The Ground control point (GCP) structure
  */
 struct gcp
 {
-    int x;      ///< The row of the source data matrix
-    int y;      ///< The line of the source data matrix
-    double lon; ///< Latitude
-    double lat; ///< Longitude
+    int x;      ///< A row of a source data matrix
+    int y;      ///< A line of a source data matrix
+    double lon; ///< A latitude
+    double lat; ///< A longitude
 };
 
 /**
- * @ru
- * @brief Метод замены десятичного разделителя:
- * запятые (,) на точки (.)
- * @param str Исходная строка
- * @return Преобразованная строка
+ * @brief The decimal point replacement function
+ *
+ * Replaces all commas (,) of a source string to dots (.)
+ * @param str A source string
+ * @return An output string
  */
 const std::string comma2dot(std::string str);
 

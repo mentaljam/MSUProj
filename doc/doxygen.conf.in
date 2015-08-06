@@ -6,9 +6,7 @@ PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = @V_VERSION@
 INPUT                  = @DOXYGEN_INPUT@
 OUTPUT_DIRECTORY       = @DOC_OUT@
-OUTPUT_LANGUAGE        = @DOC_LANGUAGE@
-ALIASES                = ru=\~russian \
-                         en=\~english
+OUTPUT_LANGUAGE        = English
 
 #---------------------------------------------------------------------------
 # Build related configuration options
@@ -40,10 +38,10 @@ INTERNAL_DOCS          = NO
 #---------------------------------------------------------------------------
 
 FILE_PATTERNS          = *.h *.h.in *.hpp *.cpp *.md *.txt
-#RECURSIVE              = NO
-EXCLUDE                = rsml.h
+RECURSIVE              = YES
+#EXCLUDE                =
 #EXCLUDE_SYMLINKS       = NO
-#EXCLUDE_PATTERNS       =
+EXCLUDE_PATTERNS       = CMakeLists.txt
 #IMAGE_PATH             =
 USE_MDFILE_AS_MAINPAGE = README.md
 
