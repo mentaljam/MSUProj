@@ -19,13 +19,8 @@ set(PDFLATEX "" CACHE FILEPATH "PDFLatex path")
 set(CONVERT  "" CACHE FILEPATH "ImageMagick convert utility")
 
 #### Documentation
-set(GENERATE_HTML     NO CACHE STRING "Documentation in HTML")
-set(GENERATE_HTMLHELP NO CACHE STRING "Documentation in HTML Help")
-set(GENERATE_LATEX    NO CACHE STRING "Documentation in LaTeX")
-set(GENERATE_PDF      NO CACHE STRING "Documentation in PDF")
-set(GENERATE_MAN      NO CACHE STRING "Documentation in MAN")
-set(GENERATE_RTF      NO CACHE STRING "Documentation in RTF")
-set(GENERATE_XML      NO CACHE STRING "Documentation in XML")
+# variants: html, htmlhelp, latex, pdf, man, rtf, xml, docbook
+set(DOXYGEN_FORMATS "" CACHE STRING "Generated documentation formats")
 
 #### Install development files
 option(INSTALL_DEV "Install development files" OFF)
@@ -133,5 +128,5 @@ endif()
 ##################### Post configuration ###################
 
 include(packaging)
-include(gh-page)
+include(doxygen)
 include(OMZProjectPostConf)

@@ -89,7 +89,7 @@ public:
     /**
      * @brief A method of getting an UTM zone string.
      *
-     * @return A UTM zone string in format <hemisphere><zone number>.
+     * @return A UTM zone string in format \<hemisphere\>\<zone number\>.
      * For example 'N38'.
      */
     const std::string getUTM() const;
