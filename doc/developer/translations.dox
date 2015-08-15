@@ -1,0 +1,51 @@
+/**
+
+@page translations Translation instructions
+@brief This page contains instructions for translators.
+
+Resources:
+- @ref msuproj-qt_ts
+- @ref msuproj-qt_desktop
+- @ref msuproj-qt_manual
+
+All resources can be translated on the [Transifex](https://www.transifex.com/projects/p/msuproj/) project page.
+
+___
+
+@section msuproj-qt_ts MSUProj-Qt Interface (Qt translations)
+
+This resource is represented by the Qt translation file (.ts).
+This file can be translated in Qt Linguist - it shows a GUI preview with translated strings.
+For this you need to download MSUProj sources from its [GitHub](http://github.com/mentaljam/MSUProj) page.
+___
+@section msuproj-qt_desktop MSUProj-Qt Linux Desktop Entry
+
+This is a Linux Desktop Entry file (.desktop). Transifex offers to translate 3 strings:
+- GenericName - a full description for the application
+- Name - an application name (MSUProj-Qt)
+- Icon - an application icon (msuproj)
+
+So you do not need to translate the <em>"Name"</em> and <em>"Icon"</em> strings, translate only the <b>"GenericName"</b> string.
+___
+@section msuproj-qt_manual MSUProj-Qt Manual
+
+This is a doxygen source file. Markdown and HTML tags are used for marking text,
+so be careful with words that starts with <b>"@"</b> and that are in <b>"<>"</b> brackets.
+
+For example in
+
+@code
+@section msuproj-qt_manual MSUProj-Qt Manual
+@endcode
+
+only the <em>"MSUProj-Qt Manual"</em> part should be translated
+
+and in
+
+@code
+<em>some italic text</em>
+@endcode
+
+only the <em>"some italic text"</em> part.
+
+**/

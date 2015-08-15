@@ -12,15 +12,13 @@ set(ARCH "" CACHE STRING "Build x86 or x86-64 application")
 
 #### Additional packages paths
 # set if cmake can not find one of them
-set(DOXYGEN_EXECUTABLE "" CACHE FILEPATH "Doxygen path")
-set(GIT      "" CACHE FILEPATH "Git path (need for version number defining)")
-set(HHC      "" CACHE FILEPATH "HTML Help generator path")
-set(PDFLATEX "" CACHE FILEPATH "PDFLatex path")
-set(CONVERT  "" CACHE FILEPATH "ImageMagick convert utility")
-
-#### Documentation
-# variants: html, htmlhelp, latex, pdf, man, rtf, xml, docbook
-set(DOXYGEN_FORMATS "" CACHE STRING "Generated documentation formats")
+set(DOXYGEN_EXECUTABLE  "" CACHE FILEPATH "Doxygen path")
+set(GIT_EXECUTABLE      "" CACHE FILEPATH "Git path (need for version number defining)")
+set(HHC_EXECUTABLE      "" CACHE FILEPATH "HTML Help generator path")
+set(QHG_EXECUTABLE      "" CACHE FILEPATH "QHP generator path")
+set(QCOLGEN_EXECUTABLE  "" CACHE FILEPATH "Qt collection generator path")
+set(PDFLATEX_EXECUTABLE "" CACHE FILEPATH "PDFLatex path")
+set(CONVERT_EXECUTABLE  "" CACHE FILEPATH "ImageMagick convert utility")
 
 #### Install development files
 option(INSTALL_DEV "Install development files" OFF)
@@ -37,14 +35,19 @@ option(BUILD_TOOLS "Build additional tools" OFF)
 #### Install runtime
 option(INSTALL_RUNTIME "Install runtime libraries on Windows" ON)
 
+#### Install documentation
+option(INSTALL_DOCS "Install documentation" ON)
+
 #### Compiler flags
 set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 
 
 ############### Setting additional variables ###############
 
-set(QT ${BUILD_QT})
 set(CMAKE_BUILD_TYPE "Release")
+if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    set(GCC_FLAGS "${GCC_FLAGS} -s")
+endif()
 
 #### GDAL paths (on Windows)
 set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")
@@ -67,12 +70,14 @@ if(WIN32)
     set(INSTALL_PATH_BIN   .)
     set(INSTALL_PATH_I18N  i18n)
     set(INSTALL_PATH_DOCS  doc/${CMAKE_PROJECT_NAME})
+    set(INSTALL_PATH_MAN   help)
     set(INSTALL_PATH_DEV   include/${CMAKE_PROJECT_NAME})
     set(INSTALL_PATH_CMAKE cmake)
 else()
     set(INSTALL_PATH_BIN   bin)
     set(INSTALL_PATH_I18N  share/${CMAKE_PROJECT_NAME}/i18n)
     set(INSTALL_PATH_DOCS  share/${CMAKE_PROJECT_NAME}/doc)
+    set(INSTALL_PATH_MAN   share/${CMAKE_PROJECT_NAME}/help)
     set(INSTALL_PATH_DEV   share/include/${CMAKE_PROJECT_NAME})
     set(INSTALL_PATH_CMAKE share/${CMAKE_PROJECT_NAME}/cmake)
 endif()
@@ -127,6 +132,6 @@ endif()
 
 ##################### Post configuration ###################
 
-include(packaging)
 include(doxygen)
+include(packaging)
 include(OMZProjectPostConf)

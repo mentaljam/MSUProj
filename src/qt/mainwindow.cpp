@@ -4,10 +4,11 @@
 #include <msuproj.h>
 #include <settings.h>
 #include <settingswindow.h>
+#include <helpwindow.h>
 #include <QResizeEvent>
 #include <QMessageBox>
-#include <QTextBrowser>
 #include <QDesktopWidget>
+
 
 extern MSUMR::MSUProj msuProjObj;
 extern settings settingsObj;
@@ -300,12 +301,12 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, tr("About MSUProj-Qt"),
                        QString("<p>%1</p><p>%2</p>"
-                               "<p><tr><td><i>%3:</i></td><td></td><td>" VERSION_MSUPROJ " (" VER_DATE_MSUPROJ ")</td></tr>"
-                               "<tr><td><i>%4:</i></td><td></td><td>%5 &lt;<a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
+                               "<p><tr><td><i>%3:</i></td><td></td><td align='right'>" VERSION_MSUPROJ " (" VER_DATE_MSUPROJ ")</td></tr>"
+                               "<tr><td><i>%4:</i></td><td></td><td align='right'>%5 <a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
                                                                     "&body=Version: " VERSION_MSUPROJ "\nPlatform: " VER_PLATFORM_MSUPROJ "\n"
-                                                                    "Architecture: " VER_ARCH_MSUPROJ "\n\n'>tpr@ntsomz.ru</a>&gt;</td></tr>"
-                               "<tr><td><i>%6 </i></td><td></td><td><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr>"
-                               "<tr><td><i>%7 </i></td><td></td><td><a href='https://www.transifex.com/projects/p/msuproj/'>Transifex</a></td></tr></p>")
+                                                                    "Architecture: " VER_ARCH_MSUPROJ "\n\n'>&lt;tpr@ntsomz.ru&gt;</a></td></tr>"
+                               "<tr><td><i>%6 </i></td><td></td><td align='right'><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr>"
+                               "<tr><td><i>%7 </i></td><td></td><td align='right'><a href='https://www.transifex.com/projects/p/msuproj/'>Transifex</a></td></tr></p>")
                        .arg(tr("MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M."),
                             tr("This is a Qt graphical interface for MSUProj."),
                             tr("Version"),
@@ -317,53 +318,10 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionReference_triggered()
 {
     ui->actionReference->setDisabled(true);
-
-    QString refText;
-    refText +=  QString("<table  cellpadding=4><tr><td colspan=2><h3>%1</h3></td></tr>"
-                        "<tr><td><b>%2</b>:</td><td>%3</td></tr>"
-                        "<tr><td><b>%4</b>:</td><td>%5</td></tr>"
-                        "<tr><td><b>%6</b>:</td><td>%7</td></tr>")
-                .arg(tr("Input files"),
-                     tr("Input file"), tr("A JPG or BMP MSU-MR image produced with <i>LRPToffLineDecoder</i>."),
-                     tr("Show preview"), tr("Toggle this checkbox to show or hide the preview for an input image. "
-                                            "For large images a preview can consume much RAM."),
-                     tr("GCPs file"), tr("A text file with ground control points produced with <i>LRPToffLineDecoder</i>. "
-                                         "Application will automatically try to find it based on source image name - "
-                                         "You need to specify GCP file manually if it has different name."));
-
-    refText +=  QString("<tr><td colspan=2><h3>%1</h3></td></tr>"
-                        "<tr><td><b>%2</b>:</td><td>%3</td></tr>"
-                        "<tr><td><b>%4</b>:</td><td>%5</td></tr>"
-                        "<tr><td><b>%6</b>:</td><td>%7</td></tr></table>")
-                .arg(tr("Operation options"),
-                     tr("Operation mode"), tr("A source image is projected into WGS84. Select <i>\"Lat/Lon mode\"</i> "
-                                              "to use geographic coordinates (degrees) or <i>\"UTM mode\"</i> to use UTM coordinates (meters). "
-                                              "The UTM zone number is selected basing on the longitude of the center of the image."),
-                     tr("Zeros as NoData"), tr("Check this box to set zero (black) pixels as NoData. These pixels won't be displayed in some "
-                                               "GIS applications such as QGIS."),
-                     tr("Output file"), tr("An output GeoTiff image (compression - JPEG, quality - 100). By default application saves the result image "
-                                           "near original one with the same name and postfix based on operation mode: \"_proj\" for Lat/Lon mode "
-                                           "and zone number for UTM mode (for example \"_N38\"). Uncheck the <i>\"Automatic Output name\"</i> "
-                                           "box to specify a custom name."));
-
-    QDialog *refWindow = new QDialog;
-    connect(refWindow, &QDialog::destroyed, ui->actionReference, &QAction::setEnabled);
+    HelpWindow *refWindow = new HelpWindow;
     refWindow->setAttribute(Qt::WA_DeleteOnClose);
-    refWindow->resize(800, 100);
-    refWindow->setWindowTitle(tr("MSUProj-Qt Reference"));
-
-    QTextBrowser *refBrowser = new QTextBrowser(refWindow);
-    refBrowser->setHtml(refText);
-
-    QVBoxLayout *refLayout = new QVBoxLayout(refWindow);
-    refLayout->addWidget(refBrowser);
+    connect(refWindow, &QDialog::destroyed, ui->actionReference, &QAction::setEnabled);
     refWindow->show();
-    int height = refBrowser->document()->size().height() + 50;
-    if (height > 600)
-        height = 600;
-    refWindow->resize(800, height);
-    QSize point((QApplication::desktop()->screen()->rect().size() - refWindow->size()) / 2);
-    refWindow->move(point.width(), point.height());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

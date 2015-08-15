@@ -1,11 +1,16 @@
-[Desktop Entry]
+﻿[Desktop Entry]
 Type=Application
 Name=MSUProj-Qt
 Version="@V_VERSION@"
 GenericName=MSUProj Qt Interface
-GenericName[ru]=Графическая оболочка для MSUProj
 Icon=msuproj
 Exec=msuproj-qt
 Terminal=false
 Categories=Qt;Science;Geography;
 Keywords=meteor-m;msu-mr;raster
+
+
+# Translations
+GenericName[ru_RU]=Графическая оболочка для MSUProj
+Name[ru_RU]=MSUProj-Qt
+Icon[ru_RU]=msuproj

@@ -16,6 +16,13 @@ public:
         PATHS_TYPES_SIZE,
     };
 
+    enum RES_PATHS
+    {
+        RES_ROOT,
+        I18N,
+        HELP
+    };
+
 public:
 
     settings();
@@ -24,7 +31,7 @@ public:
 
     QStringList getLocalesList() const;
     QString getLocale(bool *ok = 0) const;
-    QString getQmPath() const;
+    QString getResPath(const RES_PATHS type) const;
     void setLocale(const QString &locale);
     void unsetLocale();
 
@@ -37,7 +44,7 @@ public:
 private:
 
     QSettings   _settings;
-    QString     _qmPath;
+    QString     _resPath;
     QStringList _pathsKeys;
 
 };

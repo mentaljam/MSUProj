@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     MSUProjQt.setOrganizationDomain("www.ntsomz.ru");
 
     QTranslator appTranslation;
-    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getQmPath()))
+    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getResPath(settings::I18N)))
         MSUProjQt.installTranslator(&appTranslation);
 
     MainWindow MSUProjMainWindow;

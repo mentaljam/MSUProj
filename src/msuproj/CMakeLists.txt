@@ -52,14 +52,14 @@ if(BUILD_SHARED_LIBS)
             install(TARGETS msuproj
                     EXPORT  MSUProjSharedConfig
                     ARCHIVE DESTINATION ${INSTALL_PATH_LIB}
-                    COMPONENT lib)
+                    COMPONENT libdev)
         endif()
         install(EXPORT MSUProjSharedConfig
                 DESTINATION ${INSTALL_PATH_CMAKE}
                 COMPONENT libdev)
 
         add_library(msuproj-dev STATIC msuproj.cpp logoimage.hpp)
-        target_compile_definitions(msuproj-dev  PRIVATE "-DMSUPROJ_STATIC_DEFINE=1")
+        target_compile_definitions(msuproj-dev PRIVATE "-DMSUPROJ_STATIC_DEFINE=1")
         target_link_libraries(msuproj-dev ${GDAL_LIBRARIES})
         set_target_properties(msuproj-dev
                               PROPERTIES VERSION ${V_VERSION}

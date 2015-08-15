@@ -3,6 +3,18 @@ host = https://www.transifex.com
 
 [msuproj.msuproj-qt]
 file_filter = i18n/msuproj-qt_<lang>.ts
+source_file = i18n/msuproj-qt_en.ts
 source_lang = en
 type = QT
 
+[msuproj.msuproj-qt-manual]
+file_filter = doc/msuproj-qt/<lang>.dox
+source_file = doc/msuproj-qt/en.dox
+source_lang = en
+type = TXT
+
+[msuproj.msuproj-qt-desktop]
+#file_filter = res/linux/msuproj-qt.desktop.in
+source_file = res/linux/msuproj-qt.desktop.in
+source_lang = en
+type = DESCTOP

@@ -1,5 +1,16 @@
+###################### Configuring Qt ######################
+
+#if(UNIX)
+#    list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/5.4/gcc_64/lib/cmake")
+#endif(UNIX)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Help REQUIRED)
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+set_qt_defenitions()
+
 #################### Localization files ####################
 
+find_package(Qt5LinguistTools)
 if(Qt5LinguistTools_FOUND)
     message(STATUS "To update translations run \"make update_translations\"")
     file(GLOB TS_FILES ${PROJECT_SOURCE_DIR}/i18n/msuproj-qt_*.ts)
@@ -14,25 +25,28 @@ if(Qt5LinguistTools_FOUND)
     install(FILES ${QM_FILES}
             DESTINATION ${INSTALL_PATH_I18N}
             COMPONENT qt)
+else()
+    message(AUTHOR_WARNING "Qt5LinguistTools were not found, translations will not be generated")
 endif()
 
 
 ##################### Configuring Icons ####################
 
 
-if(NOT CONVERT)
-    unset(CONVERT CACHE)
-    find_program(CONVERT convert)
+if(NOT CONVERT_EXECUTABLE)
+    unset(CONVERT_EXECUTABLE CACHE)
+    find_program(CONVERT_EXECUTABLE convert)
 endif()
 
-if(CONVERT)
-    message(STATUS "Found Imagemagick - ${CONVERT}")
+if(CONVERT_EXECUTABLE)
+    message(STATUS "Found Imagemagick - ${CONVERT_EXECUTABLE}")
     set(PNG_QRC ${CMAKE_BINARY_DIR}/res/icons/icons.qrc)
     configure_file(${RESOURCES_DIR}/icons/icons.qrc.in ${PNG_QRC})
     file(GLOB_RECURSE SVG_FILES ${RESOURCES_DIR}/icons/*.svg)
     set_property(SOURCE ${SVG_FILES} PROPERTY OUTPUT_LOCATION ${CMAKE_BINARY_DIR}/res/icons)
     convert_png(SVG_FILES PNG_FILES)
     list(APPEND AUTOGEN_TARGET_DEPENDS ${PNG_FILES})
+    set(PROJECT_FILES ${PROJECT_FILES} ${SVG_FILES} PARENT_SCOPE)
 else()
     message(WARNING "Imagemagick convert utility was not found. Icons would not be generated")
 endif()
@@ -46,6 +60,8 @@ set(MSUPROJQT_SOURCES main.cpp
                       settings.cpp
                       settingswindow.cpp
                       settingswindow.ui
+                      helpwindow.cpp
+                      helpbrowser.cpp
                       ${QM_FILES}
                       ${TS_FILES}
                       ${PNG_QRC})
@@ -54,7 +70,7 @@ if(WIN32)
     set(VER_INTERNALNAME_STR     "msuproj-qt")
     set(VER_ORIGINALFILENAME_STR "msuproj-qt.exe")
     set(VER_PRODUCTNAME_STR      "MSUProj-Qt")
-    if(CONVERT)
+    if(CONVERT_EXECUTABLE)
         set(IDI_ICON             "IDI_ICON1 ICON DISCARDABLE \"msuproj.ico\"")
         set(SVG_FILES ${RESOURCES_DIR}/icons/msuproj.svg)
         set_property(SOURCE ${SVG_FILES} PROPERTY OUTPUT_LOCATION ${CMAKE_BINARY_DIR}/res/win32)
@@ -75,7 +91,13 @@ endif()
 if(AUTOGEN_TARGET_DEPENDS)
     set_target_properties(msuproj-qt PROPERTIES AUTOGEN_TARGET_DEPENDS "${AUTOGEN_TARGET_DEPENDS}")
 endif()
-target_link_libraries(msuproj-qt msuproj Qt5::Widgets)
+set_target_properties(msuproj-qt PROPERTIES AUTOMOC YES
+                                            AUTOUIC YES
+                                            AUTORCC YES
+)
+target_link_libraries(msuproj-qt msuproj Qt5::Widgets Qt5::Help)
+
+#add_dependencies(msuproj-qt build_docs)
 
 install(TARGETS msuproj-qt
         DESTINATION ${INSTALL_PATH_BIN}

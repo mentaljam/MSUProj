@@ -7,20 +7,20 @@
 settings::settings() :
     _settings(QSettings::IniFormat, QSettings::UserScope,
               "NTsOMZ", "MSUProj-Qt"),
-    _qmPath(""),
+    _resPath(""),
     _pathsKeys({
                   "History/InputPath",
                   "InputPath"
               })
 {
-    QStringList qmPaths;
-    qmPaths << "i18n"
-            << "/usr/share/msuproj/i18n"
-            << "/usr/local/share/msuproj/i18n";
-    foreach (QString qmPath, qmPaths)
-        if (QDir(qmPath).exists())
+    QStringList sharePaths;
+    sharePaths << "./"
+               << "/usr/share/msuproj/"
+               << "/usr/local/share/msuproj/";
+    foreach (QString sharePath, sharePaths)
+        if (QDir(sharePath + "i18n").exists() || QDir(sharePath + "help").exists())
         {
-            _qmPath = qmPath;
+            _resPath = sharePath;
             break;
         }
 }
@@ -32,9 +32,9 @@ void settings::clearSettings()
 
 QStringList settings::getLocalesList() const
 {
-    if (!_qmPath.isEmpty())
+    if (!_resPath.isEmpty())
     {
-        QStringList qmFiles = QDir(_qmPath).entryList(QStringList("msuproj-qt_*.qm"), QDir::Files, QDir::Name);
+        QStringList qmFiles = QDir(_resPath + "i18n").entryList(QStringList("msuproj-qt_*.qm"), QDir::Files, QDir::Name);
         QStringList locales;
         foreach (QString qmFile, qmFiles)
         {
@@ -55,9 +55,16 @@ QString settings::getLocale(bool *ok) const
     return _settings.value("locale", QLocale().system().name()).toString();
 }
 
-QString settings::getQmPath() const
+QString settings::getResPath(const RES_PATHS type) const
 {
-    return _qmPath;
+    switch (type) {
+    case I18N:
+        return _resPath + "i18n/";
+    case HELP:
+        return _resPath + "help/";
+    default:
+        return _resPath;
+    }
 }
 
 void settings::setLocale(const QString &locale)

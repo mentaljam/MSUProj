@@ -8,14 +8,19 @@ It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for
 
 <img src="http://meteor.robonuka.ru/wp-content/uploads/2015/03/21082014_UTM37_ArcGis.jpg" alt="Meteor-M No2 MSU-MR 1km" style="width: 640px;"/>
 
+## Documentation ##
+
+Developer documentation is available on [GitHub Pages](http://mentaljam.github.io/MSUProj/).
+
 ## Precompiled binaries ##
 
 - All stable binaries for Windows are in [Releases](https://github.com/mentaljam/MSUProj/releases)
-- You also can grab latest development binaries for Windows from [Yandex Disk](https://yadi.sk/d/5Lbb-1y5hzZdW)
+- You also can grab latest development binaries for Windows from [Yandex.Disk](https://yadi.sk/d/5Lbb-1y5hzZdW)
 
 ## Localization ##
 
 You can translate MSUProj-Qt to your language with [Transifex](https://www.transifex.com/projects/p/msuproj/).
+[Translations instructions](http://mentaljam.github.io/MSUProj/translations.html).
 
 ## Build ##
 

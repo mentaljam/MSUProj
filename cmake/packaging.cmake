@@ -55,74 +55,72 @@ set(CPACK_COMPONENT_GROUP_TOOLS_DISPLAY_NAME "Tools")
     set(CPACK_COMPONENT_GCPTHINER_DISPLAY_NAME "GCPThiner")
     set(CPACK_COMPONENT_GCPTHINER_DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files")
 
+set(CPACK_COMPONENT_GROUP_MAN_DISPLAY_NAME "Manuals")
+
 
 #################### Additional targets ####################
 
-if(WIN32)
+#### Runtime
 
-    if(INSTALL_RUNTIME)
+if(WIN32 AND INSTALL_RUNTIME)
 
-        get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
-        string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
-        file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
-                            ${DLL_PATH}/*geos*.dll
-                            ${DLL_PATH}/*proj*.dll)
-        list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GDAL_DLLS})
+    get_filename_component(DLL_PATH ${GDAL_LIBRARIES} DIRECTORY)
+    string(REPLACE "lib" "bin" DLL_PATH ${DLL_PATH})
+    file(GLOB GDAL_DLLS ${DLL_PATH}/*gdal*.dll
+                        ${DLL_PATH}/*geos*.dll
+                        ${DLL_PATH}/*proj*.dll)
+    list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GDAL_DLLS})
 
-        if(MINGW)
-            get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
-            if(ARCH EQUAL 64)
-                set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64*.dll
-                                     ${CXX_PATH}/libgcc*64*.dll)
-            else()
-                set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++*.dll
-                                     ${CXX_PATH}/libgcc*sjlj*.dll)
-            endif()
-            file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
-            list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GCC_RUNTIME})
-        endif()
-
-        if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
-            set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
-            set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT runtime)
-            include(InstallRequiredSystemLibraries)
-            if(MINGW AND CMAKE_BUILD_TYPE STREQUAL "Release")
-                install(CODE "message(STATUS \"Stripping runtime libraries\")
-                             file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
-                             execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
-                        COMPONENT runtime)
-            endif()
+    if(MINGW)
+        get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
+        if(ARCH EQUAL 64)
+            set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64*.dll
+                                 ${CXX_PATH}/libgcc*64*.dll)
         else()
-            message(AUTHOR_WARNING "Could not find runtime shared libraries for package forming")
+            set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++*.dll
+                                 ${CXX_PATH}/libgcc*sjlj*.dll)
         endif()
-
-        set(QTDIR $ENV{QTDIR})
-        string(REPLACE "\\" "/" QTDIR ${QTDIR})
-        if(BUILD_QT AND QTDIR)
-            install(FILES ${QTDIR}/bin/Qt5Core.dll
-                          ${QTDIR}/bin/Qt5Gui.dll
-                          ${QTDIR}/bin/Qt5Widgets.dll
-                    DESTINATION ${INSTALL_PATH_BIN}
-                    COMPONENT runtime)
-            install(FILES ${QTDIR}/plugins/platforms/qwindows.dll
-                    DESTINATION  ${INSTALL_PATH_BIN}/platforms
-                    COMPONENT runtime)
-            install(FILES ${QTDIR}/plugins/imageformats/qjpeg.dll
-                          ${QTDIR}/plugins/imageformats/qwbmp.dll
-                    DESTINATION ${INSTALL_PATH_BIN}/imageformats
-                    COMPONENT runtime)
-            file(GLOB QTQMS ${QTDIR}/translations/qtbase*.qm)
-            install(FILES ${QTQMS}
-                    DESTINATION ${INSTALL_PATH_I18N}
-                    COMPONENT runtime)
-        endif()
-
+        file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
+        list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GCC_RUNTIME})
     endif()
 
-    if(DOXYGEN_FOUND AND HHC)
-        message(STATUS "WARNING! Before building package make shure manual have been compiled")
-        install(CODE "execute_process(COMMAND ${CMAKE_BUILD_TOOL} manual)" COMPONENT man)
-        install(FILES ${CHM_FILE} DESTINATION ${INSTALL_PATH_DOCS} COMPONENT man OPTIONAL)
+    if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+        set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
+        set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT runtime)
+        include(InstallRequiredSystemLibraries)
+        if(MINGW AND CMAKE_BUILD_TYPE STREQUAL "Release")
+            install(CODE "message(STATUS \"Stripping runtime libraries\")
+                         file(GLOB_RECURSE DLLS \${CMAKE_INSTALL_PREFIX}/*.dll)
+                         execute_process(COMMAND ${CXX_PATH}/strip \${DLLS})"
+                    COMPONENT runtime)
+        endif()
+    else()
+        message(AUTHOR_WARNING "Could not find runtime shared libraries for package forming")
+    endif()
+
+    set(QTDIR $ENV{QTDIR})
+    string(REPLACE "\\" "/" QTDIR ${QTDIR})
+    if(BUILD_QT AND QTDIR)
+        install(FILES ${QTDIR}/bin/Qt5Core.dll
+                      ${QTDIR}/bin/Qt5Gui.dll
+                      ${QTDIR}/bin/Qt5Widgets.dll
+                      ${QTDIR}/bin/Qt5Help.dll
+                      ${QTDIR}/bin/Qt5Network.dll
+                      ${QTDIR}/bin/Qt5Sql.dll
+                      ${QTDIR}/bin/Qt5CLucene.dll
+                DESTINATION ${INSTALL_PATH_BIN}
+                COMPONENT runtime)
+        install(FILES ${QTDIR}/plugins/platforms/qwindows.dll
+                DESTINATION  ${INSTALL_PATH_BIN}/platforms
+                COMPONENT runtime)
+        install(FILES ${QTDIR}/plugins/imageformats/qjpeg.dll
+                      ${QTDIR}/plugins/imageformats/qwbmp.dll
+                DESTINATION ${INSTALL_PATH_BIN}/imageformats
+                COMPONENT runtime)
+        file(GLOB QTQMS ${QTDIR}/translations/qtbase*.qm)
+        install(FILES ${QTQMS}
+                DESTINATION ${INSTALL_PATH_I18N}
+                COMPONENT runtime)
     endif()
 
 endif()
@@ -132,6 +130,10 @@ install(FILES ${LICENSE_FILES} TODO.txt CHANGELOG.txt
         DESTINATION ${INSTALL_PATH_DOCS}
         COMPONENT doc)
 set(CPACK_COMPONENT_DOC_HIDDEN ON)
+set(PROJECT_FILES ${PROJECT_FILES} ${LICENSE_FILES}
+                                   TODO.txt
+                                   CHANGELOG.txt
+                                   README.md)
 
 
 ##################### Packaging rules ######################
@@ -158,7 +160,7 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 if(BUILD_PPA_PACKAGE)
     set(CPACK_DEBIAN_BUILD_DEPENDS omzmodules libgdal-dev
         CACHE STRING "Common debian source build dependencies")
-    set(CPACK_DEBIAN_QT_BUILD_DEPENDS imagemagick qttools5-dev-tools qtbase5-dev librsvg2-bin libxml2
+    set(CPACK_DEBIAN_QT_BUILD_DEPENDS imagemagick qttools5-dev-tools qtbase5-dev librsvg2-bin libxml2 doxygen
         CACHE STRING "Qt debian source build dependencies")
     set(CPACK_DEBIAN_DISTRIBUTION_NAMES vivid wily
         CACHE STRING "PPA distributions names")
@@ -169,6 +171,7 @@ if(BUILD_PPA_PACKAGE)
                                      -DBUILD_CLI=${BUILD_CLI}
                                      -DBUILD_QT=${BUILD_QT}
                                      -DBUILD_TOOLS=${BUILD_TOOLS}
+                                     -DINSTALL_DEV=${INSTALL_DEV}
                                      -DV_DATE=${V_DATE})
     include(OMZDebuildConf)
 endif()
