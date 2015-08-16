@@ -24,8 +24,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
         if (!country.isEmpty())
             boxItem += QString(" (%1)").arg(country);
         ui->langBox->addItem(boxItem);
-        if (hasLocaleSet && localeStr == curLocale)
-            ui->langBox->setCurrentIndex(ui->langBox->count() - 1);
+        if (hasLocaleSet)
+            if (localeStr == curLocale)
+                ui->langBox->setCurrentIndex(ui->langBox->count() - 1);
+            else
+                ui->langBox->setCurrentIndex(1);
     }
 
     ui->inputPathEdit->setText(settingsObj.getPath(msuSettings::INPUT_PREFERED));
@@ -43,10 +46,18 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
     switch (ui->buttonBox->standardButton(button))
     {
     case QDialogButtonBox::Ok:
-        if (curIndex > 0)
-            settingsObj.setLocale(mLocales[curIndex - 1]);
-        else
+        switch (curIndex)
+        {
+        case 0:
             settingsObj.unsetLocale();
+            break;
+        case 1:
+            settingsObj.setLocale("default");
+            break;
+        default:
+            settingsObj.setLocale(mLocales[curIndex - 2]);
+            break;
+        }
         settingsObj.setUsePreferedInputPath(ui->inputPathPreferedButton->isChecked());
         settingsObj.setPath(msuSettings::INPUT_PREFERED, ui->inputPathEdit->text());
         break;
