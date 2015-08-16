@@ -160,7 +160,16 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 if(BUILD_PPA_PACKAGE)
     set(CPACK_DEBIAN_BUILD_DEPENDS omzmodules libgdal-dev
         CACHE STRING "Common debian source build dependencies")
-    set(CPACK_DEBIAN_QT_BUILD_DEPENDS imagemagick qttools5-dev-tools qtbase5-dev librsvg2-bin libxml2 doxygen
+    set(CPACK_DEBIAN_QT_BUILD_DEPENDS qtbase5-dev
+                                      qttools5-dev
+                                      qttools5-dev-tools
+                                      libqt5sql5-sqlite
+                                      qt5-default
+                                      imagemagick
+                                      librsvg2-bin
+                                      libxml2
+                                      git
+                                      doxygen
         CACHE STRING "Qt debian source build dependencies")
     set(CPACK_DEBIAN_DISTRIBUTION_NAMES vivid wily
         CACHE STRING "PPA distributions names")
