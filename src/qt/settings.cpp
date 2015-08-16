@@ -1,40 +1,41 @@
-#include "settings.h"
 #include <QTranslator>
 #include <QLocale>
 #include <QDir>
 
+#include <settings.h>
 
-settings::settings() :
-    _settings(QSettings::IniFormat, QSettings::UserScope,
+
+msuSettings::msuSettings() :
+    mSettings(QSettings::IniFormat, QSettings::UserScope,
               "NTsOMZ", "MSUProj-Qt"),
-    _resPath(""),
-    _pathsKeys({
+    mResourcesPath(""),
+    mPathsKeys({
                   "History/InputPath",
                   "InputPath"
               })
 {
-    QStringList sharePaths;
-    sharePaths << "./"
+    QStringList resourcesPaths;
+    resourcesPaths << "./"
                << "/usr/share/msuproj/"
                << "/usr/local/share/msuproj/";
-    foreach (QString sharePath, sharePaths)
-        if (QDir(sharePath + "i18n").exists() || QDir(sharePath + "help").exists())
+    foreach (QString resourcesPath, resourcesPaths)
+        if (QDir(resourcesPath + "i18n").exists() || QDir(resourcesPath + "help").exists())
         {
-            _resPath = sharePath;
+            mResourcesPath = resourcesPath;
             break;
         }
 }
 
-void settings::clearSettings()
+void msuSettings::clearSettings()
 {
-    _settings.clear();
+    mSettings.clear();
 }
 
-QStringList settings::getLocalesList() const
+QStringList msuSettings::getLocalesList() const
 {
-    if (!_resPath.isEmpty())
+    if (!mResourcesPath.isEmpty())
     {
-        QStringList qmFiles = QDir(_resPath + "i18n").entryList(QStringList("msuproj-qt_*.qm"), QDir::Files, QDir::Name);
+        QStringList qmFiles = QDir(mResourcesPath + "i18n").entryList(QStringList("msuproj-qt_*.qm"), QDir::Files, QDir::Name);
         QStringList locales;
         foreach (QString qmFile, qmFiles)
         {
@@ -48,55 +49,55 @@ QStringList settings::getLocalesList() const
         return QStringList();
 }
 
-QString settings::getLocale(bool *ok) const
+QString msuSettings::getLocale(bool *ok) const
 {
     if (ok)
-        *ok = _settings.value("locale").toBool();
-    return _settings.value("locale", QLocale().system().name()).toString();
+        *ok = mSettings.value("locale").toBool();
+    return mSettings.value("locale", QLocale().system().name()).toString();
 }
 
-QString settings::getResPath(const RES_PATHS type) const
+QString msuSettings::getResourcesPath(const RES_PATHS type) const
 {
     switch (type) {
     case I18N:
-        return _resPath + "i18n/";
+        return mResourcesPath + "i18n/";
     case HELP:
-        return _resPath + "help/";
+        return mResourcesPath + "help/";
     default:
-        return _resPath;
+        return mResourcesPath;
     }
 }
 
-void settings::setLocale(const QString &locale)
+void msuSettings::setLocale(const QString &locale)
 {
-    _settings.setValue("locale", locale);
+    mSettings.setValue("locale", locale);
 }
 
-void settings::unsetLocale()
+void msuSettings::unsetLocale()
 {
-    _settings.remove("locale");
+    mSettings.remove("locale");
 }
 
-QString settings::getPath(const settings::PATHS_TYPES type) const
+QString msuSettings::getPath(const PATHS_TYPES type) const
 {
     if (type < PATHS_TYPES_SIZE)
-        return _settings.value(_pathsKeys[type]).toString();
+        return mSettings.value(mPathsKeys[type]).toString();
     else
         return QString();
 }
 
-void settings::setPath(const settings::PATHS_TYPES type, const QString &value)
+void msuSettings::setPath(const PATHS_TYPES type, const QString &value)
 {
     if (type < PATHS_TYPES_SIZE)
-        _settings.setValue(_pathsKeys[type], value);
+        mSettings.setValue(mPathsKeys[type], value);
 }
 
-bool settings::usePreferedInputPath() const
+bool msuSettings::usePreferedInputPath() const
 {
-    return _settings.value("UsePreferedPath").toBool();
+    return mSettings.value("UsePreferedPath").toBool();
 }
 
-void settings::setUsePreferedInputPath(const bool value)
+void msuSettings::setUsePreferedInputPath(const bool value)
 {
-    _settings.setValue("UsePreferedPath", value);
+    mSettings.setValue("UsePreferedPath", value);
 }

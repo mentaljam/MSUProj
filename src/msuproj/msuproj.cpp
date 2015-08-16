@@ -5,33 +5,30 @@
 #include <fstream>
 #include <sstream>
 
-MSUMR::MSUProj::MSUProj() :
-    srcDS(NULL),
-    gcps(NULL),
-    dstFile(),
-    dstFormat("GTiff"),
-    hemisphere(true),
-    zone(0),
-    perimSize(19),
-    srcXSize(0),
-    srcYSize(0),
-    srcSize(0),
-    gcpXSize(0),
-    gcpYSize(0),
-    gcpXStep(0),
-    gcpYStep(0),
-    gcpSize(0),
-    geoTransform(new double[6])
+msumr::MSUProj::MSUProj() :
+    mSrcDS(NULL),
+    mGCPs(NULL),
+    mDstFile(),
+    mDstFormat("GTiff"),
+    mHemisphere(true),
+    mZone(0),
+    mPerimSize(19),
+    mGCPXSize(0),
+    mGCPYSize(0),
+    mGCPXStep(0),
+    mGCPYStep(0),
+    mGCPSize(0),
+    mGeoTransform(new double[6])
 {}
 
-MSUMR::MSUProj::~MSUProj()
+msumr::MSUProj::~MSUProj()
 {
-    delete[] geoTransform;
-    if (gcpSize > 0)
-        delete[] gcps;
+    delete[] mGeoTransform;
+    if (mGCPSize > 0)
+        delete[] mGCPs;
 }
 
-const char *MSUMR::MSUProj::getVersion(const unsigned int &type) const
+const char *msumr::MSUProj::getVersion(const unsigned int &type) const
 {
     if (type == 0)
         return VERSION_MSUPROJ;
@@ -43,122 +40,118 @@ const char *MSUMR::MSUProj::getVersion(const unsigned int &type) const
         return "";
 }
 
-void MSUMR::MSUProj::setDST(std::string file)
+void msumr::MSUProj::setDst(std::string file)
 {
-    dstFile = file;
+    mDstFile = file;
 }
 
-void MSUMR::MSUProj::setDSTFormat(std::string format)
+void msumr::MSUProj::setDstFormat(std::string format)
 {
-    dstFormat = format;
+    mDstFormat = format;
 }
 
-const MSUMR::retCode MSUMR::MSUProj::setSRC(std::string file)
+const msumr::RETURN_CODE msumr::MSUProj::setSrc(std::string file)
 {
-    if (srcDS)
-        GDALClose(srcDS);
-    srcDS = (GDALDataset*)GDALOpen(file.c_str(), GA_ReadOnly);
-    if (!srcDS)
-        return errSRC;
+    if (mSrcDS)
+        GDALClose(mSrcDS);
+    mSrcDS = (GDALDataset*)GDALOpen(file.c_str(), GA_ReadOnly);
+    if (!mSrcDS)
+        return ERROR_SRC;
 
-    srcXSize = srcDS->GetRasterXSize();
-    srcYSize = srcDS->GetRasterYSize();
-    srcSize = srcXSize * srcYSize;
-
-    return success;
+    return SUCCESS;
 }
 
-const MSUMR::retCode MSUMR::MSUProj::readGCP(std::string file)
+const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
 {
-    if (!srcDS)
-        return errSRC;
+    if (!mSrcDS)
+        return ERROR_SRC;
 
-    std::ifstream srcGcp(file);
-    if (srcGcp.fail())
-        return errGCP;
+    std::ifstream srcGCP(file);
+    if (srcGCP.fail())
+        return ERROR_GCP;
 
     std::string tmp, line;
 
-    gcpSize = 0;
-    while(getline(srcGcp, line))
-        ++gcpSize;
-    srcGcp.clear();
-    srcGcp.seekg(0);
+    mGCPSize = 0;
+    while(getline(srcGCP, line))
+        ++mGCPSize;
+    srcGCP.clear();
+    srcGCP.seekg(0);
 
-    if (gcpSize)
-        delete[] gcps;
-    gcps = new gcp[gcpSize];
+    if (mGCPSize)
+        delete[] mGCPs;
+    mGCPs = new GCP[mGCPSize];
     unsigned int gIter = 0;
-    while(getline(srcGcp, line))
+    while(getline(srcGCP, line))
     {
         std::stringstream iss(line);
         getline(iss, tmp, ' ');
-        gcps[gIter].x = stoi(tmp);
+        mGCPs[gIter].x = stoi(tmp);
         getline(iss, tmp, ' ');
-        gcps[gIter].y = stoi(tmp);
+        mGCPs[gIter].y = stoi(tmp);
         getline(iss, tmp, ' ');
         tmp = comma2dot(tmp);
-        gcps[gIter].lat = stod(tmp);
+        mGCPs[gIter].lat = stod(tmp);
         getline(iss, tmp);
         tmp = comma2dot(tmp);
-        gcps[gIter].lon = stod(tmp);
+        mGCPs[gIter].lon = stod(tmp);
         ++gIter;
     }
 
-    gcpXSize = 1;
-    while (gcps[gcpXSize].x != 0)
-        ++gcpXSize;
-    gcpYSize = gcpSize / gcpXSize;
-    gcpXStep = srcXSize / gcpXSize + 1;
-    gcpYStep = srcYSize / gcpYSize + 1;
+    mGCPXSize = 1;
+    while (mGCPs[mGCPXSize].x != 0)
+        ++mGCPXSize;
+    mGCPYSize = mGCPSize / mGCPXSize;
+    mGCPXStep = mSrcDS->GetRasterXSize() / mGCPXSize + 1;
+    mGCPYStep = mSrcDS->GetRasterYSize() / mGCPYSize + 1;
 
-    zone = ((int)(((int)((gcps[0].lon + gcps[gcpXSize - 1].lon +
-           gcps[gcpSize - gcpXSize].lon + gcps[gcpSize - 1].lon) / 4 + 0.5) + 180) / 6) + 1);
-    hemisphere = ((int)((gcps[0].lat + gcps[gcpXSize - 1].lat +
-           gcps[gcpSize - gcpXSize].lat + gcps[gcpSize - 1].lat) / 4 + 0.5) > 0);
+    mZone = ((int)(((int)((mGCPs[0].lon + mGCPs[mGCPXSize - 1].lon +
+           mGCPs[mGCPSize - mGCPXSize].lon + mGCPs[mGCPSize - 1].lon) / 4 + 0.5) + 180) / 6) + 1);
+    mHemisphere = ((int)((mGCPs[0].lat + mGCPs[mGCPXSize - 1].lat +
+           mGCPs[mGCPSize - mGCPXSize].lat + mGCPs[mGCPSize - 1].lat) / 4 + 0.5) > 0);
 
-    return success;
+    return SUCCESS;
 }
 
-void MSUMR::MSUProj::setPerimSize(const unsigned int &perim)
+void msumr::MSUProj::setPerimSize(const unsigned int &perim)
 {
     if (perim > 0)
-        perimSize = 2 * perim + 1;
+        mPerimSize = 2 * perim + 1;
 }
 
-const std::string MSUMR::MSUProj::getUTM() const
+const std::string msumr::MSUProj::getUTM() const
 {
-    if (!gcpSize)
+    if (!mGCPSize)
         return "unknownZone";
     else
     {
         std::string UTM;
-        if (hemisphere)
+        if (mHemisphere)
             UTM = "N";
         else
             UTM = "S";
-        UTM += std::to_string(zone);
+        UTM += std::to_string(mZone);
 
         return UTM;
     }
 }
 
-const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosAsND)
+const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &zerosAsND)
 {
 
-    if (!srcDS)
-        return errSRC;
+    if (!mSrcDS)
+        return ERROR_SRC;
 
-    if (!gcpSize || !gcps)
-        return errGCP;
+    if (!mGCPSize || !mGCPs)
+        return ERROR_GCP;
 
-    if (dstFile.empty())
-        return errDST;
+    if (mDstFile.empty())
+        return ERROR_DST;
 
-    unsigned short bands = srcDS->GetRasterCount();
+    unsigned short bands = mSrcDS->GetRasterCount();
 
-    gcp *gcpsW = new gcp[gcpSize];
-    memcpy(gcpsW, gcps, gcpSize * sizeof(gcp));
+    GCP *GCPsW = new GCP[mGCPSize];
+    memcpy(GCPsW, mGCPs, mGCPSize * sizeof(GCP));
 
     OGRSpatialReference latlonSRS;
     latlonSRS.SetWellKnownGeogCS("WGS84");
@@ -167,54 +160,54 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
     {
         OGRSpatialReference utmSRS;
         utmSRS.SetWellKnownGeogCS("WGS84");
-        utmSRS.SetUTM(zone, hemisphere);
+        utmSRS.SetUTM(mZone, mHemisphere);
         utmSRS.exportToWkt(&srsWKT);
         OGRCoordinateTransformation *transFunc;
         transFunc = OGRCreateCoordinateTransformation(&latlonSRS, &utmSRS);
-        for (unsigned int gIter = 0; gIter < gcpSize; ++gIter)
-            transFunc->Transform(1, &gcpsW[gIter].lon, &gcpsW[gIter].lat);
-        geoTransform[1] = 1000;
-        geoTransform[5] = -1000;
+        for (unsigned int gIter = 0; gIter < mGCPSize; ++gIter)
+            transFunc->Transform(1, &GCPsW[gIter].lon, &GCPsW[gIter].lat);
+        mGeoTransform[1] = 1000;
+        mGeoTransform[5] = -1000;
     }
     else
     {
         latlonSRS.exportToWkt(&srsWKT);
-        geoTransform[1] = 0.01;
-        geoTransform[5] = -0.01;
+        mGeoTransform[1] = 0.01;
+        mGeoTransform[5] = -0.01;
     }
 
     double coords[4];
-    coords[minLON] = gcpsW[0].lon;
-    coords[maxLON] = gcpsW[0].lon;
-    coords[minLAT] = gcpsW[0].lat;
-    coords[maxLAT] = gcpsW[0].lat;
-    for (unsigned int i = 1; i < gcpSize; ++i)
+    coords[MIN_LON] = GCPsW[0].lon;
+    coords[MAX_LON] = GCPsW[0].lon;
+    coords[MIN_LAT] = GCPsW[0].lat;
+    coords[MAX_LAT] = GCPsW[0].lat;
+    for (unsigned int i = 1; i < mGCPSize; ++i)
     {
-        if (coords[minLON] > gcpsW[i].lon)
-            coords[minLON] = gcpsW[i].lon;
-        if (coords[maxLON] < gcpsW[i].lon)
-            coords[maxLON] = gcpsW[i].lon;
-        if (coords[minLAT] > gcpsW[i].lat)
-            coords[minLAT] = gcpsW[i].lat;
-        if (coords[maxLAT] < gcpsW[i].lat)
-            coords[maxLAT] = gcpsW[i].lat;
+        if (coords[MIN_LON] > GCPsW[i].lon)
+            coords[MIN_LON] = GCPsW[i].lon;
+        if (coords[MAX_LON] < GCPsW[i].lon)
+            coords[MAX_LON] = GCPsW[i].lon;
+        if (coords[MIN_LAT] > GCPsW[i].lat)
+            coords[MIN_LAT] = GCPsW[i].lat;
+        if (coords[MAX_LAT] < GCPsW[i].lat)
+            coords[MAX_LAT] = GCPsW[i].lat;
     }
 
-    unsigned int dstXSize = (int)((coords[maxLON] - coords[minLON]) / geoTransform[1] + 0.5);
-    unsigned int dstYSize = (int)((coords[maxLAT] - coords[minLAT]) / geoTransform[1] + 0.5);
+    unsigned int dstXSize = (int)((coords[MAX_LON] - coords[MIN_LON]) / mGeoTransform[1] + 0.5);
+    unsigned int dstYSize = (int)((coords[MAX_LAT] - coords[MIN_LAT]) / mGeoTransform[1] + 0.5);
     unsigned int dstSize = dstXSize * dstYSize;
 
-    geoTransform[0] = coords[minLON];
-    geoTransform[2] = 0;
-    geoTransform[3] = coords[maxLAT];
-    geoTransform[4] = 0;
+    mGeoTransform[0] = coords[MIN_LON];
+    mGeoTransform[2] = 0;
+    mGeoTransform[3] = coords[MAX_LAT];
+    mGeoTransform[4] = 0;
 
     unsigned short band;
     GDALDriver *dstDriver;
-    dstDriver = GetGDALDriverManager()->GetDriverByName(dstFormat.c_str());
+    dstDriver = GetGDALDriverManager()->GetDriverByName(mDstFormat.c_str());
     char **dstOptions = NULL;
     char **dstMetadata = NULL;
-    if (dstFormat == "GTiff")
+    if (mDstFormat == "GTiff")
     {
         dstOptions = CSLSetNameValue(dstOptions, "PHOTOMETRIC", "RGB");
         dstOptions = CSLSetNameValue(dstOptions, "COMPRESS", "JPEG");
@@ -222,13 +215,13 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "MSUProj v" VERSION_MSUPROJ);
     }
-    GDALDataset *dstDS = dstDriver->Create(dstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
+    GDALDataset *dstDS = dstDriver->Create(mDstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
     if (dstDS == NULL)
-        return errDST;
+        return ERROR_DST;
 
     dstDS->SetMetadata(dstMetadata);
     dstDS->SetProjection(srsWKT);
-    dstDS->SetGeoTransform(geoTransform);
+    dstDS->SetGeoTransform(mGeoTransform);
     if (zerosAsND)
         for (band = 1; band <= bands; ++band)
             dstDS->GetRasterBand(band)->SetNoDataValue(0);
@@ -236,48 +229,52 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
     unsigned char **pxsData = new unsigned char*[bands];
     unsigned char **tmpData = new unsigned char*[bands];
 
-    unsigned int pxsSize = dstSize;
+    unsigned int srcXSize = mSrcDS->GetRasterXSize(),
+                 srcYSize = mSrcDS->GetRasterYSize();
+    unsigned int srcSize  = srcXSize * srcYSize;
+
+    unsigned int pxsSize  = dstSize;
     if (pxsSize < srcSize)
         pxsSize = srcSize;
 
     for (band = 0; band < bands; ++band)
     {
         pxsData[band] = new unsigned char[pxsSize];
-        srcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize, pxsData[band],
-                                                 srcXSize, srcYSize, GDT_Byte, 0, 0);
+        mSrcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize, pxsData[band],
+                                                  srcXSize, srcYSize, GDT_Byte, 0, 0);
         tmpData[band] = new unsigned char[dstSize]();
     }
 
     unsigned int pLine, pRow, pCount, gRow, gCount, dCount,
-                 bilDelim = gcpXStep * gcpYStep;
+                 bilDelim = mGCPXStep * mGCPYStep;
     int x, y, xx, yy;
     double lat, lon;
 
     for (pLine = 0; pLine < srcYSize; ++pLine)
     {
-        unsigned int gLine = (int)(pLine / gcpYStep);
+        unsigned int gLine = (int)(pLine / mGCPYStep);
         pCount = pLine * srcXSize;
         for (pRow = 0; pRow < srcXSize; ++pRow, ++pCount)
         {
-            gRow = (int)(pRow / gcpXStep);
-            gCount = gRow + gLine * gcpXSize;
+            gRow = (int)(pRow / mGCPXStep);
+            gCount = gRow + gLine * mGCPXSize;
 
-            x = pRow - gRow * gcpXStep;
-            xx = gcpXStep - x;
-            y = pLine - gLine * gcpYStep;
-            yy = gcpYStep - y;
+            x  = pRow - gRow * mGCPXStep;
+            xx = mGCPXStep - x;
+            y  = pLine - gLine * mGCPYStep;
+            yy = mGCPYStep - y;
 
-            lon = (gcpsW[gCount].lon * xx * yy +
-                   gcpsW[gCount + 1].lon * x * yy +
-                   gcpsW[gCount + gcpXSize].lon * xx * y +
-                   gcpsW[gCount + gcpXSize + 1].lon * x * y) / bilDelim;
-            lat = (gcpsW[gCount].lat * xx * yy +
-                   gcpsW[gCount + 1].lat * x * yy +
-                   gcpsW[gCount + gcpXSize].lat * xx * y +
-                   gcpsW[gCount + gcpXSize + 1].lat * x * y) / bilDelim;
+            lon = (GCPsW[gCount].lon * xx * yy +
+                   GCPsW[gCount + 1].lon * x * yy +
+                   GCPsW[gCount + mGCPXSize].lon * xx * y +
+                   GCPsW[gCount + mGCPXSize + 1].lon * x * y) / bilDelim;
+            lat = (GCPsW[gCount].lat * xx * yy +
+                   GCPsW[gCount + 1].lat * x * yy +
+                   GCPsW[gCount + mGCPXSize].lat * xx * y +
+                   GCPsW[gCount + mGCPXSize + 1].lat * x * y) / bilDelim;
 
-            lon = (lon - geoTransform[0]) / geoTransform[1];
-            lat = (lat - geoTransform[3]) / geoTransform[5];
+            lon = (lon - mGeoTransform[0]) / mGeoTransform[1];
+            lat = (lat - mGeoTransform[3]) / mGeoTransform[5];
 
             dCount = (int)(lat + 0.5) * dstXSize + (int)(lon + 0.5);
 
@@ -318,7 +315,7 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
                 xx = 1;
             }
 
-            for (dCount = 2; dCount < perimSize; dCount += 2)
+            for (dCount = 2; dCount < mPerimSize; dCount += 2)
             {
                 --y;
                 yy = y * dstXSize + x;
@@ -400,7 +397,7 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
         }
     }
 
-    delete[] gcpsW;
+    delete[] GCPsW;
     delete[] sum;
 
     for (band = 0; band < bands; ++band)
@@ -427,35 +424,41 @@ const MSUMR::retCode MSUMR::MSUProj::warp(const bool &useUtm, const bool &zerosA
 
     GDALClose(dstDS);
 
-    return success;
+    return SUCCESS;
 }
 
-unsigned int MSUMR::MSUProj::getSrcYSize() const
+unsigned int msumr::MSUProj::getSrcXSize() const
 {
-    return srcYSize;
-}
-unsigned int MSUMR::MSUProj::getGcpYStep() const
-{
-    return gcpYStep;
-}
-
-unsigned int MSUMR::MSUProj::getGcpXStep() const
-{
-    return gcpXStep;
+    if (mSrcDS)
+        return mSrcDS->GetRasterXSize();
+    else
+        return 0;
 }
 
-unsigned int MSUMR::MSUProj::getGcpYSize() const
+unsigned int msumr::MSUProj::getSrcYSize() const
 {
-    return gcpYSize;
+    if (mSrcDS)
+        return mSrcDS->GetRasterYSize();
+    else
+        return 0;
 }
 
-unsigned int MSUMR::MSUProj::getGcpXSize() const
+unsigned int msumr::MSUProj::getGCPXSize() const
 {
-    return gcpXSize;
+    return mGCPXSize;
 }
 
-
-unsigned int MSUMR::MSUProj::getSrcXSize() const
+unsigned int msumr::MSUProj::getGCPYSize() const
 {
-    return srcXSize;
+    return mGCPYSize;
+}
+
+unsigned int msumr::MSUProj::getGCPXStep() const
+{
+    return mGCPXStep;
+}
+
+unsigned int msumr::MSUProj::getGCPYStep() const
+{
+    return mGCPYStep;
 }

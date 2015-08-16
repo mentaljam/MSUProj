@@ -1,36 +1,37 @@
-#include <msuproj_version.h>
-#include <mainwindow.h>
-#include <ui_mainwindow.h>
-#include <msuproj.h>
-#include <settings.h>
-#include <settingswindow.h>
-#include <helpwindow.h>
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QDesktopWidget>
 
+#include <msuproj_version.h>
+#include <msuproj.h>
+#include <settings.h>
+#include <settingswindow.h>
+#include <helpwindow.h>
+#include <mainwindow.h>
+#include <ui_mainwindow.h>
 
-extern MSUMR::MSUProj msuProjObj;
-extern settings settingsObj;
+
+extern msumr::MSUProj msuProjObj;
+extern msuSettings settingsObj;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    graphicsScene(new QGraphicsScene(this)),
-    openImageDialog(new QFileDialog(this, tr("Select input image"), 0,
-                                    tr("Meteor-M2 Images (*.jpg *.bmp);;All files (*.*)"))),
-    fPreffix("")
+    mGraphicsScene(new QGraphicsScene(this)),
+    mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
+                                     tr("Meteor-M2 Images (*.jpg *.bmp);;All files (*.*)"))),
+    mFilePreffix("")
 {
     ui->setupUi(this);
     ui->statusbar->showMessage(tr("Select input files."));
-    ui->imageView->setScene(graphicsScene);
-    openImageDialog->setFileMode(QFileDialog::ExistingFile);
+    ui->imageView->setScene(mGraphicsScene);
+    mOpenImageDialog->setFileMode(QFileDialog::ExistingFile);
     QString curPath;
     if (settingsObj.usePreferedInputPath())
-        curPath = settingsObj.getPath(settings::INPUT_PREFERED);
+        curPath = settingsObj.getPath(msuSettings::INPUT_PREFERED);
     else
-        curPath = settingsObj.getPath(settings::INPUT_PREVIOUS);
-    openImageDialog->setDirectory(curPath);
+        curPath = settingsObj.getPath(msuSettings::INPUT_PREVIOUS);
+    mOpenImageDialog->setDirectory(curPath);
 
     connect(ui->statusbar, &QStatusBar::messageChanged, this, &MainWindow::showStdStatus);
     connect(ui->previewBox, &QGroupBox::toggled, this, &MainWindow::setPreview);
@@ -46,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    settingsObj.setPath(settings::INPUT_PREVIOUS, openImageDialog->directory().path());
+    settingsObj.setPath(msuSettings::INPUT_PREVIOUS, mOpenImageDialog->directory().path());
     delete ui;
 }
 
@@ -63,9 +64,9 @@ void MainWindow::showStdStatus(const QString message)
 
 void MainWindow::on_imagePathButton_clicked()
 {
-    if (openImageDialog->exec())
+    if (mOpenImageDialog->exec())
     {
-        ui->imagePathEdit->setText(openImageDialog->selectedFiles()[0]);
+        ui->imagePathEdit->setText(mOpenImageDialog->selectedFiles()[0]);
         this->onImagePathChanged();
     }
 }
@@ -86,13 +87,13 @@ void MainWindow::onImagePathChanged()
     {
         QStringList gcpFiles(file + ".gcp");
 
-        if (msuProjObj.setSRC(file.toStdString()) == MSUMR::success)
+        if (msuProjObj.setSrc(file.toStdString()) == msumr::SUCCESS)
         {
             ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Loaded"));
             ui->imageRowsLabel->setText(tr("Input Image Rows") + QString(" %1").arg(msuProjObj.getSrcXSize()));
             ui->imageLinesLabel->setText(tr("Input Image Lines") + QString(" %1").arg(msuProjObj.getSrcYSize()));
-            fPreffix = file.left(file.lastIndexOf('.'));
-            gcpFiles.append(fPreffix + ".gcp");
+            mFilePreffix = file.left(file.lastIndexOf('.'));
+            gcpFiles.append(mFilePreffix + ".gcp");
             foreach (QString gcpFile, gcpFiles)
                 if (QFile(gcpFile).exists())
                 {
@@ -124,9 +125,9 @@ void MainWindow::on_gcpPathButton_clicked()
     if (curPath.isEmpty())
     {
         if (settingsObj.usePreferedInputPath())
-            curPath = settingsObj.getPath(settings::INPUT_PREFERED);
+            curPath = settingsObj.getPath(msuSettings::INPUT_PREFERED);
         else
-            curPath = settingsObj.getPath(settings::INPUT_PREVIOUS);
+            curPath = settingsObj.getPath(msuSettings::INPUT_PREVIOUS);
     }
     QFileDialog openGCPs(this, tr("Select input GCP file"),
                          QFileInfo(curPath).path(),
@@ -154,13 +155,13 @@ void MainWindow::onGCPPathChanged()
     }
     else if (QFile(file).exists())
     {
-        if (msuProjObj.readGCP(file.toStdString()) == MSUMR::success)
+        if (msuProjObj.readGCP(file.toStdString()) == msumr::SUCCESS)
         {
             ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("Loaded"));
-            ui->gcpRowsLabel->setText(tr("Input GCPs Rows") + QString(" %1").arg(msuProjObj.getGcpXSize()));
-            ui->gcpLinesLabel->setText(tr("Input GCPs Lines") + QString(" %1").arg(msuProjObj.getGcpYSize()));
-            ui->gcpRowStepLabel->setText(tr("Input GCPs Row Step") + QString(" %1").arg(msuProjObj.getGcpXStep()));
-            ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step") + QString(" %1").arg(msuProjObj.getGcpYStep()));
+            ui->gcpRowsLabel->setText(tr("Input GCPs Rows") + QString(" %1").arg(msuProjObj.getGCPXSize()));
+            ui->gcpLinesLabel->setText(tr("Input GCPs Lines") + QString(" %1").arg(msuProjObj.getGCPYSize()));
+            ui->gcpRowStepLabel->setText(tr("Input GCPs Row Step") + QString(" %1").arg(msuProjObj.getGCPXStep()));
+            ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step") + QString(" %1").arg(msuProjObj.getGCPYStep()));
             ui->utmZone->setText(tr("UTM zone") + QString(" %1").arg(msuProjObj.getUTM().c_str()));
             this->changeStartButtonState();
             this->changeOutName();
@@ -185,9 +186,9 @@ void MainWindow::on_outPathButton_clicked()
     if (curPath.isEmpty())
     {
         if (settingsObj.usePreferedInputPath())
-            curPath = settingsObj.getPath(settings::INPUT_PREFERED);
+            curPath = settingsObj.getPath(msuSettings::INPUT_PREFERED);
         else
-            curPath = settingsObj.getPath(settings::INPUT_PREVIOUS);
+            curPath = settingsObj.getPath(msuSettings::INPUT_PREVIOUS);
     }
     QFileDialog outFile(this, tr("Specify output file"),
                         QFileInfo(curPath).path(),
@@ -205,9 +206,9 @@ void MainWindow::on_outPathButton_clicked()
 
 void MainWindow::changeOutName()
 {
-    if (ui->autoOutNameBox->isChecked() && !fPreffix.isEmpty())
+    if (ui->autoOutNameBox->isChecked() && !mFilePreffix.isEmpty())
     {
-        QString newName(fPreffix);
+        QString newName(mFilePreffix);
         if (ui->modeLatLonButton->isChecked())
             newName += "_proj";
         else
@@ -240,15 +241,15 @@ void MainWindow::setPreview()
         QString image(ui->imagePathEdit->text());
         if (QFileInfo(image).isFile())
         {
-            graphicsScene->clear();
-            graphicsScene->addPixmap(QPixmap(image));
-            ui->imageView->fitInView(graphicsScene->sceneRect(), Qt::KeepAspectRatio);
+            mGraphicsScene->clear();
+            mGraphicsScene->addPixmap(QPixmap(image));
+            ui->imageView->fitInView(mGraphicsScene->sceneRect(), Qt::KeepAspectRatio);
         }
     }
     else
     {
         ui->imageView->setBackgroundBrush(this->palette().color(QPalette::Midlight));
-        graphicsScene->clear();
+        mGraphicsScene->clear();
     }
 }
 
@@ -274,10 +275,10 @@ void MainWindow::on_startButton_clicked()
         if (!file.contains(QRegularExpression(".*\\.tif")))
             file += ".tif";
         ui->outPathEdit->setText(file);
-        msuProjObj.setDST(file.toStdString());
+        msuProjObj.setDst(file.toStdString());
         ui->statusbar->showMessage(tr("Transforming image, please wait..."));
-        MSUMR::retCode code = msuProjObj.warp(ui->modeUTMButton->isChecked(), ui->modeNDZBox->isChecked());
-        if (code == MSUMR::success)
+        msumr::RETURN_CODE code = msuProjObj.warp(ui->modeUTMButton->isChecked(), ui->modeNDZBox->isChecked());
+        if (code == msumr::SUCCESS)
             ui->statusbar->showMessage(tr("Transformation finished successfully"), 7000);
         else
             ui->statusbar->showMessage(tr("An error occured. Please check input data"), 7000);
@@ -327,7 +328,7 @@ void MainWindow::on_actionReference_triggered()
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     event->accept();
-    ui->imageView->fitInView(graphicsScene->sceneRect(), Qt::KeepAspectRatio);
+    ui->imageView->fitInView(mGraphicsScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

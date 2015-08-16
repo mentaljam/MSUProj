@@ -24,7 +24,7 @@ private slots:
 
 private:
     Ui::SettingsWindow *ui;
-    QStringList locales;
+    QStringList mLocales;
 };
 
 #endif // SETTINGSWINDOW_H

@@ -1,20 +1,21 @@
-#include "settingswindow.h"
-#include "ui_settingswindow.h"
-#include "settings.h"
 #include <QFileDialog>
 
+#include <settings.h>
+#include <settingswindow.h>
+#include <ui_settingswindow.h>
 
-extern settings settingsObj;
+
+extern msuSettings settingsObj;
 
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsWindow),
-    locales(settingsObj.getLocalesList())
+    mLocales(settingsObj.getLocalesList())
 {
     ui->setupUi(this);
     bool hasLocaleSet = false;
     QString curLocale(settingsObj.getLocale(&hasLocaleSet));
-    foreach (QString localeStr, locales)
+    foreach (QString localeStr, mLocales)
     {
         QLocale locale(localeStr);
         QString boxItem(locale.nativeLanguageName());
@@ -27,7 +28,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
             ui->langBox->setCurrentIndex(ui->langBox->count() - 1);
     }
 
-    ui->inputPathEdit->setText(settingsObj.getPath(settings::INPUT_PREFERED));
+    ui->inputPathEdit->setText(settingsObj.getPath(msuSettings::INPUT_PREFERED));
     ui->inputPathPreferedButton->setChecked(settingsObj.usePreferedInputPath());
 }
 
@@ -43,11 +44,11 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
     {
     case QDialogButtonBox::Ok:
         if (curIndex > 0)
-            settingsObj.setLocale(locales[curIndex - 1]);
+            settingsObj.setLocale(mLocales[curIndex - 1]);
         else
             settingsObj.unsetLocale();
         settingsObj.setUsePreferedInputPath(ui->inputPathPreferedButton->isChecked());
-        settingsObj.setPath(settings::INPUT_PREFERED, ui->inputPathEdit->text());
+        settingsObj.setPath(msuSettings::INPUT_PREFERED, ui->inputPathEdit->text());
         break;
     default:
         break;

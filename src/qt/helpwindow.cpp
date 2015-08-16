@@ -6,12 +6,12 @@
 
 #include <helpwindow.h>
 
-extern settings settingsObj;
+extern msuSettings settingsObj;
 
 
 HelpWindow::HelpWindow(QWidget *parent) :
     QMainWindow(parent),
-    mHelpEngine(new QHelpEngine(settingsObj.getResPath(settings::HELP) + "msuproj-qt.qhc", this))
+    mHelpEngine(new QHelpEngine(settingsObj.getResourcesPath(msuSettings::HELP) + "msuproj-qt.qhc", this))
 {
     this->resize(900, 600);
 

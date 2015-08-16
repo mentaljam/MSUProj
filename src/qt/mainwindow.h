@@ -35,9 +35,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *graphicsScene;
-    QFileDialog    *openImageDialog;
-    QString        fPreffix;
+    QGraphicsScene *mGraphicsScene;
+    QFileDialog    *mOpenImageDialog;
+    QString        mFilePreffix;
 
 protected:
     void resizeEvent(QResizeEvent *event);

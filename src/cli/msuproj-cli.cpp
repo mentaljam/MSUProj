@@ -2,7 +2,7 @@
 #include "iostream"
 
 using namespace std;
-using namespace MSUMR;
+using namespace msumr;
 
 int main(int argc, char *argv[])
 {
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
             else if (!strcmp(argv[i], "-z"))
                 zerosAsND = true;
             else if (i + 1 < argc && !strcmp(argv[i], "-f"))
-                msuObj.setDSTFormat(argv[++i]);
+                msuObj.setDstFormat(argv[++i]);
             else
                 clog << "WARNING: Unknown option '" << argv[i] << "'" << endl;
         }
@@ -68,17 +68,17 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    retCode code;
+    RETURN_CODE code;
 
-    code = msuObj.setSRC(srcFile);
-    if (code != success)
+    code = msuObj.setSrc(srcFile);
+    if (code != SUCCESS)
     {
         cerr << "ERROR: can not read input file" << endl;
         return code;
     }
 
     code = msuObj.readGCP(gcpFile);
-    if (code != success)
+    if (code != SUCCESS)
     {
         cerr << "ERROR: can not read gcp file" << endl;
         return code;
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
         dstFile += ".tif";
     }
 
-    msuObj.setDST(dstFile);
+    msuObj.setDst(dstFile);
 
     cout << "Processing warp operation";
     if (useUTM)
@@ -109,13 +109,13 @@ int main(int argc, char *argv[])
     code = msuObj.warp(useUTM, zerosAsND);
     int exeTime = (clock() - sTime) / CLOCKS_PER_SEC;
     switch (code) {
-    case errSRC:
+    case ERROR_SRC:
         cerr << "ERROR: can not read input file" << endl;
         break;
-    case errDST:
+    case ERROR_DST:
         cerr << "ERROR: can not write output file" << endl;
         break;
-    case errGCP:
+    case ERROR_GCP:
         cerr << "ERROR: can not read gcp file" << endl;
         break;
     default:

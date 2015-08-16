@@ -1,27 +1,28 @@
-#include "mainwindow.h"
-#include "settings.h"
-#include <msuproj.h>
 #include <QApplication>
 #include <QTranslator>
 
-MSUMR::MSUProj msuProjObj;
-settings settingsObj;
+#include <msuproj.h>
+#include <settings.h>
+#include <mainwindow.h>
+
+msumr::MSUProj msuProjObj;
+msuSettings settingsObj;
 
 int main(int argc, char *argv[])
 {
     GDALAllRegister();
 
-    QApplication MSUProjQt(argc, argv);
-    MSUProjQt.setApplicationName("MSUProj-Qt");
-    MSUProjQt.setOrganizationName("NTsOMZ");
-    MSUProjQt.setOrganizationDomain("www.ntsomz.ru");
+    QApplication msuProjQt(argc, argv);
+    msuProjQt.setApplicationName("MSUProj-Qt");
+    msuProjQt.setOrganizationName("NTsOMZ");
+    msuProjQt.setOrganizationDomain("www.ntsomz.ru");
 
     QTranslator appTranslation;
-    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getResPath(settings::I18N)))
-        MSUProjQt.installTranslator(&appTranslation);
+    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getResourcesPath(msuSettings::I18N)))
+        msuProjQt.installTranslator(&appTranslation);
 
-    MainWindow MSUProjMainWindow;
-    MSUProjMainWindow.show();
+    MainWindow msuProjMainWindow;
+    msuProjMainWindow.show();
 
-    return MSUProjQt.exec();
+    return msuProjQt.exec();
 }

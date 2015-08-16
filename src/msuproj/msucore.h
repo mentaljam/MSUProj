@@ -10,26 +10,26 @@
 #endif
 
 
-namespace MSUMR {
+namespace msumr {
 
 static const unsigned short lineWidth = 1568; ///< The MSU-MR line width
 
 /**
  * @brief The enumeration of exit codes
  */
-enum retCode
+enum RETURN_CODE
 {
-    success, ///< Successful exit
-    errSRC,  ///< Error of reading of a source raster
-    errDST,  ///< Error of creation of a destination raster
-    errGCP,  ///< Error of reading of a GCP file
-    errStat  ///< Error of reading a stat file
+    SUCCESS,   ///< Successful exit
+    ERROR_SRC, ///< Error of reading of a source raster
+    ERROR_DST, ///< Error of creation of a destination raster
+    ERROR_GCP, ///< Error of reading of a GCP file
+    ERROR_STAT ///< Error of reading a stat file
 };
 
 /**
  * @brief The Ground control point (GCP) structure
  */
-struct gcp
+struct GCP
 {
     int x;      ///< A row of a source data matrix
     int y;      ///< A line of a source data matrix

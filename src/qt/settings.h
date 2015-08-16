@@ -4,7 +4,7 @@
 
 #include <QSettings>
 
-class settings
+class msuSettings
 {
 
 public:
@@ -25,13 +25,13 @@ public:
 
 public:
 
-    settings();
+    msuSettings();
 
     void clearSettings();
 
     QStringList getLocalesList() const;
     QString getLocale(bool *ok = 0) const;
-    QString getResPath(const RES_PATHS type) const;
+    QString getResourcesPath(const RES_PATHS type) const;
     void setLocale(const QString &locale);
     void unsetLocale();
 
@@ -43,9 +43,9 @@ public:
 
 private:
 
-    QSettings   _settings;
-    QString     _resPath;
-    QStringList _pathsKeys;
+    QSettings   mSettings;
+    QString     mResourcesPath;
+    QStringList mPathsKeys;
 
 };
 
