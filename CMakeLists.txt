@@ -89,7 +89,6 @@ set(INSTALL_PATH_LIB lib)
 find_package(OMZModules)
 include(OMZProjectPreConf)
 include(OMZDoxyConf)
-include(OMZFunctions)
 
 
 ####################### GDAL library #######################
