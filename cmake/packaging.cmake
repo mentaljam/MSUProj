@@ -117,10 +117,13 @@ if(WIN32 AND INSTALL_RUNTIME)
                       ${QTDIR}/plugins/imageformats/qwbmp.dll
                 DESTINATION ${INSTALL_PATH_BIN}/imageformats
                 COMPONENT runtime)
-        file(GLOB QTQMS ${QTDIR}/translations/qtbase*.qm)
-        install(FILES ${QTQMS}
-                DESTINATION ${INSTALL_PATH_I18N}
+        install(FILES ${QTDIR}/plugins/sqldrivers/qsqlite.dll
+                DESTINATION  ${INSTALL_PATH_BIN}/sqldrivers
                 COMPONENT runtime)
+#        file(GLOB QTQMS ${QTDIR}/translations/qtbase*.qm)
+#        install(FILES ${QTQMS}
+#                DESTINATION ${INSTALL_PATH_I18N}
+#                COMPONENT runtime)
     endif()
 
 endif()
