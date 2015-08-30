@@ -1,4 +1,4 @@
-﻿[Desktop Entry]
+[Desktop Entry]
 Type=Application
 Name=MSUProj-Qt
 Version="@V_VERSION@"
@@ -14,3 +14,4 @@ Keywords=meteor-m;msu-mr;raster
 GenericName[ru_RU]=Графическая оболочка для MSUProj
 Name[ru_RU]=MSUProj-Qt
 Icon[ru_RU]=msuproj
+

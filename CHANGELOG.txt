@@ -1,12 +1,26 @@
 Current:
 
+0.6 (2015-08-30)
+    - NEW:    An option to open file dialogs in a previously selected folder or a prefered folder
+    - NEW:    Default (English) interface language in settings window
+    - NEW:    Warping in separate thread (no GUI freezing)
+    - NEW:    Save and restore windows' states and geometries
+    - FIX:    Out file name updating when GCP file os selected manually
+    - FIX:    Wrong GCP file reading in MSUProj-Qt on Linux
+    - FIX:    Different small GUI fixes
+    - UPDATE: Project documentation (add target to upload doxygen html output to GH pages)
+    - UPDATE: MSUProj-Qt reference window (using QT Help)
+    - UPDATE: Translations (new sources for linux .desktop file and doxygen based manual)
+    - UPDATE: Project configuration
+    - UPDATE: Code refactoring and restyling
+
 0.5 (2015-07-28)
     - FIX:    Fix shared library building
-    - New:    Franch translation (thanks Christophe Tof <zetofzone@gmail.com>)
-    - New:    Russian translation
-    - New:    Settings window with ability to change language
-    - New:    Project icon
-    - New:    Windows RC files for runtime targets
+    - NEW:    Franch translation (thanks Christophe Tof <zetofzone@gmail.com>)
+    - NEW:    Russian translation
+    - NEW:    Settings window with ability to change language
+    - NEW:    Project icon
+    - NEW:    Windows RC files for runtime targets
     - UPDATE: GUI
 
 0.4 (2015-07-25):
@@ -22,6 +36,6 @@ Current:
     - NEW:    Added getUTM() method which returns UTM zone number in {N,S}No format
     - REMOVE: Removed setUTM()
     - NEW:    warp() options:
-        - useUTM - build output raster in UTM projection
-        - zerosAsND - set no data value to zero
+                - useUTM - build output raster in UTM projection
+                - zerosAsND - set no data value to zero
     - FIX:    calculation of UTM zone number
