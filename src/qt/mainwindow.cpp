@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mGraphicsScene(new QGraphicsScene(this)),
     mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
                                      tr("Meteor-M2 Images (*.jpg *.bmp);;All files (*.*)"))),
-    mFilePreffix("")
+    mFilePreffix(""),
+    mCurrentImage("")
 {
     ui->setupUi(this);
     ui->statusbar->showMessage(tr("Select input files."));
@@ -74,49 +75,51 @@ void MainWindow::on_imagePathButton_clicked()
 void MainWindow::onImagePathChanged()
 {
     QString file(ui->imagePathEdit->text());
-    if (file.isEmpty())
+    if (file != mCurrentImage)
     {
+        mCurrentImage = file;
+
         ui->imagePathLabel->setText(tr("Input Image File"));
         ui->imageRowsLabel->setText(tr("Input Image Rows"));
         ui->imageLinesLabel->setText(tr("Input Image Lines"));
-        ui->gcpBox->setEnabled(false);
         ui->gcpPathEdit->clear();
-        this->onGCPPathChanged();
-    }
-    else if (QFile(file).exists())
-    {
-        QStringList gcpFiles(file + ".gcp");
+        ui->gcpBox->setEnabled(false);
 
-        if (msuProjObj.setSrc(file.toStdString()) == msumr::SUCCESS)
+        if (QFile(file).exists())
         {
-            ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Loaded"));
-            ui->imageRowsLabel->setText(tr("Input Image Rows") + QString(" %1").arg(msuProjObj.getSrcXSize()));
-            ui->imageLinesLabel->setText(tr("Input Image Lines") + QString(" %1").arg(msuProjObj.getSrcYSize()));
-            mFilePreffix = file.left(file.lastIndexOf('.'));
-            gcpFiles.append(mFilePreffix + ".gcp");
-            foreach (QString gcpFile, gcpFiles)
-                if (QFile(gcpFile).exists())
-                {
-                    ui->gcpPathEdit->setText(gcpFile);
-                    this->onGCPPathChanged();
-                    break;
-                }
-            ui->gcpBox->setEnabled(true);
-            this->changeOutName();
-            this->setPreview();
+            QStringList gcpFiles(file + ".gcp");
+
+            if (msuProjObj.setSrc(file.toStdString()) == msumr::SUCCESS)
+            {
+                ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Loaded"));
+                ui->imageRowsLabel->setText(tr("Input Image Rows") + QString(" %1").arg(msuProjObj.getSrcXSize()));
+                ui->imageLinesLabel->setText(tr("Input Image Lines") + QString(" %1").arg(msuProjObj.getSrcYSize()));
+                ui->gcpBox->setEnabled(true);
+                mFilePreffix = file.left(file.lastIndexOf('.'));
+                gcpFiles.append(mFilePreffix + ".gcp");
+                foreach (QString gcpFile, gcpFiles)
+                    if (QFile(gcpFile).exists())
+                    {
+                        ui->gcpPathEdit->setText(gcpFile);
+                        break;
+                    }
+                this->changeOutName();
+            }
+            else
+            {
+                ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Error loading"));
+                ui->statusbar->showMessage(tr("Error loading image"), 7000);
+            }
         }
         else
         {
-            ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Error loading"));
-            ui->statusbar->showMessage(tr("Error loading image"), 7000);
+            ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("No such file"));
+            ui->statusbar->showMessage(tr("Image file does not exist"), 7000);
         }
+        this->setPreview();
+        this->changeStartButtonState();
+        this->onGCPPathChanged();
     }
-    else
-    {
-        ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("No such file"));
-        ui->statusbar->showMessage(tr("Image file does not exist"), 7000);
-    }
-    this->changeStartButtonState();
 }
 
 void MainWindow::on_gcpPathButton_clicked()
@@ -130,7 +133,7 @@ void MainWindow::on_gcpPathButton_clicked()
             curPath = settingsObj.getPath(MSUSettings::INPUT_PREVIOUS);
     }
     QFileDialog openGCPs(this, tr("Select input GCP file"),
-                         QFileInfo(curPath).path(),
+                         curPath,
                          tr("Meteor-M2 GCP file (*.gcp);;All files (*.*)"));
     openGCPs.setFileMode(QFileDialog::ExistingFile);
     if (openGCPs.exec())
@@ -235,13 +238,13 @@ void MainWindow::setOutNameMode(bool state)
 
 void MainWindow::setPreview()
 {
+    mGraphicsScene->clear();
     if (ui->previewBox->isChecked())
     {
         ui->imageView->setBackgroundBrush(this->palette().color(QPalette::Light));
         QString image(ui->imagePathEdit->text());
         if (QFileInfo(image).isFile())
         {
-            mGraphicsScene->clear();
             mGraphicsScene->addPixmap(QPixmap(image));
             ui->imageView->fitInView(mGraphicsScene->sceneRect(), Qt::KeepAspectRatio);
         }
@@ -249,7 +252,6 @@ void MainWindow::setPreview()
     else
     {
         ui->imageView->setBackgroundBrush(this->palette().color(QPalette::Midlight));
-        mGraphicsScene->clear();
     }
 }
 

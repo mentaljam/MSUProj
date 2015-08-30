@@ -38,6 +38,7 @@ private:
     QGraphicsScene *mGraphicsScene;
     QFileDialog    *mOpenImageDialog;
     QString        mFilePreffix;
+    QString        mCurrentImage;
 
 protected:
     void resizeEvent(QResizeEvent *event);
