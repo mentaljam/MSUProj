@@ -54,17 +54,14 @@ endif()
 
 ################## MSUProj-GUI executable ##################
 
-set(MSUPROJQT_SOURCES main.cpp
-                      mainwindow.cpp
-                      mainwindow.ui
-                      settings.cpp
-                      settingswindow.cpp
-                      settingswindow.ui
-                      helpwindow.cpp
-                      helpbrowser.cpp
-                      ${QM_FILES}
-                      ${TS_FILES}
-                      ${PNG_QRC})
+file(GLOB MSUPROJQT_SOURCES  *.cpp
+                             *.ui
+)
+list(APPEND MSUPROJQT_SOURCES ${QM_FILES}
+                              ${TS_FILES}
+                              ${PNG_QRC}
+)
+
 if(WIN32)
     set(VER_FILEDESCRIPTION_STR  "MSUProj Qt Interface")
     set(VER_INTERNALNAME_STR     "msuproj-qt")

@@ -5,6 +5,8 @@
 #include <QGraphicsView>
 #include <QFileDialog>
 
+#include <warper.h>
+
 namespace Ui {
 class MainWindow;
 }
@@ -32,11 +34,14 @@ private slots:
     void on_actionSettings_triggered();
     void on_actionAbout_triggered();
     void on_actionReference_triggered();
+    void onWarpStarted();
+    void onWarpFinished(msumr::RETURN_CODE code);
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *mGraphicsScene;
     QFileDialog    *mOpenImageDialog;
+    Warper         *mWarper;
     QString        mFilePreffix;
     QString        mCurrentImage;
 

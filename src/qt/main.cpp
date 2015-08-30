@@ -1,11 +1,9 @@
 #include <QApplication>
 #include <QTranslator>
 
-#include <msuproj.h>
 #include <settings.h>
 #include <mainwindow.h>
 
-msumr::MSUProj msuProjObj;
 MSUSettings settingsObj;
 
 int main(int argc, char *argv[])

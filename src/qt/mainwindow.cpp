@@ -3,7 +3,6 @@
 #include <QDesktopWidget>
 
 #include <msuproj_version.h>
-#include <msuproj.h>
 #include <settings.h>
 #include <settingswindow.h>
 #include <helpwindow.h>
@@ -11,7 +10,6 @@
 #include <ui_mainwindow.h>
 
 
-extern msumr::MSUProj msuProjObj;
 extern MSUSettings settingsObj;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -20,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mGraphicsScene(new QGraphicsScene(this)),
     mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
                                      tr("Meteor-M2 Images (*.jpg *.bmp);;All files (*.*)"))),
+    mWarper(new Warper),
     mFilePreffix(""),
     mCurrentImage("")
 {
@@ -44,11 +43,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->modeLatLonButton, &QRadioButton::clicked, this, &MainWindow::changeOutName);
     connect(ui->modeUTMButton, &QRadioButton::clicked, this, &MainWindow::changeOutName);
     connect(ui->autoOutNameBox, &QCheckBox::toggled, this, &MainWindow::setOutNameMode);
+
+    connect(mWarper, &Warper::started, this, &MainWindow::onWarpStarted);
+    connect(mWarper, &Warper::finished, this, &MainWindow::onWarpFinished);
 }
 
 MainWindow::~MainWindow()
 {
     settingsObj.setPath(MSUSettings::INPUT_PREVIOUS, mOpenImageDialog->directory().path());
+    QThread *wThread = mWarper->thread();
+    if (wThread != qApp->thread())
+        wThread->terminate();
+    delete mWarper;
     delete ui;
 }
 
@@ -89,11 +95,11 @@ void MainWindow::onImagePathChanged()
         {
             QStringList gcpFiles(file + ".gcp");
 
-            if (msuProjObj.setSrc(file.toStdString()) == msumr::SUCCESS)
+            if (mWarper->setSrc(file) == msumr::SUCCESS)
             {
                 ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Loaded"));
-                ui->imageRowsLabel->setText(tr("Input Image Rows") + QString(" %1").arg(msuProjObj.getSrcXSize()));
-                ui->imageLinesLabel->setText(tr("Input Image Lines") + QString(" %1").arg(msuProjObj.getSrcYSize()));
+                ui->imageRowsLabel->setText(tr("Input Image Rows") + QString(" %1").arg(mWarper->getSrcXSize()));
+                ui->imageLinesLabel->setText(tr("Input Image Lines") + QString(" %1").arg(mWarper->getSrcYSize()));
                 ui->gcpBox->setEnabled(true);
                 mFilePreffix = file.left(file.lastIndexOf('.'));
                 gcpFiles.append(mFilePreffix + ".gcp");
@@ -158,14 +164,14 @@ void MainWindow::onGCPPathChanged()
     }
     else if (QFile(file).exists())
     {
-        if (msuProjObj.readGCP(file.toStdString()) == msumr::SUCCESS)
+        if (mWarper->readGCP(file) == msumr::SUCCESS)
         {
             ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("Loaded"));
-            ui->gcpRowsLabel->setText(tr("Input GCPs Rows") + QString(" %1").arg(msuProjObj.getGCPXSize()));
-            ui->gcpLinesLabel->setText(tr("Input GCPs Lines") + QString(" %1").arg(msuProjObj.getGCPYSize()));
-            ui->gcpRowStepLabel->setText(tr("Input GCPs Row Step") + QString(" %1").arg(msuProjObj.getGCPXStep()));
-            ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step") + QString(" %1").arg(msuProjObj.getGCPYStep()));
-            ui->utmZone->setText(tr("UTM zone") + QString(" %1").arg(msuProjObj.getUTM().c_str()));
+            ui->gcpRowsLabel->setText(tr("Input GCPs Rows") + QString(" %1").arg(mWarper->getGCPXSize()));
+            ui->gcpLinesLabel->setText(tr("Input GCPs Lines") + QString(" %1").arg(mWarper->getGCPYSize()));
+            ui->gcpRowStepLabel->setText(tr("Input GCPs Row Step") + QString(" %1").arg(mWarper->getGCPXStep()));
+            ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step") + QString(" %1").arg(mWarper->getGCPYStep()));
+            ui->utmZone->setText(tr("UTM zone") + QString(" %1").arg(mWarper->getUTM()));
             this->changeStartButtonState();
             this->changeOutName();
         }
@@ -215,7 +221,7 @@ void MainWindow::changeOutName()
         if (ui->modeLatLonButton->isChecked())
             newName += "_proj";
         else
-            newName = QString("%1_%2").arg(newName).arg(msuProjObj.getUTM().c_str());
+            newName = QString("%1_%2").arg(newName).arg(mWarper->getUTM());
         if (QFile(newName + ".tif").exists())
         {
             unsigned int postfix = 0;
@@ -268,7 +274,6 @@ void MainWindow::changeStartButtonState()
 
 void MainWindow::on_startButton_clicked()
 {
-    ui->startButton->setEnabled(false);
     QString file(ui->outPathEdit->text());
     while (file.endsWith('/') || file.endsWith('\\'))
         file = file.left(file.size() - 1);
@@ -277,15 +282,14 @@ void MainWindow::on_startButton_clicked()
         if (!file.contains(QRegularExpression(".*\\.tif")))
             file += ".tif";
         ui->outPathEdit->setText(file);
-        msuProjObj.setDst(file.toStdString());
-        ui->statusbar->showMessage(tr("Transforming image, please wait..."));
-        msumr::RETURN_CODE code = msuProjObj.warp(ui->modeUTMButton->isChecked(), ui->modeNDZBox->isChecked());
-        if (code == msumr::SUCCESS)
-            ui->statusbar->showMessage(tr("Transformation finished successfully"), 7000);
-        else
-            ui->statusbar->showMessage(tr("An error occured. Please check input data"), 7000);
-        this->changeOutName();
-        ui->startButton->setEnabled(true);
+        mWarper->setDst(file);
+        mWarper->setUseUTM(ui->modeUTMButton->isChecked());
+        mWarper->setZerosAsND(ui->modeNDZBox->isChecked());
+        QThread *thread = new QThread;
+        mWarper->moveToThread(thread);
+        connect(thread, &QThread::started, mWarper, &Warper::start);
+        connect(mWarper, &Warper::finished, thread, &QThread::exit);
+        thread->start();
     }
     else
     {
@@ -325,6 +329,25 @@ void MainWindow::on_actionReference_triggered()
     refWindow->setAttribute(Qt::WA_DeleteOnClose);
     connect(refWindow, &QDialog::destroyed, ui->actionReference, &QAction::setEnabled);
     refWindow->show();
+}
+
+void MainWindow::onWarpStarted()
+{
+    ui->centralwidget->setEnabled(false);
+    ui->menubar->setEnabled(false);
+    ui->statusbar->showMessage(tr("Transforming image, please wait..."));
+}
+
+void MainWindow::onWarpFinished(msumr::RETURN_CODE code)
+{
+    qApp->alert(this);
+    if (code == msumr::SUCCESS)
+        ui->statusbar->showMessage(tr("Transformation finished successfully"), 7000);
+    else
+        ui->statusbar->showMessage(tr("An error occured. Please check input data"), 7000);
+    this->changeOutName();
+    ui->centralwidget->setEnabled(true);
+    ui->menubar->setEnabled(true);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
