@@ -11,7 +11,7 @@ HelpWindow::HelpWindow(QWidget *parent) :
     mActionGoMainPage(new QAction(tr("Home"), this)),
     mActionBackward(new QAction(tr("Backward"), this)),
     mActionForward(new QAction(tr("Forward"), this)),
-    mHelpEngine(new QHelpEngine(settingsObj.getResourcesPath(MSUSettings::HELP) + "msuproj-qt.qhc", this)),
+    mHelpEngine(new QHelpEngine(settingsObj.getPath(MSUSettings::PATH_SHARE_HELP) + "msuproj-qt.qhc", this)),
     mPageWidget(new HelpBrowser(mHelpEngine, this))
 {
     QByteArray geom(settingsObj.getGeometry(MSUSettings::HELPWINDOW));

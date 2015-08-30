@@ -9,18 +9,19 @@ class MSUSettings
 
 public:
 
-    enum PATHS_TYPES
+    enum PATHS
     {
-        INPUT_PREVIOUS,
-        INPUT_PREFERED,
-        PATHS_TYPES_SIZE,
+        PATH_SHARE_I18N,
+        PATH_SHARE_HELP,
+        PATH_SHARE,
+        PATH_INPUT_PREVIOUS,
+        PATH_INPUT_PREFERED,
+        PATH_TOTAL
     };
 
-    enum RES_PATHS
+    enum BOOL_OPTIONS
     {
-        RES_ROOT,
-        I18N,
-        HELP
+        BOOL_USE_PREFERED_INPUT
     };
 
     enum WIDGETS
@@ -37,27 +38,31 @@ public:
 
     QStringList getLocalesList() const;
     QString getLocale(bool *ok = 0) const;
-    QString getResourcesPath(const RES_PATHS type) const;
     void setLocale(const QString &locale);
     void unsetLocale();
 
-    QString getPath(const PATHS_TYPES type) const;
-    void setPath(const PATHS_TYPES type, const QString &value);
+    QString getPath(const PATHS type) const;
+    void setPath(const PATHS type, const QString &value);
 
-    bool usePreferedInputPath() const;
-    void setUsePreferedInputPath(const bool value);
+    bool getBool(BOOL_OPTIONS type) const;
+    void setBool(BOOL_OPTIONS type, const bool &value);
 
-    QByteArray getGeometry(WIDGETS widget) const;
-    void setGeometry(WIDGETS widget, const QByteArray &value);
+    QByteArray getGeometry(WIDGETS type) const;
+    void setGeometry(WIDGETS type, const QByteArray &value);
 
-    QByteArray getState(WIDGETS widget) const;
-    void setState(WIDGETS widget, const QByteArray &value);
+    QByteArray getState(WIDGETS type) const;
+    void setState(WIDGETS type, const QByteArray &value);
 
 private:
 
     QSettings   mSettings;
     QString     mResourcesPath;
-    QStringList mPathsKeys;
+
+private:
+
+    QString option(PATHS type) const;
+    QString option(BOOL_OPTIONS type) const;
+    QString option(WIDGETS type) const;
 
 };
 

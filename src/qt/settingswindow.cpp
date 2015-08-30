@@ -31,8 +31,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
                 ui->langBox->setCurrentIndex(1);
     }
 
-    ui->inputPathEdit->setText(settingsObj.getPath(MSUSettings::INPUT_PREFERED));
-    ui->inputPathPreferedButton->setChecked(settingsObj.usePreferedInputPath());
+    ui->inputPathEdit->setText(settingsObj.getPath(MSUSettings::PATH_INPUT_PREFERED));
+    ui->inputPathPreferedButton->setChecked(settingsObj.getBool(MSUSettings::BOOL_USE_PREFERED_INPUT));
 }
 
 SettingsWindow::~SettingsWindow()
@@ -58,8 +58,8 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
             settingsObj.setLocale(mLocales[curIndex - 2]);
             break;
         }
-        settingsObj.setUsePreferedInputPath(ui->inputPathPreferedButton->isChecked());
-        settingsObj.setPath(MSUSettings::INPUT_PREFERED, ui->inputPathEdit->text());
+        settingsObj.setBool(MSUSettings::BOOL_USE_PREFERED_INPUT, ui->inputPathPreferedButton->isChecked());
+        settingsObj.setPath(MSUSettings::PATH_INPUT_PREFERED, ui->inputPathEdit->text());
         break;
     default:
         break;

@@ -32,10 +32,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->imageView->setScene(mGraphicsScene);
     mOpenImageDialog->setFileMode(QFileDialog::ExistingFile);
     QString curPath;
-    if (settingsObj.usePreferedInputPath())
-        curPath = settingsObj.getPath(MSUSettings::INPUT_PREFERED);
+    if (settingsObj.getBool(MSUSettings::BOOL_USE_PREFERED_INPUT))
+        curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREFERED);
     else
-        curPath = settingsObj.getPath(MSUSettings::INPUT_PREVIOUS);
+        curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREVIOUS);
     mOpenImageDialog->setDirectory(curPath);
 
     connect(ui->statusbar, &QStatusBar::messageChanged, this, &MainWindow::showStdStatus);
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    settingsObj.setPath(MSUSettings::INPUT_PREVIOUS, mOpenImageDialog->directory().path());
+    settingsObj.setPath(MSUSettings::PATH_INPUT_PREVIOUS, mOpenImageDialog->directory().path());
     settingsObj.setGeometry(MSUSettings::MAINWINDOW, this->saveGeometry());
     QThread *wThread = mWarper->thread();
     if (wThread != qApp->thread())
@@ -139,10 +139,10 @@ void MainWindow::on_gcpPathButton_clicked()
     QString curPath = ui->gcpPathEdit->text();
     if (curPath.isEmpty())
     {
-        if (settingsObj.usePreferedInputPath())
-            curPath = settingsObj.getPath(MSUSettings::INPUT_PREFERED);
+        if (settingsObj.getBool(MSUSettings::BOOL_USE_PREFERED_INPUT))
+            curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREFERED);
         else
-            curPath = settingsObj.getPath(MSUSettings::INPUT_PREVIOUS);
+            curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREVIOUS);
     }
     QFileDialog openGCPs(this, tr("Select input GCP file"),
                          curPath,
@@ -200,10 +200,10 @@ void MainWindow::on_outPathButton_clicked()
     QString curPath = ui->outPathEdit->text();
     if (curPath.isEmpty())
     {
-        if (settingsObj.usePreferedInputPath())
-            curPath = settingsObj.getPath(MSUSettings::INPUT_PREFERED);
+        if (settingsObj.getBool(MSUSettings::BOOL_USE_PREFERED_INPUT))
+            curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREFERED);
         else
-            curPath = settingsObj.getPath(MSUSettings::INPUT_PREVIOUS);
+            curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREVIOUS);
     }
     QFileDialog outFile(this, tr("Specify output file"),
                         QFileInfo(curPath).path(),
