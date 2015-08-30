@@ -91,10 +91,12 @@ const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
         mGCPs[gIter].y = stoi(tmp);
         getline(iss, tmp, ' ');
         tmp = comma2dot(tmp);
-        mGCPs[gIter].lat = stod(tmp);
+        std::stringstream(tmp) >> mGCPs[gIter].lat;
+//        mGCPs[gIter].lat = stod(tmp);
         getline(iss, tmp);
         tmp = comma2dot(tmp);
-        mGCPs[gIter].lon = stod(tmp);
+        std::stringstream(tmp) >> mGCPs[gIter].lon;
+//        mGCPs[gIter].lon = stod(tmp);
         ++gIter;
     }
 
