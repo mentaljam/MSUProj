@@ -6,7 +6,7 @@
 #include <mainwindow.h>
 
 msumr::MSUProj msuProjObj;
-msuSettings settingsObj;
+MSUSettings settingsObj;
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     msuProjQt.setOrganizationDomain("www.ntsomz.ru");
 
     QTranslator appTranslation;
-    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getResourcesPath(msuSettings::I18N)))
+    if (appTranslation.load("msuproj-qt_" + settingsObj.getLocale(), settingsObj.getResourcesPath(MSUSettings::I18N)))
         msuProjQt.installTranslator(&appTranslation);
 
     MainWindow msuProjMainWindow;

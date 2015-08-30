@@ -5,7 +5,7 @@
 #include <ui_settingswindow.h>
 
 
-extern msuSettings settingsObj;
+extern MSUSettings settingsObj;
 
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QDialog(parent),
@@ -31,7 +31,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
                 ui->langBox->setCurrentIndex(1);
     }
 
-    ui->inputPathEdit->setText(settingsObj.getPath(msuSettings::INPUT_PREFERED));
+    ui->inputPathEdit->setText(settingsObj.getPath(MSUSettings::INPUT_PREFERED));
     ui->inputPathPreferedButton->setChecked(settingsObj.usePreferedInputPath());
 }
 
@@ -59,7 +59,7 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
             break;
         }
         settingsObj.setUsePreferedInputPath(ui->inputPathPreferedButton->isChecked());
-        settingsObj.setPath(msuSettings::INPUT_PREFERED, ui->inputPathEdit->text());
+        settingsObj.setPath(MSUSettings::INPUT_PREFERED, ui->inputPathEdit->text());
         break;
     default:
         break;

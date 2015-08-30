@@ -4,7 +4,7 @@
 
 #include <QSettings>
 
-class msuSettings
+class MSUSettings
 {
 
 public:
@@ -25,7 +25,7 @@ public:
 
 public:
 
-    msuSettings();
+    MSUSettings();
 
     void clearSettings();
 

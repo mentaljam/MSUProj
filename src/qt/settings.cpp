@@ -5,7 +5,7 @@
 #include <settings.h>
 
 
-msuSettings::msuSettings() :
+MSUSettings::MSUSettings() :
     mSettings(QSettings::IniFormat, QSettings::UserScope,
               "NTsOMZ", "MSUProj-Qt"),
     mResourcesPath(""),
@@ -26,12 +26,12 @@ msuSettings::msuSettings() :
         }
 }
 
-void msuSettings::clearSettings()
+void MSUSettings::clearSettings()
 {
     mSettings.clear();
 }
 
-QStringList msuSettings::getLocalesList() const
+QStringList MSUSettings::getLocalesList() const
 {
     if (!mResourcesPath.isEmpty())
     {
@@ -49,14 +49,14 @@ QStringList msuSettings::getLocalesList() const
         return QStringList();
 }
 
-QString msuSettings::getLocale(bool *ok) const
+QString MSUSettings::getLocale(bool *ok) const
 {
     if (ok)
         *ok = mSettings.value("locale").toBool();
     return mSettings.value("locale", QLocale().system().name()).toString();
 }
 
-QString msuSettings::getResourcesPath(const RES_PATHS type) const
+QString MSUSettings::getResourcesPath(const RES_PATHS type) const
 {
     switch (type) {
     case I18N:
@@ -68,17 +68,17 @@ QString msuSettings::getResourcesPath(const RES_PATHS type) const
     }
 }
 
-void msuSettings::setLocale(const QString &locale)
+void MSUSettings::setLocale(const QString &locale)
 {
     mSettings.setValue("locale", locale);
 }
 
-void msuSettings::unsetLocale()
+void MSUSettings::unsetLocale()
 {
     mSettings.remove("locale");
 }
 
-QString msuSettings::getPath(const PATHS_TYPES type) const
+QString MSUSettings::getPath(const PATHS_TYPES type) const
 {
     if (type < PATHS_TYPES_SIZE)
         return mSettings.value(mPathsKeys[type]).toString();
@@ -86,18 +86,18 @@ QString msuSettings::getPath(const PATHS_TYPES type) const
         return QString();
 }
 
-void msuSettings::setPath(const PATHS_TYPES type, const QString &value)
+void MSUSettings::setPath(const PATHS_TYPES type, const QString &value)
 {
     if (type < PATHS_TYPES_SIZE)
         mSettings.setValue(mPathsKeys[type], value);
 }
 
-bool msuSettings::usePreferedInputPath() const
+bool MSUSettings::usePreferedInputPath() const
 {
     return mSettings.value("UsePreferedPath").toBool();
 }
 
-void msuSettings::setUsePreferedInputPath(const bool value)
+void MSUSettings::setUsePreferedInputPath(const bool value)
 {
     mSettings.setValue("UsePreferedPath", value);
 }
