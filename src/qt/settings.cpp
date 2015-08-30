@@ -101,3 +101,59 @@ void MSUSettings::setUsePreferedInputPath(const bool value)
 {
     mSettings.setValue("UsePreferedPath", value);
 }
+
+QByteArray MSUSettings::getGeometry(MSUSettings::WIDGETS widget) const
+{
+    switch (widget)
+    {
+    case MAINWINDOW:
+        return mSettings.value("MainWindow/geom").toByteArray();
+    case HELPWINDOW:
+        return mSettings.value("HelpWindow/geom").toByteArray();
+    default:
+        return 0;
+    }
+}
+
+void MSUSettings::setGeometry(MSUSettings::WIDGETS widget, const QByteArray &value)
+{
+    switch (widget)
+    {
+    case MAINWINDOW:
+        mSettings.setValue("MainWindow/geom", value);
+        break;
+    case HELPWINDOW:
+        mSettings.setValue("HelpWindow/geom", value);
+        break;
+    default:
+        break;
+    }
+}
+
+QByteArray MSUSettings::getState(MSUSettings::WIDGETS widget) const
+{
+    switch (widget)
+    {
+    case MAINWINDOW:
+        return mSettings.value("MainWindow/state").toByteArray();
+    case HELPWINDOW:
+        return mSettings.value("HelpWindow/state").toByteArray();
+    default:
+        return 0;
+    }
+}
+
+void MSUSettings::setState(MSUSettings::WIDGETS widget, const QByteArray &value)
+{
+    switch (widget)
+    {
+    case MAINWINDOW:
+        mSettings.setValue("MainWindow/state", value);
+        break;
+    case HELPWINDOW:
+        mSettings.setValue("HelpWindow/state", value);
+        break;
+    default:
+        break;
+    }
+}

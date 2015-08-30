@@ -23,6 +23,12 @@ public:
         HELP
     };
 
+    enum WIDGETS
+    {
+        MAINWINDOW,
+        HELPWINDOW
+    };
+
 public:
 
     MSUSettings();
@@ -40,6 +46,12 @@ public:
 
     bool usePreferedInputPath() const;
     void setUsePreferedInputPath(const bool value);
+
+    QByteArray getGeometry(WIDGETS widget) const;
+    void setGeometry(WIDGETS widget, const QByteArray &value);
+
+    QByteArray getState(WIDGETS widget) const;
+    void setState(WIDGETS widget, const QByteArray &value);
 
 private:
 

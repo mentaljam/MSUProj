@@ -11,9 +11,19 @@ extern MSUSettings settingsObj;
 
 HelpWindow::HelpWindow(QWidget *parent) :
     QMainWindow(parent),
+    mActionGoMainPage(new QAction(tr("Home"), this)),
+    mActionBackward(new QAction(tr("Backward"), this)),
+    mActionForward(new QAction(tr("Forward"), this)),
     mHelpEngine(new QHelpEngine(settingsObj.getResourcesPath(MSUSettings::HELP) + "msuproj-qt.qhc", this))
 {
-    this->resize(900, 600);
+    QByteArray geom(settingsObj.getGeometry(MSUSettings::HELPWINDOW));
+    if (geom.size() > 0)
+    {
+        this->restoreGeometry(geom);
+        this->restoreState(settingsObj.getState(MSUSettings::HELPWINDOW));
+    }
+    else
+        this->resize(900, 600);
 
     QDockWidget *pageDockWidget = new QDockWidget(tr("Help section"), this);
     pageDockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
@@ -54,6 +64,12 @@ HelpWindow::HelpWindow(QWidget *parent) :
                                     "<p align=\"center\">%2</p></body></html>")
                             .arg(tr("Error loading help files."),
                                  tr("Could not load help files. Have You installed the MSUProj-Qt Help package?")));
+}
+
+HelpWindow::~HelpWindow()
+{
+    settingsObj.setGeometry(MSUSettings::HELPWINDOW, this->saveGeometry());
+    settingsObj.setState(MSUSettings::HELPWINDOW, this->saveState());
 }
 
 void HelpWindow::setPage(const QModelIndex &index)

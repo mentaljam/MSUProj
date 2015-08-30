@@ -23,6 +23,11 @@ MainWindow::MainWindow(QWidget *parent) :
     mCurrentImage("")
 {
     ui->setupUi(this);
+
+    QByteArray geom(settingsObj.getGeometry(MSUSettings::MAINWINDOW));
+    if (geom.size() > 0)
+        this->restoreGeometry(geom);
+
     ui->statusbar->showMessage(tr("Select input files."));
     ui->imageView->setScene(mGraphicsScene);
     mOpenImageDialog->setFileMode(QFileDialog::ExistingFile);
@@ -51,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     settingsObj.setPath(MSUSettings::INPUT_PREVIOUS, mOpenImageDialog->directory().path());
+    settingsObj.setGeometry(MSUSettings::MAINWINDOW, this->saveGeometry());
     QThread *wThread = mWarper->thread();
     if (wThread != qApp->thread())
         wThread->terminate();
