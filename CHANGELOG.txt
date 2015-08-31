@@ -1,4 +1,5 @@
 Current:
+    - NEW:    Add option to disable logotype
 
 0.6 (2015-08-30)
     - NEW:    An option to open file dialogs in a previously selected folder or a prefered folder

@@ -31,6 +31,9 @@ public:
     void setUseUTM(bool useUTM);
     void setZerosAsND(bool zerosAsND);
 
+    bool ifAddLogo() const;
+    void setAddLogo(bool enable);
+
 signals:
 
     void started();
@@ -44,6 +47,7 @@ private:
 
     bool mUseUTM;
     bool mZerosAsND;
+    bool mAddLogo;
     msumr::MSUProj mMSUProj;
 
 };

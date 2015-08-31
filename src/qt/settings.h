@@ -21,7 +21,8 @@ public:
 
     enum BOOL_OPTIONS
     {
-        BOOL_USE_PREFERED_INPUT
+        BOOL_USE_PREFERED_INPUT,
+        BOOL_ADD_LOGO
     };
 
     enum WIDGETS

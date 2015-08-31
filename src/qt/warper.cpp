@@ -5,7 +5,8 @@
 Warper::Warper(QObject *parent) :
     QObject(parent),
     mUseUTM(false),
-    mZerosAsND(false)
+    mZerosAsND(false),
+    mAddLogo(true)
 {
     qRegisterMetaType<msumr::RETURN_CODE>("msumr::RETURN_CODE");
 }
@@ -70,8 +71,19 @@ void Warper::setUseUTM(bool useUTM)
     mUseUTM = useUTM;
 }
 
+bool Warper::ifAddLogo() const
+{
+    return mAddLogo;
+}
+
+void Warper::setAddLogo(bool enable)
+{
+    mAddLogo = enable;
+}
+
 void Warper::start()
 {
+    mMSUProj.setAddLogo(mAddLogo);
     emit started();
     msumr::RETURN_CODE code = mMSUProj.warp(mUseUTM, mZerosAsND);
     this->moveToThread(qApp->thread());

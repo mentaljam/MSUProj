@@ -140,6 +140,18 @@ public:
      */
     unsigned int getGCPYStep() const;
 
+    /**
+     * @brief Check if add logotype option is enabled
+     * @return Option state
+     */
+    bool ifAddLogo() const;
+
+    /**
+     * @brief Set add logotype option state
+     * @param enabled Option state
+     */
+    void setAddLogo(bool enabled);
+
 private:
 
     /**
@@ -159,6 +171,8 @@ private:
 
     std::string mDstFile;    ///< A destination image path
     std::string mDstFormat;  ///< A destination image format code
+
+    bool mAddLogo;           ///< Add logotypes of NTs OMZ and GDAL onto output raster.
 
     bool mHemisphere;        ///< A destination image hemisphere:
                              /// - 0 - Southern

@@ -144,6 +144,22 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="optionsBox">
+     <property name="title">
+      <string>Options</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QCheckBox" name="enableLogoBox">
+        <property name="text">
+         <string>Add a logo onto the output raster</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

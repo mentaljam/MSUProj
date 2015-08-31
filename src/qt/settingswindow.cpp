@@ -33,6 +33,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
 
     ui->inputPathEdit->setText(settingsObj.getPath(MSUSettings::PATH_INPUT_PREFERED));
     ui->inputPathPreferedButton->setChecked(settingsObj.getBool(MSUSettings::BOOL_USE_PREFERED_INPUT));
+
+    ui->enableLogoBox->setChecked(settingsObj.getBool(MSUSettings::BOOL_ADD_LOGO));
 }
 
 SettingsWindow::~SettingsWindow()
@@ -60,6 +62,7 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
         }
         settingsObj.setBool(MSUSettings::BOOL_USE_PREFERED_INPUT, ui->inputPathPreferedButton->isChecked());
         settingsObj.setPath(MSUSettings::PATH_INPUT_PREFERED, ui->inputPathEdit->text());
+        settingsObj.setBool(MSUSettings::BOOL_ADD_LOGO, ui->enableLogoBox->isChecked());
         break;
     default:
         break;

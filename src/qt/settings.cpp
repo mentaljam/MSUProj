@@ -85,7 +85,13 @@ void MSUSettings::setPath(const MSUSettings::PATHS type, const QString &value)
 
 bool MSUSettings::getBool(MSUSettings::BOOL_OPTIONS type) const
 {
-    return mSettings.value(option(type)).toBool();
+    switch (type)
+    {
+    case BOOL_ADD_LOGO:
+        return mSettings.value(option(type), true).toBool();
+    default:
+        return mSettings.value(option(type)).toBool();
+    }
 }
 
 void MSUSettings::setBool(MSUSettings::BOOL_OPTIONS type, const bool &value)
@@ -132,6 +138,8 @@ QString MSUSettings::option(MSUSettings::BOOL_OPTIONS type) const
     {
     case BOOL_USE_PREFERED_INPUT:
         return "UsePreferedPath";
+    case BOOL_ADD_LOGO:
+        return "AddLogo";
     default:
         return 0;
     }

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ru_RU" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru_RU">
 <context>
     <name>HelpWindow</name>
     <message>
@@ -306,62 +308,62 @@
         <translation>Растры GeoTiff (*.tif)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="302"/>
+        <location filename="../src/qt/mainwindow.cpp" line="303"/>
         <source>Output file name is empty</source>
         <translation>Не указано имя выходного растра</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="315"/>
+        <location filename="../src/qt/mainwindow.cpp" line="316"/>
         <source>About MSUProj-Qt</source>
         <translation>О MSUProj-Qt</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="323"/>
+        <location filename="../src/qt/mainwindow.cpp" line="324"/>
         <source>MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.</source>
         <translation>MSUProj - библиотека и приложения для геопроецирования изображений аппаратуры МСУ-МР космического аппарата дистанционного зондирования Земли Метеор-М.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="324"/>
+        <location filename="../src/qt/mainwindow.cpp" line="325"/>
         <source>This is a Qt graphical interface for MSUProj.</source>
         <translation>Это графический интерфейс Qt для библиотеки MSUProj.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="325"/>
+        <location filename="../src/qt/mainwindow.cpp" line="326"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="326"/>
+        <location filename="../src/qt/mainwindow.cpp" line="327"/>
         <source>Author</source>
         <translation>Автор</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="326"/>
+        <location filename="../src/qt/mainwindow.cpp" line="327"/>
         <source>Petr Tsymbarovich</source>
         <translation>Цымбарович Петр</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="327"/>
+        <location filename="../src/qt/mainwindow.cpp" line="328"/>
         <source>Progect page on</source>
         <translation>Проект на</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="328"/>
+        <location filename="../src/qt/mainwindow.cpp" line="329"/>
         <source>Translations on</source>
         <translation>Переводы на</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="344"/>
+        <location filename="../src/qt/mainwindow.cpp" line="345"/>
         <source>Transforming image, please wait...</source>
         <translation>Идет трансформирование изображения, подождите...</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="351"/>
+        <location filename="../src/qt/mainwindow.cpp" line="352"/>
         <source>Transformation finished successfully</source>
         <translation>Трансформирование успешно завершено</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="353"/>
+        <location filename="../src/qt/mainwindow.cpp" line="354"/>
         <source>An error occured. Please check input data</source>
         <translation>Произошла ошибка, проверьте исходные данные</translation>
     </message>
@@ -435,9 +437,19 @@
     </message>
     <message>
         <location filename="../src/qt/settingswindow.ui" line="134"/>
-        <location filename="../src/qt/settingswindow.cpp" line="77"/>
+        <location filename="../src/qt/settingswindow.cpp" line="80"/>
         <source>Select prefered input folder</source>
         <translation>Выберите предпочитаемый начальный каталог</translation>
+    </message>
+    <message>
+        <location filename="../src/qt/settingswindow.ui" line="149"/>
+        <source>Options</source>
+        <translation>Опции</translation>
+    </message>
+    <message>
+        <location filename="../src/qt/settingswindow.ui" line="155"/>
+        <source>Add a logo onto the output raster</source>
+        <translation>Добавить логотип на выходной растр</translation>
     </message>
 </context>
 </TS>

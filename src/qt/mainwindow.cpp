@@ -291,6 +291,7 @@ void MainWindow::on_startButton_clicked()
         mWarper->setDst(file);
         mWarper->setUseUTM(ui->modeUTMButton->isChecked());
         mWarper->setZerosAsND(ui->modeNDZBox->isChecked());
+        mWarper->setAddLogo(settingsObj.getBool(MSUSettings::BOOL_ADD_LOGO));
         QThread *thread = new QThread;
         mWarper->moveToThread(thread);
         connect(thread, &QThread::started, mWarper, &Warper::start);

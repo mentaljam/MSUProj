@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
                         "                    (a zone number is calculated for the center point)\n"
                         "    -z              Set NoData value to zero\n"
                         "    -v | --version  Print version number and exit\n"
-                        "    -h | --help     Print help message and exit" << endl;
+                        "    -h | --help     Print help message and exit\n"
+                        "    --no-logo       Disable adding a logotype onto output raster" << endl;
                 return 0;
             }
             if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version"))
@@ -54,6 +55,8 @@ int main(int argc, char *argv[])
                 useUTM = true;
             else if (!strcmp(argv[i], "-z"))
                 zerosAsND = true;
+            else if (!strcmp(argv[i], "--no-logo"))
+                msuObj.setAddLogo(false);
             else if (i + 1 < argc && !strcmp(argv[i], "-f"))
                 msuObj.setDstFormat(argv[++i]);
             else

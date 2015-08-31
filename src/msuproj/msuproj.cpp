@@ -10,6 +10,7 @@ msumr::MSUProj::MSUProj() :
     mGCPs(NULL),
     mDstFile(),
     mDstFormat("GTiff"),
+    mAddLogo(true),
     mHemisphere(true),
     mZone(0),
     mPerimSize(19),
@@ -415,13 +416,16 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     logoImage logo;
     dstXSize -= logo.width;
     dstYSize -= logo.height;
-    if (bands >= 3)
+    if (mAddLogo)
     {
-        bands = 3;
-        for (band = 0; band < bands; ++band)
-            dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, dstXSize, dstYSize,
-                                                     logo.width, logo.height, (unsigned char*)&logo.data[band][0],
-                                                     logo.width, logo.height, GDT_Byte, 0, 0);
+        if (bands >= 3)
+        {
+            bands = 3;
+            for (band = 0; band < bands; ++band)
+                dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, dstXSize, dstYSize,
+                                                         logo.width, logo.height, (unsigned char*)&logo.data[band][0],
+                        logo.width, logo.height, GDT_Byte, 0, 0);
+        }
     }
 
     GDALClose(dstDS);
@@ -463,4 +467,14 @@ unsigned int msumr::MSUProj::getGCPXStep() const
 unsigned int msumr::MSUProj::getGCPYStep() const
 {
     return mGCPYStep;
+}
+
+bool msumr::MSUProj::ifAddLogo() const
+{
+    return mAddLogo;
+}
+
+void msumr::MSUProj::setAddLogo(bool enabled)
+{
+    mAddLogo = enabled;
 }
