@@ -8,6 +8,19 @@ It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for
 
 <img src="http://meteor.robonuka.ru/wp-content/uploads/2015/03/21082014_UTM37_ArcGis.jpg" alt="Meteor-M No2 MSU-MR 1km" style="width: 640px;"/>
 
+## Using ##
+
+For now MSUProj need a **GCP** file produced with **LRPToffLineDecoder**.
+
+**LRPToffLineDecoder** uses the [SGP4](https://en.wikipedia.org/wiki/Simplified_perturbations_models) model and [TLE](https://en.wikipedia.org/wiki/Two-line_element_set) to calculate ground control points (GCP) for transforming MSU-MR images. To produce a GCP file you should set corresponding options in **LRPToffLineDecoder ini file**:
+
+- RoughStartTimeUTC - an image date in format dd.mm.yyyy (for example "21.08.2014")
+- TleFileName - a full path to TLE text file (for example "C:\decoder\norad_M2.txt")
+
+TLE contains input parameters for SGP4 model and can be obtained from [celestrak.com](http://www.celestrak.com) on [this page](http://www.celestrak.com/NORAD/elements/weather.txt) or [space-track.org](https://www.space-track.org). Pay attention that TLE is being constantly updated so you need to refresh your TLE file with the last data.
+
+In future releases KMSSProj library will be able to transform images using TLE directly.
+
 ## Documentation ##
 
 Developer documentation is available on [GitHub Pages](http://mentaljam.github.io/MSUProj/).
