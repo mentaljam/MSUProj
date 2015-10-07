@@ -12,12 +12,13 @@ if(DOXYGEN_FOUND)
                               ${CMAKE_SOURCE_DIR}/README.md
                               ${CMAKE_BINARY_DIR}/sources.h
                               ${DOC_DIR}/developer/translations.dox
-                        NAME MSUProj-Dev
-                        LOGO ${RESOURCES_DIR}/icons/msuproj.svg
-                        OUT_DIRECTORY ${CMAKE_BINARY_DIR}/doc/developer
-                        LANGUAGE English
+                        PROJECT_NAME "MSUProj-Dev"
+                        PROJECT_LOGO ${RESOURCES_DIR}/icons/msuproj.svg
+                        OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/doc/developer
+                        OUTPUT_LANGUAGE English
                         FORMATS HTML
-                        HTML_STYLESHEET ${DOC_DIR}/msuproj.css
+                        HTML_EXTRA_STYLESHEET ${DOC_DIR}/msuproj.css
+                        RECURSIVE
         )
         add_custom_target(update_gh-page
                           COMMAND ${CMAKE_COMMAND} -E remove_directory .git
@@ -50,16 +51,17 @@ if(DOXYGEN_FOUND)
             list(APPEND QHP_FILES msuproj-qt_${LOCALE}.qch)
             doxy_add_target(QHP
                             INPUT ${DOC_DIR}/msuproj-qt/${LOCALE}.dox
-                            NAME MSUProj-Qt
-                            LOGO ${CMAKE_BINARY_DIR}/res/icons/msuproj.png
-                            OUT_DIRECTORY ${CMAKE_BINARY_DIR}/doc/msuproj-qt/${LOCALE}
+                            PROJECT_NAME MSUProj-Qt
+                            PROJECT_LOGO ${CMAKE_BINARY_DIR}/res/icons/msuproj.png
+                            OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/doc/msuproj-qt/${LOCALE}
                             QCH_FILE ${CMAKE_BINARY_DIR}/doc/msuproj-qt/msuproj-qt_${LOCALE}.qch
                             QHP_NAMESPACE amigos.msuproj-qt.${LOCALE}
                             QHP_VIRTUAL_FOLDER ${LOCALE}
-                            QHP_FILTER_NAME ${LOCALE}
-                            QHP_FILTER_ATTRS ${LOCALE}
-                            LANGUAGE ${${LOCALE}_LANG}
-                            HTML_STYLESHEET ${DOC_DIR}/msuproj.css
+                            QHP_CUST_FILTER_NAME ${LOCALE}
+                            QHP_CUST_FILTER_ATTRS ${LOCALE}
+                            QHP_SECT_FILTER_ATTRS ${LOCALE}
+                            OUTPUT_LANGUAGE ${${LOCALE}_LANG}
+                            HTML_EXTRA_STYLESHEET ${DOC_DIR}/msuproj.css
             )
             install(FILES       ${CMAKE_BINARY_DIR}/doc/msuproj-qt/msuproj-qt_${LOCALE}.qch
                     DESTINATION ${INSTALL_PATH_MAN}

@@ -22,7 +22,7 @@
     <item>
      <widget class="QGroupBox" name="previewBox">
       <property name="title">
-       <string>Show Preview</string>
+       <string>Show preview</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
@@ -55,22 +55,22 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Input Image</string>
+         <string>Input image</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <layout class="QGridLayout" name="imageInfo">
-           <item row="0" column="0">
-            <widget class="QLabel" name="imageRowsLabel">
+           <item row="0" column="1">
+            <widget class="QLabel" name="imageHeightLabel">
              <property name="text">
-              <string>Input Image Rows</string>
+              <string>Image height</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="imageLinesLabel">
+           <item row="0" column="0">
+            <widget class="QLabel" name="imageWidthLabel">
              <property name="text">
-              <string>Input Image Lines</string>
+              <string>Image width</string>
              </property>
             </widget>
            </item>
@@ -98,7 +98,7 @@
             <string>Path to input image file</string>
            </property>
            <property name="text">
-            <string>Input Image File</string>
+            <string>Input image file</string>
            </property>
           </widget>
          </item>
@@ -147,30 +147,30 @@
          <item>
           <layout class="QGridLayout" name="gridLayout">
            <item row="0" column="1">
-            <widget class="QLabel" name="gcpLinesLabel">
+            <widget class="QLabel" name="gcpHeightLabel">
              <property name="text">
-              <string>Input GCPs Lines</string>
+              <string>GCPs grid height</string>
              </property>
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="gcpRowsLabel">
+            <widget class="QLabel" name="gcpWidthLabel">
              <property name="text">
-              <string>Input GCPs Rows</string>
+              <string>GCPs grid width</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="gcpRowStepLabel">
+            <widget class="QLabel" name="gcpColumnStepLabel">
              <property name="text">
-              <string>Input GCPs Row Step</string>
+              <string>Step of GCPs grid columns</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
             <widget class="QLabel" name="gcpLineStepLabel">
              <property name="text">
-              <string>Input GCPs Line Step</string>
+              <string>Step of GCPs grid rows</string>
              </property>
             </widget>
            </item>
@@ -205,7 +205,7 @@
             <string>Path to input GCP file</string>
            </property>
            <property name="text">
-            <string>GCPs File</string>
+            <string>Input GCP file</string>
            </property>
           </widget>
          </item>
@@ -245,7 +245,7 @@
       <item>
        <widget class="QGroupBox" name="optBox">
         <property name="title">
-         <string>Operation Options</string>
+         <string>Operation options</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
@@ -256,7 +256,7 @@
            <item>
             <widget class="QRadioButton" name="modeLatLonButton">
              <property name="text">
-              <string>Lat/Lon Mode</string>
+              <string>Lat/Lon mode</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -266,7 +266,7 @@
            <item>
             <widget class="QRadioButton" name="modeUTMButton">
              <property name="text">
-              <string>UTM Mode</string>
+              <string>UTM mode</string>
              </property>
             </widget>
            </item>
@@ -301,7 +301,7 @@
             <string>Path to output image file</string>
            </property>
            <property name="text">
-            <string>Output Image File</string>
+            <string>Output image file</string>
            </property>
           </widget>
          </item>
@@ -344,7 +344,7 @@
          <item>
           <widget class="QCheckBox" name="autoOutNameBox">
            <property name="text">
-            <string>Automatic Output Name</string>
+            <string>Automatic output name</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -396,7 +396,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -448,7 +448,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../../../build/msuproj/res/icons/icons.qrc"/>
+  <include location="../../../../build/msuproj/mingw-32/res/icons/icons.qrc"/>
  </resources>
  <connections>
   <connection>

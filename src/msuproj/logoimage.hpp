@@ -6,7 +6,7 @@ class logoImage
 public:
     logoImage();
     ~logoImage();
-    unsigned int  width;  ///< Number of rows in image
+    unsigned int  width;  ///< Number of columns in image
     unsigned int  height; ///< Number of lines in image
     unsigned int  bands;  ///< Number of image bands
     unsigned int  size;   ///< Number of pixels in band

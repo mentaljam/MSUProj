@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
                  "public:\n"
                  "    " << argv[2] << "();\n"
                  "    ~" << argv[2] << "();\n"
-                 "    unsigned int  width;" << "  ///< Number of rows in image\n"
+                 "    unsigned int  width;" << "  ///< Number of columns in image\n"
                  "    unsigned int  height;" << " ///< Number of lines in image\n"
                  "    unsigned int  bands;" << "  ///< Number of image bands\n"
                  "    unsigned int  size;" << "   ///< Number of pixels in band\n"

@@ -248,7 +248,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
         tmpData[band] = new unsigned char[dstSize]();
     }
 
-    unsigned int pLine, pRow, pCount, gRow, gCount, dCount,
+    unsigned int pLine, pColumn, pCount, gColumn, gCount, dCount,
                  bilDelim = mGCPXStep * mGCPYStep;
     int x, y, xx, yy;
     double lat, lon;
@@ -257,12 +257,12 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     {
         unsigned int gLine = (int)(pLine / mGCPYStep);
         pCount = pLine * srcXSize;
-        for (pRow = 0; pRow < srcXSize; ++pRow, ++pCount)
+        for (pColumn = 0; pColumn < srcXSize; ++pColumn, ++pCount)
         {
-            gRow = (int)(pRow / mGCPXStep);
-            gCount = gRow + gLine * mGCPXSize;
+            gColumn = (int)(pColumn / mGCPXStep);
+            gCount = gColumn + gLine * mGCPXSize;
 
-            x  = pRow - gRow * mGCPXStep;
+            x  = pColumn - gColumn * mGCPXStep;
             xx = mGCPXStep - x;
             y  = pLine - gLine * mGCPYStep;
             yy = mGCPYStep - y;
@@ -300,9 +300,9 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     for (pLine = 0; pLine < dstYSize; ++pLine)
     {
         pCount = pLine * dstXSize;
-        for (pRow = 0; pRow < dstXSize; ++pRow, ++pCount)
+        for (pColumn = 0; pColumn < dstXSize; ++pColumn, ++pCount)
         {
-            x = pRow;
+            x = pColumn;
             y = pLine;
             for (band = 0; band < bands; ++band)
                 sum[band] = tmpData[band][pCount];
@@ -325,7 +325,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
                 if (yy >= 0 && yy < dstSize &&
                     tmpData[0][yy] > 0)
                 {
-                    vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
+                    vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
                     for (band = 0; band < bands; ++band)
                         sum[band] += tmpData[band][yy] / vl;
                     wDelim += 1 / vl;
@@ -339,7 +339,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
                     if (yy >= 0 && yy < dstSize &&
                         tmpData[0][yy] > 0)
                     {
-                        vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
+                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
                         for (band = 0; band < bands; ++band)
                             sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
@@ -354,7 +354,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
                     if (yy >= 0 && yy < dstSize &&
                         tmpData[0][yy] > 0)
                     {
-                        vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
+                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
                         for (band = 0; band < bands; ++band)
                             sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
@@ -369,7 +369,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
                     if (yy >= 0 && yy < dstSize &&
                         tmpData[0][yy] > 0)
                     {
-                        vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
+                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
                         for (band = 0; band < bands; ++band)
                             sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;
@@ -384,7 +384,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
                     if (yy >= 0 && yy < dstSize &&
                         tmpData[0][yy] > 0)
                     {
-                        vl = sqrt(pow(pRow - x, 2) + pow(pLine - y, 2));
+                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
                         for (band = 0; band < bands; ++band)
                             sum[band] += tmpData[band][yy] / vl;
                         wDelim += 1 / vl;

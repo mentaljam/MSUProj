@@ -31,7 +31,7 @@ enum RETURN_CODE
  */
 struct GCP
 {
-    int x;      ///< A row of a source data matrix
+    int x;      ///< A column of a source data matrix
     int y;      ///< A line of a source data matrix
     double lon; ///< A latitude
     double lat; ///< A longitude

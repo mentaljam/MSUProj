@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     mGraphicsScene(new QGraphicsScene(this)),
     mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
-                                     tr("Meteor-M2 Images (*.jpg *.bmp);;All files (*.*)"))),
+                                     tr("Meteor-M2 images (*.jpg *.bmp);;All files (*.*)"))),
     mWarper(new Warper),
     mFilePreffix(""),
     mCurrentImage("")
@@ -91,9 +91,9 @@ void MainWindow::onImagePathChanged()
     {
         mCurrentImage = file;
 
-        ui->imagePathLabel->setText(tr("Input Image File"));
-        ui->imageRowsLabel->setText(tr("Input Image Rows"));
-        ui->imageLinesLabel->setText(tr("Input Image Lines"));
+        ui->imagePathLabel->setText(tr("Input image file"));
+        ui->imageWidthLabel->setText(tr("Image width"));
+        ui->imageHeightLabel->setText(tr("Image height"));
         ui->gcpPathEdit->clear();
         ui->gcpBox->setEnabled(false);
 
@@ -103,9 +103,9 @@ void MainWindow::onImagePathChanged()
 
             if (mWarper->setSrc(file) == msumr::SUCCESS)
             {
-                ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Loaded"));
-                ui->imageRowsLabel->setText(tr("Input Image Rows") + QString(" %1").arg(mWarper->getSrcXSize()));
-                ui->imageLinesLabel->setText(tr("Input Image Lines") + QString(" %1").arg(mWarper->getSrcYSize()));
+                ui->imagePathLabel->setText(tr("Input image file") + " - " + tr("loaded"));
+                ui->imageWidthLabel->setText(tr("Image width") + QString(" %1").arg(mWarper->getSrcXSize()));
+                ui->imageHeightLabel->setText(tr("Image height") + QString(" %1").arg(mWarper->getSrcYSize()));
                 ui->gcpBox->setEnabled(true);
                 mFilePreffix = file.left(file.lastIndexOf('.'));
                 gcpFiles.append(mFilePreffix + ".gcp");
@@ -119,13 +119,13 @@ void MainWindow::onImagePathChanged()
             }
             else
             {
-                ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("Error loading"));
+                ui->imagePathLabel->setText(tr("Input image file") + " - " + tr("error loading"));
                 ui->statusbar->showMessage(tr("Error loading image"), 7000);
             }
         }
         else
         {
-            ui->imagePathLabel->setText(tr("Input Image File") + " - " + tr("No such file"));
+            ui->imagePathLabel->setText(tr("Input image file") + " - " + tr("no such file"));
             ui->statusbar->showMessage(tr("Image file does not exist"), 7000);
         }
         this->setPreview();
@@ -161,11 +161,10 @@ void MainWindow::onGCPPathChanged()
     if (file.isEmpty())
     {
         ui->gcpPathLabel->setText(tr("Input GCPs"));
-        ui->gcpPathLabel->setText(tr("Input GCPs"));
-        ui->gcpRowsLabel->setText(tr("Input GCPs Rows"));
-        ui->gcpLinesLabel->setText(tr("Input GCPs Lines"));
-        ui->gcpRowStepLabel->setText(tr("Input GCPs Row Step"));
-        ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step"));
+        ui->gcpWidthLabel->setText(tr("GCPs grid width"));
+        ui->gcpHeightLabel->setText(tr("GCPs grid height"));
+        ui->gcpColumnStepLabel->setText(tr("Step of GCPs grid columns"));
+        ui->gcpLineStepLabel->setText(tr("Step of GCPs grid rows"));
         ui->utmZone->setText(tr("UTM zone"));
     }
     else if (QFile(file).exists())
@@ -173,10 +172,10 @@ void MainWindow::onGCPPathChanged()
         if (mWarper->readGCP(file) == msumr::SUCCESS)
         {
             ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("Loaded"));
-            ui->gcpRowsLabel->setText(tr("Input GCPs Rows") + QString(" %1").arg(mWarper->getGCPXSize()));
-            ui->gcpLinesLabel->setText(tr("Input GCPs Lines") + QString(" %1").arg(mWarper->getGCPYSize()));
-            ui->gcpRowStepLabel->setText(tr("Input GCPs Row Step") + QString(" %1").arg(mWarper->getGCPXStep()));
-            ui->gcpLineStepLabel->setText(tr("Input GCPs Line Step") + QString(" %1").arg(mWarper->getGCPYStep()));
+            ui->gcpWidthLabel->setText(tr("GCPs grid width") + QString(" %1").arg(mWarper->getGCPXSize()));
+            ui->gcpHeightLabel->setText(tr("GCPs grid height") + QString(" %1").arg(mWarper->getGCPYSize()));
+            ui->gcpColumnStepLabel->setText(tr("Step of GCPs grid columns") + QString(" %1").arg(mWarper->getGCPXStep()));
+            ui->gcpLineStepLabel->setText(tr("Step of GCPs grid rows") + QString(" %1").arg(mWarper->getGCPYStep()));
             ui->utmZone->setText(tr("UTM zone") + QString(" %1").arg(mWarper->getUTM()));
             this->changeStartButtonState();
             this->changeOutName();
@@ -184,7 +183,7 @@ void MainWindow::onGCPPathChanged()
         else
         {
             ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("Error loading"));
-            ui->statusbar->showMessage(tr("Error loading GCPs file"), 7000);
+            ui->statusbar->showMessage(tr("Error loading GCP file"), 7000);
         }
     }
     else
@@ -325,7 +324,7 @@ void MainWindow::on_actionAbout_triggered()
                             tr("This is a Qt graphical interface for MSUProj."),
                             tr("Version"),
                             tr("Author"), tr("Petr Tsymbarovich"),
-                            tr("Progect page on"),
+                            tr("Project page on"),
                             tr("Translations on")));
 }
 
