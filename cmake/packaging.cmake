@@ -74,10 +74,10 @@ if(WIN32 AND INSTALL_RUNTIME)
     if(MINGW)
         get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
         if(ARCH EQUAL 64)
-            set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64*.dll
+            set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64-*.dll
                                  ${CXX_PATH}/libgcc*64*.dll)
         else()
-            set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++*.dll
+            set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++-*.dll
                                  ${CXX_PATH}/libgcc*sjlj*.dll)
         endif()
         file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
