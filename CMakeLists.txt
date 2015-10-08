@@ -6,20 +6,6 @@ set(PROJECT_NAME "MSUProj")
 
 ####################### Build options ######################
 
-#### Build architecture
-# 32 - 32bit, 64 - 64bit
-set(ARCH "" CACHE STRING "Build x86 or x86-64 application")
-
-#### Additional packages paths
-# set if cmake can not find one of them
-set(DOXYGEN_EXECUTABLE  "" CACHE FILEPATH "Doxygen path")
-set(GIT_EXECUTABLE      "" CACHE FILEPATH "Git path (need for version number defining)")
-set(HHC_EXECUTABLE      "" CACHE FILEPATH "HTML Help generator path")
-set(QHG_EXECUTABLE      "" CACHE FILEPATH "QHP generator path")
-set(QCOLGEN_EXECUTABLE  "" CACHE FILEPATH "Qt collection generator path")
-set(PDFLATEX_EXECUTABLE "" CACHE FILEPATH "PDFLatex path")
-set(CONVERT_EXECUTABLE  "" CACHE FILEPATH "ImageMagick convert utility")
-
 #### Install development files
 option(INSTALL_DEV "Install development files" OFF)
 
