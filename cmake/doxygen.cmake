@@ -2,7 +2,7 @@
 
 include(documentation_locales)
 
-if(DOXYGEN_FOUND)
+if(INSTALL_DOCS AND DOXYGEN_FOUND)
 
     #### Update GitHub Documentation ####
 
