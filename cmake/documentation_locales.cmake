@@ -4,6 +4,7 @@
 
 set(DOXY_LOCALES en
                  fr_FR
+                 hu_HU
                  ru_RU
 )
 
@@ -12,4 +13,5 @@ set(DOXY_LOCALES en
 
 set(en_LANG      English)
 set(fr_FR_LANG   French)
+set(hu_HU_LANG   Hungarian)
 set(ru_RU_LANG   Russian)

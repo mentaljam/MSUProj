@@ -1,0 +1,65 @@
+/**
+
+@mainpage MSUProj Qt felhasználói felület
+
+Az <b>[MSUProj](http://github.com/mentaljam/MSUProj)</b> egy projekt az orosz ERS "Meteor-M" műhold MSU-MR érzékelőjének képeinek georeferálásához.
+
+Kifejezetten az [LRPToffLineDecoder](http://meteor.robonuka.ru/for-experts/lrpt-analizer-2015/)-hez készült, hogy segítsen a rádióamatőr operátoroknak távérzékelő adatokhoz jutni a "Meteor-M No2" műholdról. A raszter képek feldolgozáshoz a [GDAL](http://www.gdal.org/) függvénykönyvtárat használja.
+
+Ez az útmutató az MSUProj Qt felhasználóit felülethez tartozik
+
+A fejlesztői dokumentáció a [GitHub oldalon](http://mentaljam.github.io/MSUProj/) érhető el.
+
+Amennyiben szeretne hozzájárulni a projekthez:
+- Hiba bejelentés és javaslatok új funkciókra a [problémakezelőn](http://github.com/mentaljam/MSUProj/issues) keresztül;
+- Elágaztatás [GitHub](http://github.com/mentaljam/MSUProj)-on;
+- Fordítsa saját nyelvére a [Transifex](http://www.transifex.com/projects/p/msuproj/)-en.
+
+Letöltési hivatkozások:
+- A legfrissebb verzió Windows-hoz elérhető a [GitHub](http://github.com/mentaljam/MSUProj/releases)-on;
+- A legfrissebb fejlesztői verzió Windows-hoz elérhető a [Yandex](http://yadi.sk/d/5Lbb-1y5hzZdW)-en;
+- A legfrissebb Debian (Ubuntu) csomagok elérhetőek a [launchpad](http://launchpad.net/~mentaljam/+archive/ubuntu/amigos/)-en.
+
+Hasznos hivatkozások:
+- [NTs OMZ](http://eng.ntsomz.ru/)
+- [meteor.robonuka.ru](http://meteor.robonuka.ru/)
+- [AMIGOS](http://185.26.115.106/)
+
+@page input Bemeneti fájlok
+@brief Bemeneti fájlok rész
+
+@section input_file Bemeneti fájl
+Egy <em>LRPToffLineDecoder</em>-rel létrehozott JPG vagy BMP MSU-MR kép.
+
+@section show_preview Előnézet mutatása
+A jelölőnégyzet kiválasztásával hozza elő vagy rejtse el a bemeneti kép előnézetét. Nagy képeknél az előnézet jelentős memória használtot eredményezhet.
+
+@section gcps_file GCP fájl
+Egy <em>LRPToffLineDecoder</em>-rel létrehozott földi ellenőrző pontokkat tartalmazó szöveges fájl. Az alkalmazás megpróbálja automatikusan megtalálni a forráskép neve alapján - Kézzel kell megadnia amennyiben a név eltérő.
+
+Az <em>LRPToffLineDecoder</em> az [SGP4](https://en.wikipedia.org/wiki/Simplified_perturbations_models) modellt és [TLE](https://en.wikipedia.org/wiki/Two-line_element_set)-ket használ a földi ellenőrző pontok (GCP) kiszámításához melyek az MSU-MR képek átalakításához szükségesek. GCP fájlok létrehozásához helyezze el a megfelelő beállításokat a <em>LRPToffLineDecoder ini</em> fájlban:
+
+- RoughStartTimeUTC - a kép vételének dátuma lokális formában (például "nn.hh.éééé" vagy "hh/nn/éééé")
+- TleFileName - teljes elérési útvonal a TLE szöveges fájlhoz (például "C:\\decoder\\norad_M2.txt")
+
+A TLE a tartalmazza a bemeneti paramétereket az SGP4 modell számára és beszerezhető a [celestrak.com](http://www.celestrak.com) oldalról [innen](http://www.celestrak.com/NORAD/elements/weather.txt) vagy [space-track.org](https://www.space-track.org). Figyeljen oda, hogy a TLE-t folyamatosan frissítik, ezért azt időszakosan frissítenie kell.
+
+A jövőbeni MSUProj kiadások közvetlenül a TLE-k használatával fogják tudni a képeket átalakítani.
+
+@page options Feldolgozási beállítások
+@brief Feldolgozási beállítások rész
+
+@section operation_mode Feldolgozási mód
+Egy forráskép WGS84-be vetítve.
+- Válassza a <em>"Lat/Lon mód"</em>-ot földrajzi koordináták használatához (fokokban).
+- Válassza az <em>"UTM mód"</em>-ot az UTM koordináták használatához (méterben).
+
+Az UTM zónaszám a kép közepének hosszúsági köre alapján választandó.
+
+@section zeros_as_nd Nullák figyelmen kívül hagyása
+Jelölje be ezt a jelölőnégyzetet a nulla (fekete) képpontok figyelmen kívül hagyásához. Ezek a képpontok nem kerülnek megjelenítésre egyes GIS alkalmazásokban, mint például a QGIS.
+
+@section output_file Kimeneti fájl
+Egy kimeneti GeoTiff kép (tömörítés - JPEG, minőség - 100). Alapértelmezésben az alkalmazás az eredmény képet az eredetihez hasonló néven menti el hozzáfűzve egy utótagot a feldolgozási mód függvényében: "_proj" a Lat/Lon mód és zónaszám UTM mód esetén (például "_N38"). Kapcsolja ki az <em>"Automatikus elnevezés használata"</em> jelölőnégyzetet egyedi név megadásához.
+
+**/
