@@ -353,8 +353,8 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="327"/>
-        <source>Progect page on</source>
-        <translation>Projekt honlapja</translation>
+        <source>Project page on</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="328"/>

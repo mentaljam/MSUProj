@@ -353,7 +353,7 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="327"/>
-        <source>Progect page on</source>
+        <source>Project page on</source>
         <translation>Проект на</translation>
     </message>
     <message>
