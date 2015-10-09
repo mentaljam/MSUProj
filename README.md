@@ -1,4 +1,4 @@
-# MSUProj #
+# MSUProj
 
 **MSUProj** is a project to geo transform images of MSU-MR equipment of Russian ERS satellite "Meteor-M".
 
@@ -8,7 +8,7 @@ It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for
 
 <img src="http://meteor.robonuka.ru/wp-content/uploads/2015/03/21082014_UTM37_ArcGis.jpg" alt="Meteor-M No2 MSU-MR 1km" style="width: 640px;"/>
 
-## Using ##
+## Using
 
 For now MSUProj need a **GCP** file produced with **LRPToffLineDecoder**.
 
@@ -21,41 +21,63 @@ TLE contains input parameters for SGP4 model and can be obtained from [celestrak
 
 In future releases KMSSProj library will be able to transform images using TLE directly.
 
-## Documentation ##
+## Documentation
 
 Developer documentation is available on [GitHub Pages](http://mentaljam.github.io/MSUProj/).
 
-## Precompiled binaries ##
+## Precompiled binaries
 
 - All stable binaries for Windows are in [Releases](https://github.com/mentaljam/MSUProj/releases)
 - You also can grab latest development binaries for Windows from [Yandex.Disk](https://yadi.sk/d/5Lbb-1y5hzZdW)
 
-## Localization ##
+## Localization
 
 You can translate MSUProj-Qt to your language with [Transifex](https://www.transifex.com/projects/p/msuproj/).
 [Translations instructions](http://mentaljam.github.io/MSUProj/translations.html).
 
-## Build ##
+## Build
 
-#### 1. Install the required packages ###
+#### 1. Install dependencies
 
-- *Compiler* (tested with GCC and MSVC2013)
-- *CMake*
-- *make* or *Ninja* for GCC
-- *GDAL* development package with geos and proj support (libgdal-dev in debian)
-- *WIX* or *NSIS* for building installer packages on Windows
-- *ImageMagick* for generating icons
+**Requared:**
+- **Compiler** (tested with GCC and MSVC2013)
+- [CMake](https://cmake.org/)
+- [OMZModules](https://github.com/mentaljam/MSUProj) - cmake modules for configuring project (read below)
+- **make** or [Ninja](http://martine.github.io/ninja/) for GCC
+- [GDAL](http://www.gdal.org/) development package with [geos](https://trac.osgeo.org/geos/) and [proj](http://trac.osgeo.org/proj/) support (libgdal-dev in debian)
+- [ImageMagick](http://www.imagemagick.org/) for generating icons
 
-#### 2. Clone ###
+**Additional:**
+- [Qt](http://qt-project.org/) for building MSUProj-Qt
+- [WIX](http://wixtoolset.org/) or [NSIS](http://nsis.sourceforge.net/) for building installer packages on Windows
+- [Doxygen](http://www.stack.nl/~dimitri/doxygen/index.html) for building documentation and help files
 
-    git clone --recursive https://github.com/mentaljam/MSUProj
+#### 2. Install OMZModules
 
-#### 3. Make a building directory ###
+    cd ~/build_dir
+    git clone git@github.com:mentaljam/OMZModules.git
+    mkdir OMZModules-build
+    cd OMZModules-build
+    
+With make:
 
-    mkdir msuproj_build
-    cd msuproj_build
+    cmake ../OMZModules
+    make install
 
-#### 4. Compile
+With ninja:
+
+    cmake -G Ninja ../OMZModules
+    ninja install
+
+
+#### 3. Clone MSUProj
+
+    cd ~/build_dir
+    git clone git@github.com:mentaljam/MSUProj.git
+    mkdir MSUProj_build
+    cd MSUProj_build
+
+#### 4. Compile ####
 
 Use a *-DARCH={32/64}* argument for CMake to build a 32bit or a 64bit application, or leave to autodetect
 
@@ -68,15 +90,15 @@ You may want to specify an additional path to gdal lib/ include/ dirs with *-DSE
 
 With make:
 
-    cmake -DARCH=64 -DBUILD_QT=ON -DSEARCH_PREFIX="c:/local/" ../msuproj
+    cmake -DARCH=64 -DBUILD_QT=ON -DSEARCH_PREFIX="c:/local/" ../MSUProj
     make
 
 With ninja:
 
-    cmake -DARCH=64 -DBUILD_QT=ON -G Ninja -DSEARCH_PREFIX="c:/local/" ../msuproj
+    cmake -DARCH=64 -DBUILD_QT=ON -G Ninja -DSEARCH_PREFIX="c:/local/" ../MSUProj
     ninja
     
-#### Build a package or just install ###
+#### 5. Build a package or just install
 
 Windows:
 
