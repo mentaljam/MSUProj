@@ -8,10 +8,16 @@ if(INSTALL_DOCS AND DOXYGEN_FOUND)
 
     if(GIT_EXECUTABLE)
 
+        file(GLOB_RECURSE DOC_DEV_SOURCES
+             RELATIVE ${CMAKE_SOURCE_DIR}
+             ${CMAKE_SOURCE_DIR}/src/msuproj/*)
+
+        write_sources_versions(${CMAKE_BINARY_DIR}/doc/developer/sources.h
+                               ${DOC_DEV_SOURCES})
         doxy_add_target(INPUT ${CMAKE_SOURCE_DIR}/src/msuproj
-                              ${CMAKE_SOURCE_DIR}/README.md
-                              ${CMAKE_BINARY_DIR}/sources.h
+                              ${CMAKE_BINARY_DIR}/doc/developer/sources.h
                               ${DOC_DIR}/developer/translations.dox
+                              ${CMAKE_SOURCE_DIR}/README.md
                         PROJECT_NAME "MSUProj-Dev"
                         PROJECT_LOGO ${RESOURCES_DIR}/icons/msuproj.svg
                         OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/doc/developer
@@ -19,6 +25,7 @@ if(INSTALL_DOCS AND DOXYGEN_FOUND)
                         FORMATS HTML
                         HTML_EXTRA_STYLESHEET ${DOC_DIR}/msuproj.css
                         RECURSIVE
+                        USE_MDFILE_AS_MAINPAGE README.md
         )
         add_custom_target(update_gh-page
                           COMMAND ${CMAKE_COMMAND} -E remove_directory .git

@@ -314,10 +314,10 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, tr("About MSUProj-Qt"),
                        QString("<p>%1</p><p>%2</p>"
-                               "<p><tr><td><i>%3:</i></td><td></td><td align='right'>" VERSION_MSUPROJ " (" VER_DATE_MSUPROJ ")</td></tr>"
+                               "<p><tr><td><i>%3:</i></td><td></td><td align='right'>" VERSION_MSUPROJ_STRING " (" VERSION_MSUPROJ_DATE ")</td></tr>"
                                "<tr><td><i>%4:</i></td><td></td><td align='right'>%5 <a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
-                                                                    "&body=Version: " VERSION_MSUPROJ "\nPlatform: " VER_PLATFORM_MSUPROJ "\n"
-                                                                    "Architecture: " VER_ARCH_MSUPROJ "\n\n'>&lt;tpr@ntsomz.ru&gt;</a></td></tr>"
+                                                                    "&body=Version: " VERSION_MSUPROJ_STRING "\nPlatform: " VERSION_MSUPROJ_OS "\n"
+                                                                    "Architecture: " VERSION_MSUPROJ_ARCH "\n\n'>&lt;tpr@ntsomz.ru&gt;</a></td></tr>"
                                "<tr><td><i>%6 </i></td><td></td><td align='right'><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr>"
                                "<tr><td><i>%7 </i></td><td></td><td align='right'><a href='https://www.transifex.com/projects/p/msuproj/'>Transifex</a></td></tr></p>")
                        .arg(tr("MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M."),

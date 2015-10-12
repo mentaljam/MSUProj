@@ -29,16 +29,23 @@ msumr::MSUProj::~MSUProj()
         delete[] mGCPs;
 }
 
-const char *msumr::MSUProj::getVersion(const unsigned int &type) const
+const char *msumr::MSUProj::getVersion(VERSION_TYPE type) const
 {
-    if (type == 0)
-        return VERSION_MSUPROJ;
-    else if (type == 1)
-        return VER_DATE_MSUPROJ;
-    else if (type == 2)
-        return VER_ARCH_MSUPROJ;
-    else
+    switch (type)
+    {
+    case VERSION_STRING:
+        return VERSION_MSUPROJ_STRING;
+        break;
+    case VERSION_DATE:
+        return VERSION_MSUPROJ_DATE;
+        break;
+    case VERSION_ARCH:
+        return VERSION_MSUPROJ_ARCH;
+        break;
+    default:
         return "";
+        break;
+    }
 }
 
 void msumr::MSUProj::setDst(std::string file)
@@ -216,7 +223,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
         dstOptions = CSLSetNameValue(dstOptions, "COMPRESS", "JPEG");
         dstOptions = CSLSetNameValue(dstOptions, "JPEG_QUALITY", "100");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
-        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "MSUProj v" VERSION_MSUPROJ);
+        dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "MSUProj v" VERSION_MSUPROJ_STRING);
     }
     GDALDataset *dstDS = dstDriver->Create(mDstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
     if (dstDS == NULL)

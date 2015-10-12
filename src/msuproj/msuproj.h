@@ -30,6 +30,16 @@ public:
     ~MSUProj();
 
     /**
+     * @brief The enumiration for getVersion() method
+     */
+    enum VERSION_TYPE
+    {
+        VERSION_STRING, ///< Return a version string
+        VERSION_DATE,   ///< Return a version date
+        VERSION_ARCH    ///< Return a version architecture
+    };
+
+    /**
      * @brief A method of getting version of MSUProj
      * @param type - a type of a returning value:
      * - 0 - Get version number
@@ -37,7 +47,7 @@ public:
      * - 2 - Get build architecture
      * @return Version value
      */
-    const char* getVersion(const unsigned int &type = 0) const;
+    const char* getVersion(VERSION_TYPE type = VERSION_STRING) const;
 
     /**
      * @brief Amethod of setting a destination file name

@@ -12,7 +12,7 @@ if(WIN32)
     unset(IDI_ICON)
     set(VER_FILEDESCRIPTION_STR  "MSUProj Shared Library")
     set(VER_INTERNALNAME_STR     "msuproj_dll")
-    set(VER_ORIGINALFILENAME_STR "msuproj-${CPACK_PACKAGE_VERSION_MAJOR}.dll")
+    set(VER_ORIGINALFILENAME_STR "msuproj-${MSUPROJ_VERSION_MAJOR}.dll")
     set(VER_PRODUCTNAME_STR      "MSUProj")
     configure_file(${RESOURCES_DIR}/win32/msuproj.rc.in ${WIN_RC})
     list(APPEND MSUPROJ_SOURCES ${WIN_RC})
@@ -29,11 +29,11 @@ endif()
 if(BUILD_SHARED_LIBS)
 
     set_target_properties(msuproj
-                          PROPERTIES VERSION ${V_VERSION}
-                                     SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+                          PROPERTIES VERSION ${MSUPROJ_VERSION_STRING}
+                                     SOVERSION ${MSUPROJ_VERSION_MAJOR}
                                      OUTPUT_NAME msuproj)
     if(WIN32)
-        set_target_properties(msuproj PROPERTIES SUFFIX -${CPACK_PACKAGE_VERSION_MAJOR}.dll)
+        set_target_properties(msuproj PROPERTIES SUFFIX -${MSUPROJ_VERSION_MAJOR}.dll)
         install(TARGETS msuproj
                 RUNTIME DESTINATION ${INSTALL_PATH_BIN}
                 COMPONENT lib)
@@ -62,8 +62,8 @@ if(BUILD_SHARED_LIBS)
         target_compile_definitions(msuproj-dev PRIVATE "-DMSUPROJ_STATIC_DEFINE=1")
         target_link_libraries(msuproj-dev ${GDAL_LIBRARIES})
         set_target_properties(msuproj-dev
-                              PROPERTIES VERSION ${V_VERSION}
-                                         SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+                              PROPERTIES VERSION ${MSUPROJ_VERSION_STRING}
+                                         SOVERSION ${MSUPROJ_VERSION_MAJOR}
                                          OUTPUT_NAME msuproj-dev)
         set(MSUPROJ_DEV msuproj-dev)
 
@@ -72,8 +72,8 @@ if(BUILD_SHARED_LIBS)
 else()
 
     set_target_properties(msuproj
-                          PROPERTIES VERSION ${V_VERSION}
-                                     SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+                          PROPERTIES VERSION ${MSUPROJ_VERSION_STRING}
+                                     SOVERSION ${MSUPROJ_VERSION_MAJOR}
                                      OUTPUT_NAME msuproj-dev)
     set(MSUPROJ_DEV msuproj)
 

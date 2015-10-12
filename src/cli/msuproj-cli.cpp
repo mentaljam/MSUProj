@@ -29,7 +29,9 @@ int main(int argc, char *argv[])
                         "               Research Center for Earth Operative Monitoring\n"
                         "               (NTs OMZ) <www.ntsomz.ru>\n\n"
                         "Project Page:  https://github.com/mentaljam/MSUProj\n\n"
-                        "Version:       " << msuObj.getVersion() << " (" << msuObj.getVersion(1) << ") for " << msuObj.getVersion(2) << "\n\n"
+                        "Version:       " << msuObj.getVersion()
+                                          << " (" << msuObj.getVersion(MSUProj::VERSION_DATE)
+                                          << ") for " << msuObj.getVersion(MSUProj::VERSION_ARCH) << "\n\n"
                         "Usage:   msuproj-cli [OPTIONS] -src input_file -gcp gcp_file [-dst output_file]\n\n"
                         "Options:\n"
                         "    -u              Produce an image in UTM projection\n"
