@@ -312,19 +312,20 @@ void MainWindow::on_actionSettings_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, tr("About MSUProj-Qt"),
-                       QString("<p>%1</p><p>%2</p>"
-                               "<p><tr><td><i>%3:</i></td><td></td><td align='right'>" VERSION_MSUPROJ_STRING " (" VERSION_MSUPROJ_DATE ")</td></tr>"
-                               "<tr><td><i>%4:</i></td><td></td><td align='right'>%5 <a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
+                       QString("<p>%1</p><p>%2</p><p>%3</p>"
+                               "<p><tr><td align='right'>%4:&nbsp;&nbsp;</td><td>" VERSION_MSUPROJ_STRING " (" VERSION_MSUPROJ_DATE ")</td></tr>"
+                               "<tr><td align='right'>%5:</td>&nbsp;&nbsp;<td><a href='mailto:tpr@ntsomz.ru?subject=Feedback for MSUProj-Qt"
                                                                     "&body=Version: " VERSION_MSUPROJ_STRING "\nPlatform: " VERSION_MSUPROJ_OS "\n"
-                                                                    "Architecture: " VERSION_MSUPROJ_ARCH "\n\n'>&lt;tpr@ntsomz.ru&gt;</a></td></tr>"
-                               "<tr><td><i>%6 </i></td><td></td><td align='right'><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr>"
-                               "<tr><td><i>%7 </i></td><td></td><td align='right'><a href='https://www.transifex.com/projects/p/msuproj/'>Transifex</a></td></tr></p>")
-                       .arg(tr("MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M."),
-                            tr("This is a Qt graphical interface for MSUProj."),
-                            tr("Version"),
-                            tr("Author"), tr("Petr Tsymbarovich"),
-                            tr("Project page on"),
-                            tr("Translations on")));
+                                                                    "Architecture: " VERSION_MSUPROJ_ARCH "\n\n'>tpr@ntsomz.ru</a></td></tr>"
+                               "<tr><td align='right'>%6:</td>&nbsp;&nbsp;<td><a href='https://github.com/mentaljam/MSUProj'>GitHub</a></td></tr>"
+                               "<tr><td align='right'>%7:</td>&nbsp;&nbsp;<td><a href='https://www.transifex.com/projects/p/msuproj/'>Transifex</a></td></tr></p>")
+                       .arg(tr("MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M."))
+                       .arg(tr("This is a Qt graphical interface for MSUProj."))
+                       .arg(tr("MSUProj is provided under <a href='http://opensource.org/licenses/Zlib'>The Zlib License</a>."))
+                       .arg(tr("Version"))
+                       .arg(tr("Author"))
+                       .arg(tr("Project page"))
+                       .arg(tr("Translations")));
 }
 
 void MainWindow::on_actionReference_triggered()

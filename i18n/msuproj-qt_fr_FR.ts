@@ -1,40 +1,42 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr_FR" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fr_FR">
 <context>
     <name>HelpWindow</name>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="11"/>
         <source>Home</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="12"/>
         <source>Backward</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="13"/>
         <source>Forward</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="41"/>
         <source>Navigation</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="46"/>
         <source>Contents</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="76"/>
         <source>Error loading help files.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/helpwindow.cpp" line="77"/>
         <source>Could not load help files. Have You installed the MSUProj-Qt Help package?</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -42,26 +44,26 @@
     <message>
         <location filename="../src/qt/mainwindow.ui" line="25"/>
         <source>Show preview</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="58"/>
         <source>Input image</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="66"/>
-        <location filename="../src/qt/mainwindow.cpp" line="96"/>
-        <location filename="../src/qt/mainwindow.cpp" line="108"/>
+        <location filename="../src/qt/mainwindow.cpp" line="95"/>
+        <location filename="../src/qt/mainwindow.cpp" line="107"/>
         <source>Image height</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="73"/>
-        <location filename="../src/qt/mainwindow.cpp" line="95"/>
-        <location filename="../src/qt/mainwindow.cpp" line="107"/>
+        <location filename="../src/qt/mainwindow.cpp" line="94"/>
+        <location filename="../src/qt/mainwindow.cpp" line="106"/>
         <source>Image width</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="98"/>
@@ -71,12 +73,12 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="101"/>
-        <location filename="../src/qt/mainwindow.cpp" line="94"/>
-        <location filename="../src/qt/mainwindow.cpp" line="106"/>
-        <location filename="../src/qt/mainwindow.cpp" line="122"/>
-        <location filename="../src/qt/mainwindow.cpp" line="128"/>
+        <location filename="../src/qt/mainwindow.cpp" line="93"/>
+        <location filename="../src/qt/mainwindow.cpp" line="105"/>
+        <location filename="../src/qt/mainwindow.cpp" line="121"/>
+        <location filename="../src/qt/mainwindow.cpp" line="127"/>
         <source>Input image file</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="126"/>
@@ -86,45 +88,45 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="144"/>
-        <location filename="../src/qt/mainwindow.cpp" line="163"/>
-        <location filename="../src/qt/mainwindow.cpp" line="174"/>
-        <location filename="../src/qt/mainwindow.cpp" line="185"/>
-        <location filename="../src/qt/mainwindow.cpp" line="191"/>
+        <location filename="../src/qt/mainwindow.cpp" line="162"/>
+        <location filename="../src/qt/mainwindow.cpp" line="173"/>
+        <location filename="../src/qt/mainwindow.cpp" line="184"/>
+        <location filename="../src/qt/mainwindow.cpp" line="190"/>
         <source>Input GCPs</source>
         <translation>Fichier GCP d&apos;entrée</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="152"/>
-        <location filename="../src/qt/mainwindow.cpp" line="165"/>
-        <location filename="../src/qt/mainwindow.cpp" line="176"/>
+        <location filename="../src/qt/mainwindow.cpp" line="164"/>
+        <location filename="../src/qt/mainwindow.cpp" line="175"/>
         <source>GCPs grid height</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="159"/>
-        <location filename="../src/qt/mainwindow.cpp" line="164"/>
-        <location filename="../src/qt/mainwindow.cpp" line="175"/>
+        <location filename="../src/qt/mainwindow.cpp" line="163"/>
+        <location filename="../src/qt/mainwindow.cpp" line="174"/>
         <source>GCPs grid width</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="166"/>
-        <location filename="../src/qt/mainwindow.cpp" line="166"/>
-        <location filename="../src/qt/mainwindow.cpp" line="177"/>
+        <location filename="../src/qt/mainwindow.cpp" line="165"/>
+        <location filename="../src/qt/mainwindow.cpp" line="176"/>
         <source>Step of GCPs grid columns</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="173"/>
-        <location filename="../src/qt/mainwindow.cpp" line="167"/>
-        <location filename="../src/qt/mainwindow.cpp" line="178"/>
+        <location filename="../src/qt/mainwindow.cpp" line="166"/>
+        <location filename="../src/qt/mainwindow.cpp" line="177"/>
         <source>Step of GCPs grid rows</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="180"/>
-        <location filename="../src/qt/mainwindow.cpp" line="168"/>
-        <location filename="../src/qt/mainwindow.cpp" line="179"/>
+        <location filename="../src/qt/mainwindow.cpp" line="167"/>
+        <location filename="../src/qt/mainwindow.cpp" line="178"/>
         <source>UTM zone</source>
         <translation>Zone UTM</translation>
     </message>
@@ -137,22 +139,22 @@
     <message>
         <location filename="../src/qt/mainwindow.ui" line="208"/>
         <source>Input GCP file</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="248"/>
         <source>Operation options</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="259"/>
         <source>Lat/Lon mode</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="269"/>
         <source>UTM mode</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="278"/>
@@ -168,7 +170,7 @@
     <message>
         <location filename="../src/qt/mainwindow.ui" line="304"/>
         <source>Output image file</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="335"/>
@@ -178,7 +180,7 @@
     <message>
         <location filename="../src/qt/mainwindow.ui" line="347"/>
         <source>Automatic output name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="382"/>
@@ -226,115 +228,120 @@
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="19"/>
+        <location filename="../src/qt/mainwindow.cpp" line="18"/>
         <source>Select input image</source>
         <translation>Sélectionnez l&apos;image d&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="20"/>
+        <location filename="../src/qt/mainwindow.cpp" line="19"/>
         <source>Meteor-M2 images (*.jpg *.bmp);;All files (*.*)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="31"/>
-        <location filename="../src/qt/mainwindow.cpp" line="74"/>
+        <location filename="../src/qt/mainwindow.cpp" line="30"/>
+        <location filename="../src/qt/mainwindow.cpp" line="73"/>
         <source>Select input files.</source>
         <translation>Sélectionnez les fichiers d&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="72"/>
+        <location filename="../src/qt/mainwindow.cpp" line="71"/>
         <source>Ready to transform.</source>
         <translation>Prêt à transformer</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="106"/>
+        <location filename="../src/qt/mainwindow.cpp" line="105"/>
         <source>loaded</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/qt/mainwindow.cpp" line="121"/>
+        <source>error loading</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="122"/>
-        <source>error loading</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/qt/mainwindow.cpp" line="123"/>
         <source>Error loading image</source>
         <translation>Erreur de chargement de l&apos;image</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="128"/>
+        <location filename="../src/qt/mainwindow.cpp" line="127"/>
         <source>no such file</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="129"/>
+        <location filename="../src/qt/mainwindow.cpp" line="128"/>
         <source>Image file does not exist</source>
         <translation>L&apos;image n&apos;existe pas</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="147"/>
+        <location filename="../src/qt/mainwindow.cpp" line="146"/>
         <source>Select input GCP file</source>
         <translation>Sélectionnez le fichier GCP</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="149"/>
+        <location filename="../src/qt/mainwindow.cpp" line="148"/>
         <source>Meteor-M2 GCP file (*.gcp);;All files (*.*)</source>
         <translation>Fichier Meteor-M2 GCP (*.gcp);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="174"/>
+        <location filename="../src/qt/mainwindow.cpp" line="173"/>
         <source>Loaded</source>
         <translation>Chargé</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="185"/>
+        <location filename="../src/qt/mainwindow.cpp" line="184"/>
         <source>Error loading</source>
         <translation>Erreur de chargement</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="186"/>
+        <location filename="../src/qt/mainwindow.cpp" line="185"/>
         <source>Error loading GCP file</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="191"/>
+        <location filename="../src/qt/mainwindow.cpp" line="190"/>
         <source>No such file</source>
         <translation>Le fichier n&apos;existe pas</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="192"/>
+        <location filename="../src/qt/mainwindow.cpp" line="191"/>
         <source>GCP file does not exist</source>
         <translation>Le fichier GCP n&apos;existe pas</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="207"/>
+        <location filename="../src/qt/mainwindow.cpp" line="206"/>
         <source>Specify output file</source>
         <translation>Spécifiez le fichier de sortie</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="209"/>
+        <location filename="../src/qt/mainwindow.cpp" line="208"/>
         <source>GeoTiff images (*.tif)</source>
         <translation>Images GeoTiff (*.tif)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="302"/>
+        <location filename="../src/qt/mainwindow.cpp" line="301"/>
         <source>Output file name is empty</source>
         <translation>Le nom du fichier de sortie est vide</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="315"/>
+        <location filename="../src/qt/mainwindow.cpp" line="314"/>
         <source>About MSUProj-Qt</source>
         <translation>A propos de MSUProj-Qt</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="323"/>
+        <location filename="../src/qt/mainwindow.cpp" line="322"/>
         <source>MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.</source>
         <translation>MSUProj-Qt est un projet pour géo-référencer les images provenant du capteur MSU-MR équipant les satellites Russes ERS de la série Meteor-M</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="324"/>
+        <location filename="../src/qt/mainwindow.cpp" line="323"/>
         <source>This is a Qt graphical interface for MSUProj.</source>
         <translation>Ceci est l&apos;interface graphique QT pour MSUProj.</translation>
+    </message>
+    <message>
+        <location filename="../src/qt/mainwindow.cpp" line="324"/>
+        <source>MSUProj is provided under &lt;a href=&apos;http://opensource.org/licenses/Zlib&apos;&gt;The Zlib License&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="325"/>
@@ -347,19 +354,14 @@
         <translation>Auteur</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="326"/>
-        <source>Petr Tsymbarovich</source>
-        <translation>Petr Tsymbarovich</translation>
-    </message>
-    <message>
         <location filename="../src/qt/mainwindow.cpp" line="327"/>
-        <source>Project page on</source>
-        <translation type="unfinished"/>
+        <source>Project page</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="328"/>
-        <source>Translations on</source>
-        <translation type="unfinished"/>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="344"/>
@@ -380,85 +382,85 @@
 <context>
     <name>SettingsWindow</name>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="20"/>
+        <location filename="../src/qt/settingswindow.ui" line="15"/>
         <source>Settings</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="36"/>
+        <location filename="../src/qt/settingswindow.ui" line="31"/>
         <source>Interface</source>
         <translation>Interface</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="43"/>
+        <location filename="../src/qt/settingswindow.ui" line="38"/>
         <source>&lt;System&gt;</source>
         <translation>&lt;Système&gt;</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="48"/>
+        <location filename="../src/qt/settingswindow.ui" line="43"/>
         <source>&lt;Default&gt;</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="61"/>
+        <location filename="../src/qt/settingswindow.ui" line="56"/>
         <source>*Require application restart</source>
         <translation>*L&apos;application doit être relancée</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="71"/>
+        <location filename="../src/qt/settingswindow.ui" line="66"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="87"/>
+        <location filename="../src/qt/settingswindow.ui" line="82"/>
         <source>A start path for file selection dialogs</source>
         <translation>Un dossier racine pour la sélection des fichiers</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="90"/>
+        <location filename="../src/qt/settingswindow.ui" line="85"/>
         <source>Input folder</source>
         <translation>Dossier d&apos;entrée</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="96"/>
+        <location filename="../src/qt/settingswindow.ui" line="91"/>
         <source>Use a previously selected folder</source>
         <translation>Utiliser le précédent dossier</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="99"/>
+        <location filename="../src/qt/settingswindow.ui" line="94"/>
         <source>Use previous one</source>
         <translation>Utiliser le précédent</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="109"/>
+        <location filename="../src/qt/settingswindow.ui" line="104"/>
         <source>Use a prefered folder</source>
         <translation>Utiliser un dossier favoris</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="112"/>
+        <location filename="../src/qt/settingswindow.ui" line="107"/>
         <source>Use prefered one</source>
         <translation>Utiliser le favoris</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="124"/>
+        <location filename="../src/qt/settingswindow.ui" line="119"/>
         <source>Prefered input path</source>
         <translation>Chemin favoris </translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="134"/>
-        <location filename="../src/qt/settingswindow.cpp" line="80"/>
+        <location filename="../src/qt/settingswindow.ui" line="129"/>
+        <location filename="../src/qt/settingswindow.cpp" line="85"/>
         <source>Select prefered input folder</source>
         <translation>Choisissez le dossier favoris</translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="149"/>
+        <location filename="../src/qt/settingswindow.ui" line="144"/>
         <source>Options</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/qt/settingswindow.ui" line="155"/>
+        <location filename="../src/qt/settingswindow.ui" line="150"/>
         <source>Add a logo onto the output raster</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
