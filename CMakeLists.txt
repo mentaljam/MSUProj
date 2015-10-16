@@ -30,15 +30,8 @@ set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 
 ############### Setting additional variables ###############
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-    set(GCC_FLAGS "${GCC_FLAGS} -s")
-endif()
-
 #### GDAL paths (on Windows)
 set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")
-
-#### Generate .ico file on windows
-set(WIN_ICONS msuproj)
 
 
 ####################### Setting paths ######################
