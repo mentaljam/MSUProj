@@ -64,25 +64,17 @@ set(INSTALL_PATH_LIB lib)
 
 ###################### CMake modules #######################
 
+#### Set of CMake modules (https://github.com/mentaljam/OMZModules)
 find_package(OMZModules)
+
+#### Run OMZ preconfiguring script
 include(OMZProjectPreConf)
+
+#### Configure doxygen
 include(OMZDoxyConf)
 
-
-####################### GDAL library #######################
-
-if(SEARCH_PREFIX)
-    list(APPEND CMAKE_SYSTEM_PREFIX_PATH ${SEARCH_PREFIX})
-endif()
-
-find_package(GDAL)
-
-if(NOT GDAL_FOUND)
-    message(FATAL_ERROR "Could not find GDAL, try to install gdal-dev "
-                        "or specify SEARCH_PREFIX")
-endif()
-
-include_directories(${GDAL_INCLUDE_DIRS})
+#### Find GDAL
+include(GDAL)
 
 
 ########################## Targets #########################
@@ -109,6 +101,11 @@ endif()
 
 ##################### Post configuration ###################
 
-include(doxygen)
-include(packaging)
+#### Configure doxygen targets
+include(DoxygenTargets)
+
+#### Configure packaging rules
+include(Packaging)
+
+#### Run OMZ postconfiguring script
 include(OMZProjectPostConf)

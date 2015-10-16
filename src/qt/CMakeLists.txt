@@ -1,12 +1,12 @@
 ###################### Configuring Qt ######################
 
-#if(UNIX)
-#    list(APPEND CMAKE_PREFIX_PATH "/opt/Qt/5.4/gcc_64/lib/cmake")
-#endif(UNIX)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Help REQUIRED)
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 set_qt_defenitions()
+set(QT_VERSION ${Qt5Widgets_VERSION} PARENT_SCOPE)
+message(STATUS "Using Qt v${Qt5Widgets_VERSION}")
+
 
 #################### Localization files ####################
 
@@ -31,7 +31,6 @@ endif()
 
 
 ##################### Configuring Icons ####################
-
 
 if(NOT CONVERT_EXECUTABLE)
     unset(CONVERT_EXECUTABLE CACHE)
@@ -93,8 +92,6 @@ set_target_properties(msuproj-qt PROPERTIES AUTOMOC YES
                                             AUTORCC YES
 )
 target_link_libraries(msuproj-qt msuproj Qt5::Widgets Qt5::Help)
-
-#add_dependencies(msuproj-qt build_docs)
 
 install(TARGETS msuproj-qt
         DESTINATION ${INSTALL_PATH_BIN}

@@ -1,6 +1,6 @@
 ################### MSUProj Documentation ##################
 
-include(documentation_locales)
+include(Locales)
 
 if(INSTALL_DOCS AND DOXYGEN_FOUND)
 
@@ -72,13 +72,10 @@ if(INSTALL_DOCS AND DOXYGEN_FOUND)
             )
             install(FILES       ${CMAKE_BINARY_DIR}/doc/msuproj-qt/msuproj-qt_${LOCALE}.qch
                     DESTINATION ${INSTALL_PATH_MAN}
-                    COMPONENT   qt_man_${LOCALE}
+                    COMPONENT   qt_man.${LOCALE}
                     OPTIONAL
             )
             string(TOUPPER ${LOCALE} LOCALE_UPPER)
-            set(CPACK_COMPONENT_QT_MAN_${LOCALE_UPPER}_GROUP   man)
-            set(CPACK_COMPONENT_QT_MAN_${LOCALE_UPPER}_DEPENDS doc)
-            set(CPACK_COMPONENT_QT_MAN_${LOCALE_UPPER}_DISPLAY_NAME "MSUProj-Qt ${LOCALE} help")
             set(PROJECT_FILES ${PROJECT_FILES} ${DOC_DIR}/msuproj-qt/${LOCALE}.dox)
         endforeach()
 

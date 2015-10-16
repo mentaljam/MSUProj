@@ -1,0 +1,4 @@
+#### Disable components grouping for IFW
+if(${CPACK_GENERATOR} MATCHES "IFW")
+    set(CPACK_COMPONENTS_GROUPING IGNORE)
+endif()
