@@ -2,7 +2,6 @@
 #include <QMessageBox>
 #include <QDesktopWidget>
 
-#include <msuproj_version.h>
 #include <settings.h>
 #include <settingswindow.h>
 #include <helpwindow.h>

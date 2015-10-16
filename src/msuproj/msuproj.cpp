@@ -1,6 +1,5 @@
 #include <msuproj.h>
 #include <logoimage.hpp>
-#include <msuproj_version.h>
 #include <ogrsf_frmts.h>
 #include <fstream>
 #include <sstream>
