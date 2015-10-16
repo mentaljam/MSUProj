@@ -15,6 +15,11 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     ui->setupUi(this);
     bool hasLocaleSet = false;
     QString curLocale(settingsObj.getLocale(&hasLocaleSet));
+    if (curLocale == "default")
+    {
+        ui->langBox->setCurrentIndex(1);
+        hasLocaleSet = false;
+    }
     foreach (QString localeStr, mLocales)
     {
         QLocale locale(localeStr);
@@ -24,11 +29,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
         if (!country.isEmpty())
             boxItem += QString(" (%1)").arg(country);
         ui->langBox->addItem(boxItem);
-        if (hasLocaleSet)
-            if (localeStr == curLocale)
-                ui->langBox->setCurrentIndex(ui->langBox->count() - 1);
-            else
-                ui->langBox->setCurrentIndex(1);
+        if (hasLocaleSet && localeStr == curLocale)
+            ui->langBox->setCurrentIndex(ui->langBox->count() - 1);
     }
 
     ui->inputPathEdit->setText(settingsObj.getPath(MSUSettings::PATH_INPUT_PREFERED));
