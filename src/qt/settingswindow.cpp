@@ -13,6 +13,9 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
     mLocales(settingsObj.getLocalesList())
 {
     ui->setupUi(this);
+    this->adjustSize();
+    this->setFixedSize(this->size());
+
     bool hasLocaleSet = false;
     QString curLocale(settingsObj.getLocale(&hasLocaleSet));
     if (curLocale == "default")

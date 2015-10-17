@@ -2,25 +2,20 @@
 <ui version="4.0">
  <class>SettingsWindow</class>
  <widget class="QDialog" name="SettingsWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
-    <height>300</height>
+    <width>450</width>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../../build/msuproj/res/icons/icons.qrc">
+   <iconset>
     <normaloff>:/icons/MSUProj</normaloff>:/icons/MSUProj</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -187,9 +182,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../../../build/msuproj/res/icons/icons.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
