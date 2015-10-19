@@ -1,6 +1,6 @@
 # MSUProj
 
-**MSUProj** is a project to geo transform images of MSU-MR equipment of Russian ERS satellite "Meteor-M".
+**MSUProj** is a project to transform images of MSU-MR equipment of Russian ERS satellite "Meteor-M" to geographical projection.
 
 It is developed specially for [LRPToffLineDecoder](http://meteor.robonuka.ru/for-experts/lrpt-analizer-2015/) to help amateur radio operators get remote sensing data from "Meteor-M No2" and uses [GDAL](http://www.gdal.org/) to operate with raster images.
 
