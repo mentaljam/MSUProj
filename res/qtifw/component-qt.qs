@@ -5,7 +5,7 @@ function Component()
 Component.prototype.createOperations = function()
 {
     component.createOperations();
-    if (installer.value("os") === "win")
+    if (systemInfo.productType === "windows")
     {
         component.addOperation("CreateShortcut",
                                "@TargetDir@/msuproj-qt.exe",

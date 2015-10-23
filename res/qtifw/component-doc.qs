@@ -4,20 +4,21 @@ function Component()
 
 Component.prototype.createOperations = function()
 {
-    if (installer.value("os") === "win")
+    component.createOperations();
+    if (systemInfo.productType === "windows")
     {
         console.log("Creating additional shortcuts");
         component.addOperation("CreateShortcut",
                                "@TargetDir@/MaintenanceTool.exe",
-                               "@StartMenuDir@/Maintenance.lnk");
+                               "@StartMenuDir@/" + qsTr("Maintenance", "Start menu entry") + ".lnk");
         component.addOperation("AppendFile",
-                               "@StartMenuDir@\\Project Page.url",
+                               "@StartMenuDir@\\" + qsTr("Project Page", "Start menu link") + ".url",
                                "[InternetShortcut]\nURL=https://github.com/mentaljam/MSUProj");
         component.addOperation("AppendFile",
-                               "@StartMenuDir@\\Issues and Suggestions.url",
+                               "@StartMenuDir@\\" + qsTr("Issues and Suggestions", "Start menu link") + ".url",
                                "[InternetShortcut]\nURL=https://github.com/mentaljam/MSUProj/issues");
         component.addOperation("AppendFile",
-                               "@StartMenuDir@\\Robonuka Meteor-M N2 Site.url",
+                               "@StartMenuDir@\\" + qsTr("Robonuka Meteor-M N2 Site", "Start menu link") + ".url",
                                "[InternetShortcut]\nURL=http://meteor.robonuka.ru/");
     }
 }

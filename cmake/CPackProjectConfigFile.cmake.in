@@ -1,4 +1,11 @@
 #### Disable components grouping for IFW
 if(${CPACK_GENERATOR} MATCHES "IFW")
     set(CPACK_COMPONENTS_GROUPING IGNORE)
+    if(NOT CPACK_IFW_DOWNLOAD_ALL)
+        if(CPACK_IFW_BINARYCREATOR_EXECUTABLE)
+            set(CPACK_IFW_BINARYCREATOR_EXECUTABLE "${CPACK_IFW_BINARYCREATOR_EXECUTABLE} --offline-only")
+        else()
+            set(CPACK_IFW_BINARYCREATOR_EXECUTABLE "binarycreator --offline-only")
+        endif()
+    endif()
 endif()

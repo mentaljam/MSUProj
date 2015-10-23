@@ -1,0 +1,41 @@
+function Controller()
+{
+    if (systemInfo.currentCpuArchitecture === "i386" && "@COMPILED_ARCH@" !== "i386")
+    {
+        installer.setValue("archError", true);
+        installer.setDefaultPageVisible(QInstaller.Introduction, false);
+        installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
+        installer.setDefaultPageVisible(QInstaller.ComponentSelection, false);
+        installer.setDefaultPageVisible(QInstaller.LicenseCheck, false);
+        installer.setDefaultPageVisible(QInstaller.StartMenuSelection, false);
+        installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
+        installer.setDefaultPageVisible(QInstaller.PerformInstallation, false);
+        QMessageBox.critical("archError", qsTr("Version error"),
+                             "<p>" + qsTr("This version is for a 64-bit OS, but you are using a 32-bit OS.") + "</p>" +
+                             "<p>" + qsTr("Download a proper version of installer: %1.")
+                                        .arg("<a href=\"@REPO_URL@/installers/msuproj_@MSUPROJ_VERSION_STRING@_win32_@COMPILER_NAME@_i386.exe\">" +
+                                             qsTr("link") + "</a>")
+                             + "</p>", QMessageBox.Close);
+    }
+}
+
+Controller.prototype.FinishedPageCallback = function()
+{
+    if (installer.value("archError"))
+    {
+        gui.clickButton(buttons.FinishButton);
+    }
+}
+
+Controller.prototype.TargetDirectoryPageCallback = function()
+{
+    if (systemInfo.productType === "windows")
+    {
+        var appsDir = "C:\\Program Files";
+        if (systemInfo.currentCpuArchitecture === "x86_64" && "@COMPILED_ARCH@" === "i386")
+        {
+            appsDir += " (x86)";
+        }
+        gui.currentPageWidget().TargetDirectoryLineEdit.setText(appsDir + "\\MSUProj");
+    }
+}

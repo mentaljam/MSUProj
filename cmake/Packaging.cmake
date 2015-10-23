@@ -6,7 +6,7 @@ set(CPACK_PACKAGE_VENDOR  "NTs OMZ")
 set(CPACK_PACKAGE_CONTACT "Petr Tsymbarovich <petr@tsymbarovich.ru>")
 set(COPYRIGHT             "Research Center for Earth Operative Monitoring (NTs OMZ) <www.ntsomz.ru>")
 set(WEB                   "https://github.com/mentaljam/MSUProj")
-
+set(REPO_URL              "ftp://AMIGOS:robonuka@185.26.115.106:2121/Download/PETR/MSUProj")
 
 ################# CPack project config file ################
 
@@ -90,7 +90,9 @@ endif()
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     set(CPACK_IFW_VERBOSE ON)
 endif()
-set(CPACK_IFW_PACKAGE_CONTROL_SCRIPT ${RESOURCES_DIR}/qtifw/controller.qs)
+set(CPACK_IFW_PACKAGE_CONTROL_SCRIPT ${CMAKE_BINARY_DIR}/res/qtifw/controller.qs)
+configure_file(${RESOURCES_DIR}/qtifw/controller.qs.in
+               ${CPACK_IFW_PACKAGE_CONTROL_SCRIPT} @ONLY)
 file(GLOB IFW_SCRIPTS ${RESOURCES_DIR}/qtifw/*.qs)
 list(APPEND PROJECT_FILES ${IFW_SCRIPTS})
 
@@ -108,8 +110,8 @@ if(WIN32)
 else()
     set(REPO ${CMAKE_SYSTEM_NAME})
 endif()
-cpack_ifw_add_repository(winrepo
-     URL "ftp://AMIGOS:robonuka@185.26.115.106:2121/Download/PETR/MSUProj/ifw/${REPO}/${COMPILED_ARCH}/"
+cpack_ifw_add_repository(qtifwrepo
+     URL "${REPO_URL}/ifw/${REPO}/${COMPILED_ARCH}/"
      DISPLAY_NAME "MSUProj QtIFW Repository")
 
 
@@ -156,9 +158,10 @@ if(WIN32 AND INSTALL_RUNTIME)
         message(AUTHOR_WARNING "Could not find runtime shared libraries for package forming")
     endif()
 
+    ## Qt
     set(QTDIR $ENV{QTDIR})
-    string(REPLACE "\\" "/" QTDIR ${QTDIR})
     if(BUILD_QT AND QTDIR)
+        string(REPLACE "\\" "/" QTDIR ${QTDIR})
         install(FILES ${QTDIR}/bin/Qt5Core.dll
                       ${QTDIR}/bin/Qt5Gui.dll
                       ${QTDIR}/bin/Qt5Widgets.dll
@@ -210,20 +213,20 @@ cpack_ifw_configure_component(doc
                               SCRIPT ${RESOURCES_DIR}/qtifw/component-doc.qs)
 
 cpack_add_component(lib
-                    DISPLAY_NAME "MSUProj ${MSUPROJ_VERSION_STRING} Shared"
+                    DISPLAY_NAME "MSUProj Shared"
                     DESCRIPTION  "MSUProj shared library")
 cpack_ifw_configure_component(lib
                               PRIORITY 10)
 
 cpack_add_component(cli
-                    DISPLAY_NAME "MSUProj ${MSUPROJ_VERSION_STRING} CLI"
+                    DISPLAY_NAME "MSUProj CLI"
                     DESCRIPTION  "MSUProj command line interface application"
                     ${DEPENDS})
 cpack_ifw_configure_component(cli
                               PRIORITY 9)
 
 cpack_add_component(qt
-                    DISPLAY_NAME "MSUProj-Qt ${MSUPROJ_VERSION_STRING}"
+                    DISPLAY_NAME "MSUProj-Qt"
                     DESCRIPTION  "MSUProj graphical user interface application"
                     ${DEPENDS})
 cpack_ifw_configure_component(qt
@@ -278,7 +281,7 @@ cpack_ifw_configure_component_group(runtime
                                     PRIORITY 5)
 
     cpack_add_component(runtime.gdal
-                        DISPLAY_NAME "GDAL ${GDAL_VERSION}"
+                        DISPLAY_NAME "GDAL"
                         DESCRIPTION  "GDAL, GEOS and Proj libraries"
                         GROUP runtime)
     cpack_ifw_configure_component(runtime.gdal
@@ -286,7 +289,7 @@ cpack_ifw_configure_component_group(runtime
                                   PRIORITY 3)
 
     cpack_add_component(runtime.cpp
-                        DISPLAY_NAME "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}"
+                        DISPLAY_NAME "${CMAKE_CXX_COMPILER_ID}"
                         DESCRIPTION  "C++ standard library"
                         GROUP runtime)
     cpack_ifw_configure_component(runtime.cpp
@@ -295,7 +298,7 @@ cpack_ifw_configure_component_group(runtime
 
     if(BUILD_QT)
         cpack_add_component(runtime.qt
-                            DISPLAY_NAME "Qt ${QT_VERSION}"
+                            DISPLAY_NAME "Qt"
                             DESCRIPTION  "Qt libraries"
                             GROUP runtime)
         cpack_ifw_configure_component(runtime.qt
