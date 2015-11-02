@@ -83,22 +83,6 @@ void MSUSettings::setPath(const MSUSettings::PATHS type, const QString &value)
         mSettings.setValue(option(type), value);
 }
 
-bool MSUSettings::getBool(MSUSettings::BOOL_OPTIONS type) const
-{
-    switch (type)
-    {
-    case BOOL_ADD_LOGO:
-        return mSettings.value(option(type), true).toBool();
-    default:
-        return mSettings.value(option(type)).toBool();
-    }
-}
-
-void MSUSettings::setBool(MSUSettings::BOOL_OPTIONS type, const bool &value)
-{
-    mSettings.setValue(option(type), value);
-}
-
 QByteArray MSUSettings::getGeometry(MSUSettings::WIDGETS type) const
 {
     return mSettings.value(option(type) + "/geom").toByteArray();
@@ -119,6 +103,40 @@ void MSUSettings::setState(MSUSettings::WIDGETS type, const QByteArray &value)
     mSettings.setValue(option(type) + "/state", value);
 }
 
+bool MSUSettings::getBool(MSUSettings::BOOL_OPTIONS type) const
+{
+    switch (type)
+    {
+    case BOOL_ADD_LOGO:
+        return mSettings.value(option(type), true).toBool();
+    default:
+        return mSettings.value(option(type)).toBool();
+    }
+}
+
+void MSUSettings::setBool(MSUSettings::BOOL_OPTIONS type, const bool &value)
+{
+    mSettings.setValue(option(type), value);
+}
+
+#ifdef WITH_UPDATES_ACTION
+int MSUSettings::getInt(MSUSettings::INT_OPTIONS type) const
+{
+    switch (type)
+    {
+    case INT_TIMEOUT_UPDATES:
+        return mSettings.value(option(type), 15000).toInt();
+    default:
+        return mSettings.value(option(type)).toInt();
+    }
+}
+
+void MSUSettings::setInt(MSUSettings::INT_OPTIONS type, const int &value)
+{
+    mSettings.setValue(option(type), value);
+}
+#endif // WITH_UPDATES_ACTION
+
 QString MSUSettings::option(MSUSettings::PATHS type) const
 {
     switch (type)
@@ -127,19 +145,6 @@ QString MSUSettings::option(MSUSettings::PATHS type) const
         return "History/InputPath";
     case PATH_INPUT_PREFERED:
         return "InputPath";
-    default:
-        return 0;
-    }
-}
-
-QString MSUSettings::option(MSUSettings::BOOL_OPTIONS type) const
-{
-    switch (type)
-    {
-    case BOOL_USE_PREFERED_INPUT:
-        return "UsePreferedPath";
-    case BOOL_ADD_LOGO:
-        return "AddLogo";
     default:
         return 0;
     }
@@ -157,3 +162,33 @@ QString MSUSettings::option(MSUSettings::WIDGETS type) const
         return 0;
     }
 }
+
+QString MSUSettings::option(MSUSettings::BOOL_OPTIONS type) const
+{
+    switch (type)
+    {
+    case BOOL_USE_PREFERED_INPUT:
+        return "UsePreferedPath";
+    case BOOL_ADD_LOGO:
+        return "AddLogo";
+#ifdef WITH_UPDATES_ACTION
+    case BOOL_UPDATES_ON_START:
+        return "CheckUpdatesOnStart";
+#endif // WITH_UPDATES_ACTION
+    default:
+        return 0;
+    }
+}
+
+#ifdef WITH_UPDATES_ACTION
+QString MSUSettings::option(MSUSettings::INT_OPTIONS type) const
+{
+    switch (type)
+    {
+    case INT_TIMEOUT_UPDATES:
+        return "TimeoutForUpdates";
+    default:
+        return 0;
+    }
+}
+#endif // WITH_UPDATES_ACTION

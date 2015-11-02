@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QFileDialog>
+#ifdef WITH_UPDATES_ACTION
+#   include <QProcess>
+#endif // WITH_UPDATES_ACTION
 
 #include <warper.h>
 
@@ -36,12 +39,21 @@ private slots:
     void on_actionReference_triggered();
     void onWarpStarted();
     void onWarpFinished(msumr::RETURN_CODE code);
+#ifdef WITH_UPDATES_ACTION
+    void checkUpdates();
+    void onCheckUpdatesFinished(int code);
+#endif // WITH_UPDATES_ACTION
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *mGraphicsScene;
     QFileDialog    *mOpenImageDialog;
     Warper         *mWarper;
+#ifdef WITH_UPDATES_ACTION
+    QAction        *mActionCheckUpdates;
+    QProcess       *mUpdater;
+    QTimer         *mUpdatesTimer;
+#endif // WITH_UPDATES_ACTION
     QString        mFilePreffix;
     QString        mCurrentImage;
 

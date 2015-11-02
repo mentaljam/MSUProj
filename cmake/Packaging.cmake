@@ -181,10 +181,10 @@ if(WIN32 AND INSTALL_RUNTIME)
         install(FILES ${QTDIR}/plugins/sqldrivers/qsqlite.dll
                 DESTINATION  ${INSTALL_PATH_BIN}/sqldrivers
                 COMPONENT runtime.qt)
-#        file(GLOB QTQMS ${QTDIR}/translations/qtbase*.qm)
-#        install(FILES ${QTQMS}
-#                DESTINATION ${INSTALL_PATH_I18N}
-#                COMPONENT runtime.qt)
+        file(GLOB QTQMS ${QTDIR}/translations/qtbase*.qm)
+        install(FILES ${QTQMS}
+                DESTINATION ${INSTALL_PATH_I18N}
+                COMPONENT runtime.qt)
     endif()
 
 endif()
@@ -208,7 +208,8 @@ if(BUILD_SHARED_LIBS)
     set(DEPENDS DEPENDS lib)
 endif()
 
-cpack_add_component(doc HIDDEN REQUIRED)
+cpack_add_component(doc HIDDEN REQUIRED
+                    DISPLAY_NAME "MSUProj Documentation")
 cpack_ifw_configure_component(doc
                               SCRIPT ${RESOURCES_DIR}/qtifw/component-doc.qs)
 
@@ -235,6 +236,9 @@ cpack_ifw_configure_component(qt
 
 #### Development
 cpack_add_component_group(dev DISPLAY_NAME "Development")
+cpack_ifw_configure_component_group(dev
+                                    VERSION 0
+                                    PRIORITY 0)
 
     cpack_add_component(libdev DISABLED
                         DISPLAY_NAME "MSUProj Static"
@@ -250,6 +254,7 @@ cpack_add_component_group(dev DISPLAY_NAME "Development")
 #### Tools
 cpack_add_component_group(tools DISPLAY_NAME "Tools")
 cpack_ifw_configure_component_group(tools
+                                    VERSION 0
                                     PRIORITY 6)
 
     cpack_add_component(gcpthiner DISABLED
@@ -260,6 +265,7 @@ cpack_ifw_configure_component_group(tools
 #### Manuals
 cpack_add_component_group(qt_man DISPLAY_NAME "Manuals")
 cpack_ifw_configure_component_group(qt_man
+                                    VERSION 0
                                     PRIORITY 7)
     set(LOCALE_PRIORITY ${DOXY_LOCALES_SIZE})
     math(EXPR LOCALE_PRIORITY "${LOCALE_PRIORITY} + 1")
@@ -278,6 +284,7 @@ cpack_add_component_group(runtime
                           DISPLAY_NAME "Runtime"
                           DESCRIPTION  "Thirdparty runtime libraries (GDAL, GEOS, Proj, Qt, C++ standard library)")
 cpack_ifw_configure_component_group(runtime
+                                    VERSION 0
                                     PRIORITY 5)
 
     cpack_add_component(runtime.gdal

@@ -1,6 +1,9 @@
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QDesktopWidget>
+#ifdef WITH_UPDATES_ACTION
+#   include <QXmlStreamReader>
+#endif // WITH_UPDATES_ACTION
 
 #include <settings.h>
 #include <settingswindow.h>
@@ -18,10 +21,20 @@ MainWindow::MainWindow(QWidget *parent) :
     mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
                                      tr("Meteor-M2 images (*.jpg *.bmp);;All files (*.*)"))),
     mWarper(new Warper),
+#ifdef WITH_UPDATES_ACTION
+    mActionCheckUpdates(new QAction(tr("Check for updates"), this)),
+#endif // WITH_UPDATES_ACTION
     mFilePreffix(""),
     mCurrentImage("")
 {
     ui->setupUi(this);
+
+#ifdef WITH_UPDATES_ACTION
+    ui->menuHelp->insertAction(ui->actionAbout, mActionCheckUpdates);
+    connect(mActionCheckUpdates, &QAction::triggered, this, &MainWindow::checkUpdates);
+    if (settingsObj.getBool(MSUSettings::BOOL_UPDATES_ON_START))
+        QTimer::singleShot(500, this, &MainWindow::checkUpdates);
+#endif // WITH_UPDATES_ACTION
 
     QByteArray geom(settingsObj.getGeometry(MSUSettings::MAINWINDOW));
     if (geom.size() > 0)
@@ -330,7 +343,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionReference_triggered()
 {
-    ui->actionReference->setDisabled(true);
+    ui->actionReference->setEnabled(false);
     HelpWindow *refWindow = new HelpWindow;
     refWindow->setAttribute(Qt::WA_DeleteOnClose);
     connect(refWindow, &QDialog::destroyed, ui->actionReference, &QAction::setEnabled);
@@ -355,6 +368,92 @@ void MainWindow::onWarpFinished(msumr::RETURN_CODE code)
     ui->centralwidget->setEnabled(true);
     ui->menubar->setEnabled(true);
 }
+
+#ifdef WITH_UPDATES_ACTION
+void MainWindow::checkUpdates()
+{
+
+    QString tool = QDir::currentPath() + "/maintenancetool.exe";
+    if (QFile(tool).exists())
+    {
+        mActionCheckUpdates->setEnabled(false);
+        ui->statusbar->showMessage(tr("Searching for updates..."));
+        mUpdater = new QProcess(this);
+        connect(mUpdater, static_cast<void (QProcess::*)(int)>(&QProcess::finished),
+                this, &MainWindow::onCheckUpdatesFinished);
+        mUpdatesTimer = new QTimer(this);
+        connect(mUpdatesTimer, &QTimer::timeout, mUpdater, &QProcess::kill);
+        mUpdater->start(tool, QStringList("--checkupdates"));
+        mUpdatesTimer->start(settingsObj.getInt(MSUSettings::INT_TIMEOUT_UPDATES));
+    }
+    else
+    {
+        qDebug() << "Error searching for updates: cannot find" << tool;
+        QMessageBox::critical(this, tr("Error searching for updates"),
+                              tr("Cannot find update tool \"maintenancetool.exe\"."));
+    }
+}
+
+void MainWindow::onCheckUpdatesFinished(int code)
+{
+    mUpdatesTimer->stop();
+    mUpdatesTimer->deleteLater();
+    qApp->alert(this);
+    qDebug() << "maintenancetool returned code" << code;
+    if (code == 0)
+    {
+        QString xmlData(mUpdater->readAll());
+        qDebug() << "Parsing answer:";
+        qDebug() << xmlData;
+        QXmlStreamReader xml(xmlData);
+        QString version;
+        while (!xml.atEnd() && !xml.hasError())
+        {
+            xml.readNext();
+            QXmlStreamAttributes attributes = xml.attributes();
+            if (attributes.value("name") == "MSUProj-Qt")
+            {
+                version = attributes.value("version").toString();
+                break;
+            }
+        }
+
+        QString title(tr("Updates are available"));
+        QString messagePrefix;
+        if (!version.isEmpty())
+            messagePrefix = tr("MSUProj-Qt version %1 is available.").arg(version);
+        else
+            messagePrefix = tr("MSUProj components updates are available.");
+        ui->statusbar->showMessage(title);
+        if (QMessageBox::question(this, title, QString("<p>%1</p><p>%2</p>")
+                                  .arg(messagePrefix)
+                                  .arg(tr("Start the maintenance tool now?")))
+                ==
+            QMessageBox::Yes)
+        {
+            qDebug() << "Starting maintenance tool";
+            QProcess::startDetached(QDir::currentPath() + "/maintenancetool.exe",
+                                    QStringList("--updater"));
+            qApp->quit();
+        }
+        else
+            this->showStdStatus(0);
+    }
+    else if (code == 1)
+    {
+        qDebug() << "No updates are available";
+        ui->statusbar->showMessage(tr("No updates are available"), 7000);
+    }
+    else
+    {
+        qDebug() << "Checking updates timeout";
+        ui->statusbar->showMessage(tr("Error searching for updates, check your internet connection"),
+                                   7000);
+    }
+    mUpdater->deleteLater();
+    mActionCheckUpdates->setEnabled(true);
+}
+#endif // WITH_UPDATES_ACTION
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {

@@ -24,6 +24,9 @@ option(INSTALL_RUNTIME "Install runtime libraries on Windows" ON)
 #### Install documentation
 option(INSTALL_DOCS "Install documentation" ON)
 
+#### Add "Check for updates" action on windows
+option(WITH_UPDATES_ACTION "Check for updates action" ON)
+
 #### Compiler flags
 set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024")
 

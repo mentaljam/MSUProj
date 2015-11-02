@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QAbstractButton>
+#ifdef WITH_UPDATES_ACTION
+#   include <QCheckBox>
+#endif // WITH_UPDATES_ACTION
 
 namespace Ui {
 class SettingsWindow;
@@ -24,6 +27,9 @@ private slots:
 
 private:
     Ui::SettingsWindow *ui;
+#ifdef WITH_UPDATES_ACTION
+    QCheckBox   *mCheckUpdatesBox;
+#endif // WITH_UPDATES_ACTION
     QStringList mLocales;
 };
 

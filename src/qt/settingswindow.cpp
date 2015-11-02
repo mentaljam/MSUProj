@@ -10,9 +10,18 @@ extern MSUSettings settingsObj;
 SettingsWindow::SettingsWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsWindow),
+#ifdef WITH_UPDATES_ACTION
+    mCheckUpdatesBox(new QCheckBox(tr("Check for updates on application start"), this)),
+#endif // WITH_UPDATES_ACTION
     mLocales(settingsObj.getLocalesList())
 {
     ui->setupUi(this);
+
+#ifdef WITH_UPDATES_ACTION
+    mCheckUpdatesBox->setChecked(settingsObj.getBool(MSUSettings::BOOL_UPDATES_ON_START));
+    ui->optionsBox->layout()->addWidget(mCheckUpdatesBox);
+#endif // WITH_UPDATES_ACTION
+
     this->adjustSize();
     this->setFixedSize(this->size());
 
@@ -68,6 +77,7 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
         settingsObj.setBool(MSUSettings::BOOL_USE_PREFERED_INPUT, ui->inputPathPreferedButton->isChecked());
         settingsObj.setPath(MSUSettings::PATH_INPUT_PREFERED, ui->inputPathEdit->text());
         settingsObj.setBool(MSUSettings::BOOL_ADD_LOGO, ui->enableLogoBox->isChecked());
+        settingsObj.setBool(MSUSettings::BOOL_UPDATES_ON_START, mCheckUpdatesBox->isChecked());
         break;
     default:
         break;
