@@ -16,10 +16,10 @@ if(Qt5LinguistTools_FOUND)
     file(GLOB TS_FILES ${PROJECT_SOURCE_DIR}/i18n/msuproj-qt_*.ts)
     set_property(SOURCE ${TS_FILES} PROPERTY OUTPUT_LOCATION ${CMAKE_BINARY_DIR}/i18n)
     add_custom_target(update_translations
-                      COMMAND lupdate ${PROJECT_SOURCE_DIR}/src/ -ts ${TS_FILES}
+                      COMMAND lupdate ${PROJECT_SOURCE_DIR}/src/qt -ts ${TS_FILES}
                       COMMENT "Updating kmssproj-qt translations files")
     add_custom_target(update_translations_clean
-                      COMMAND lupdate ${PROJECT_SOURCE_DIR}/src/ -ts ${TS_FILES} -no-obsolete
+                      COMMAND lupdate ${PROJECT_SOURCE_DIR}/src/qt -ts ${TS_FILES} -no-obsolete
                       COMMENT "Updating kmssproj-qt translations files with '-no-obsolete' key")
     qt5_add_translation(QM_FILES ${TS_FILES})
     install(FILES ${QM_FILES}

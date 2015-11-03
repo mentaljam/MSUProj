@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (geom.size() > 0)
         this->restoreGeometry(geom);
 
-    ui->statusbar->showMessage(tr("Select input files."));
+    this->showStdStatus(0);
     ui->imageView->setScene(mGraphicsScene);
     mOpenImageDialog->setFileMode(QFileDialog::ExistingFile);
     QString curPath;
@@ -81,9 +81,9 @@ void MainWindow::showStdStatus(const QString message)
     if (message.isEmpty())
     {
         if (ui->startButton->isEnabled())
-            ui->statusbar->showMessage(tr("Ready to transform."));
+            ui->statusbar->showMessage(tr("Ready to transform"));
         else
-            ui->statusbar->showMessage(tr("Select input files."));
+            ui->statusbar->showMessage(tr("Select input files"));
     }
 }
 

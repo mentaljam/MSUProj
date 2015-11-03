@@ -243,15 +243,14 @@
         <translation>Проверить обновления</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="43"/>
-        <location filename="../src/qt/mainwindow.cpp" line="86"/>
-        <source>Select input files.</source>
-        <translation>Выберите исходные файлы.</translation>
+        <location filename="../src/qt/mainwindow.cpp" line="84"/>
+        <source>Ready to transform</source>
+        <translation>Готов к трансформированию</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="84"/>
-        <source>Ready to transform.</source>
-        <translation>Готов к трансформированию.</translation>
+        <location filename="../src/qt/mainwindow.cpp" line="86"/>
+        <source>Select input files</source>
+        <translation>Выберите исходные файлы</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.cpp" line="118"/>
@@ -399,22 +398,22 @@
         <translation>Не найден инструмент управления установкой &quot;maintenancetool.exe&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="423"/>
+        <location filename="../src/qt/mainwindow.cpp" line="421"/>
         <source>Updates are available</source>
         <translation>Доступны обновления</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="426"/>
+        <location filename="../src/qt/mainwindow.cpp" line="424"/>
         <source>MSUProj-Qt version %1 is available.</source>
         <translation>Доступен MSUProj-Qt %1.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="428"/>
+        <location filename="../src/qt/mainwindow.cpp" line="426"/>
         <source>MSUProj components updates are available.</source>
         <translation>Доступны обновления компонентов MSUProj.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="432"/>
+        <location filename="../src/qt/mainwindow.cpp" line="430"/>
         <source>Start the maintenance tool now?</source>
         <translation>Запустить процесс обновления?</translation>
     </message>
@@ -424,7 +423,7 @@
         <translation>Доступных обновлений нет</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="456"/>
+        <location filename="../src/qt/mainwindow.cpp" line="450"/>
         <source>Error searching for updates, check your internet connection</source>
         <translation>Ошибка поиска обновлений, проверьте интернет соединение</translation>
     </message>
