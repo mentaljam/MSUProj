@@ -77,7 +77,9 @@ void SettingsWindow::on_buttonBox_clicked(QAbstractButton *button)
         settingsObj.setBool(MSUSettings::BOOL_USE_PREFERED_INPUT, ui->inputPathPreferedButton->isChecked());
         settingsObj.setPath(MSUSettings::PATH_INPUT_PREFERED, ui->inputPathEdit->text());
         settingsObj.setBool(MSUSettings::BOOL_ADD_LOGO, ui->enableLogoBox->isChecked());
+#ifdef WITH_UPDATES_ACTION
         settingsObj.setBool(MSUSettings::BOOL_UPDATES_ON_START, mCheckUpdatesBox->isChecked());
+#endif // WITH_UPDATES_ACTION
         break;
     default:
         break;
