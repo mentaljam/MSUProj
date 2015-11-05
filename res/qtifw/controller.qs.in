@@ -13,7 +13,7 @@ function Controller()
         QMessageBox.critical("archError", qsTr("Version error"),
                              "<p>" + qsTr("This version is for a 64-bit OS, but you are using a 32-bit OS.") + "</p>" +
                              "<p>" + qsTr("Download a proper version of installer: %1.")
-                                        .arg("<a href=\"@REPO_URL@/installers/msuproj_@MSUPROJ_VERSION_STRING@_win32_@COMPILER_NAME@_i386.exe\">" +
+                                        .arg("<a href=\"@REPO_URL@/installers/\">" +
                                              qsTr("link") + "</a>")
                              + "</p>", QMessageBox.Close);
     }
