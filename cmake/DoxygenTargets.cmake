@@ -72,7 +72,7 @@ if(INSTALL_DOCS AND DOXYGEN_FOUND)
             )
             install(FILES       ${CMAKE_BINARY_DIR}/doc/msuproj-qt/msuproj-qt_${LOCALE}.qch
                     DESTINATION ${INSTALL_PATH_MAN}
-                    COMPONENT   qt_man.${LOCALE}
+                    COMPONENT   qtman.${LOCALE}
                     OPTIONAL
             )
             string(TOUPPER ${LOCALE} LOCALE_UPPER)
