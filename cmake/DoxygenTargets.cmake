@@ -33,7 +33,7 @@ if(INSTALL_DOCS AND DOXYGEN_FOUND)
                           COMMAND ${GIT_EXECUTABLE} remote add github git@github.com:mentaljam/MSUProj.git
                           COMMAND ${GIT_EXECUTABLE} checkout --orphan gh-pages
                           COMMAND ${GIT_EXECUTABLE} add -A
-                          COMMAND ${GIT_EXECUTABLE} commit -m "Update documentation for version ${V_VERSION} (${V_DATE})"
+                          COMMAND ${GIT_EXECUTABLE} commit -m "Update documentation for version ${MSUPROJ_VERSION_STRING} (${MSUPROJ_VERSION_DATE})"
                           COMMAND ${GIT_EXECUTABLE} push -f github gh-pages
                           DEPENDS build_docs
                           WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc/developer/html
