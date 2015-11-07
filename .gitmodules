@@ -1,3 +1,0 @@
-[submodule "cmake/OMZModules"]
-	path = cmake/OMZModules
-	url = git@github.com:mentaljam/cmake_modules.git
