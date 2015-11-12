@@ -3,6 +3,8 @@
 #include <ogrsf_frmts.h>
 #include <fstream>
 #include <sstream>
+#include <cfloat>
+#include <iostream>
 
 msumr::MSUProj::MSUProj() :
     mSrcDS(NULL),
@@ -12,18 +14,15 @@ msumr::MSUProj::MSUProj() :
     mAddLogo(true),
     mHemisphere(true),
     mZone(0),
-    mPerimSize(19),
     mGCPXSize(0),
     mGCPYSize(0),
     mGCPXStep(0),
     mGCPYStep(0),
-    mGCPSize(0),
-    mGeoTransform(new double[6])
+    mGCPSize(0)
 {}
 
 msumr::MSUProj::~MSUProj()
 {
-    delete[] mGeoTransform;
     if (mGCPSize > 0)
         delete[] mGCPs;
 }
@@ -88,23 +87,23 @@ const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
     if (mGCPSize)
         delete[] mGCPs;
     mGCPs = new GCP[mGCPSize];
-    unsigned int gIter = 0;
+    unsigned int gcpInd = 0;
     while(getline(srcGCP, line))
     {
         std::stringstream iss(line);
         getline(iss, tmp, ' ');
-        mGCPs[gIter].x = stoi(tmp);
+        mGCPs[gcpInd].x = stoi(tmp);
         getline(iss, tmp, ' ');
-        mGCPs[gIter].y = stoi(tmp);
+        mGCPs[gcpInd].y = stoi(tmp);
         getline(iss, tmp, ' ');
         tmp = comma2dot(tmp);
-        std::stringstream(tmp) >> mGCPs[gIter].lat;
-//        mGCPs[gIter].lat = stod(tmp);
+        std::stringstream(tmp) >> mGCPs[gcpInd].lat;
+//        mGCPs[gcpInd].lat = stod(tmp);
         getline(iss, tmp);
         tmp = comma2dot(tmp);
-        std::stringstream(tmp) >> mGCPs[gIter].lon;
-//        mGCPs[gIter].lon = stod(tmp);
-        ++gIter;
+        std::stringstream(tmp) >> mGCPs[gcpInd].lon;
+//        mGCPs[gcpInd].lon = stod(tmp);
+        ++gcpInd;
     }
 
     mGCPXSize = 1;
@@ -120,12 +119,6 @@ const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
            mGCPs[mGCPSize - mGCPXSize].lat + mGCPs[mGCPSize - 1].lat) / 4 + 0.5) > 0);
 
     return SUCCESS;
-}
-
-void msumr::MSUProj::setPerimSize(const unsigned int &perim)
-{
-    if (perim > 0)
-        mPerimSize = 2 * perim + 1;
 }
 
 const std::string msumr::MSUProj::getUTM() const
@@ -147,7 +140,6 @@ const std::string msumr::MSUProj::getUTM() const
 
 const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &zerosAsND)
 {
-
     if (!mSrcDS)
         return ERROR_SRC;
 
@@ -165,6 +157,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     OGRSpatialReference latlonSRS;
     latlonSRS.SetWellKnownGeogCS("WGS84");
     char *srsWKT;
+    double geoTransform[6];
     if (useUtm)
     {
         OGRSpatialReference utmSRS;
@@ -173,16 +166,16 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
         utmSRS.exportToWkt(&srsWKT);
         OGRCoordinateTransformation *transFunc;
         transFunc = OGRCreateCoordinateTransformation(&latlonSRS, &utmSRS);
-        for (unsigned int gIter = 0; gIter < mGCPSize; ++gIter)
-            transFunc->Transform(1, &GCPsW[gIter].lon, &GCPsW[gIter].lat);
-        mGeoTransform[1] = 1000;
-        mGeoTransform[5] = -1000;
+        for (unsigned int gcpInd = 0; gcpInd < mGCPSize; ++gcpInd)
+            transFunc->Transform(1, &GCPsW[gcpInd].lon, &GCPsW[gcpInd].lat);
+        geoTransform[1] = 1000;
+        geoTransform[5] = -1000;
     }
     else
     {
         latlonSRS.exportToWkt(&srsWKT);
-        mGeoTransform[1] = 0.01;
-        mGeoTransform[5] = -0.01;
+        geoTransform[1] = 0.01;
+        geoTransform[5] = -0.01;
     }
 
     double coords[4];
@@ -202,235 +195,208 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
             coords[MAX_LAT] = GCPsW[i].lat;
     }
 
-    unsigned int dstXSize = (int)((coords[MAX_LON] - coords[MIN_LON]) / mGeoTransform[1] + 0.5);
-    unsigned int dstYSize = (int)((coords[MAX_LAT] - coords[MIN_LAT]) / mGeoTransform[1] + 0.5);
+    unsigned int dstXSize = (int)((coords[MAX_LON] - coords[MIN_LON]) / geoTransform[1] + 0.5);
+    unsigned int dstYSize = (int)((coords[MAX_LAT] - coords[MIN_LAT]) / geoTransform[1] + 0.5);
     unsigned int dstSize = dstXSize * dstYSize;
 
-    mGeoTransform[0] = coords[MIN_LON];
-    mGeoTransform[2] = 0;
-    mGeoTransform[3] = coords[MAX_LAT];
-    mGeoTransform[4] = 0;
+    geoTransform[0] = coords[MIN_LON];
+    geoTransform[2] = 0;
+    geoTransform[3] = coords[MAX_LAT];
+    geoTransform[4] = 0;
 
     unsigned short band;
-    GDALDriver *dstDriver;
-    dstDriver = GetGDALDriverManager()->GetDriverByName(mDstFormat.c_str());
-    char **dstOptions = NULL;
-    char **dstMetadata = NULL;
+    GDALDriver  *dstDriver = GetGDALDriverManager()->GetDriverByName(mDstFormat.c_str());
+    GDALDataset *dstDS;
     if (mDstFormat == "GTiff")
     {
+        char **dstOptions  = 0;
+        char **dstMetadata = 0;
         dstOptions = CSLSetNameValue(dstOptions, "PHOTOMETRIC", "RGB");
         dstOptions = CSLSetNameValue(dstOptions, "COMPRESS", "JPEG");
         dstOptions = CSLSetNameValue(dstOptions, "JPEG_QUALITY", "100");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_IMAGEDESCRIPTION", "Meteor-M MSU-MR georeferenced image");
         dstMetadata = CSLSetNameValue(dstMetadata, "TIFFTAG_SOFTWARE", "MSUProj v" VERSION_MSUPROJ_STRING);
+        dstDS = dstDriver->Create(mDstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
+        dstDS->SetMetadata(dstMetadata);
     }
-    GDALDataset *dstDS = dstDriver->Create(mDstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, dstOptions);
-    if (dstDS == NULL)
+    else
+        dstDS = dstDriver->Create(mDstFile.c_str(), dstXSize, dstYSize, bands, GDT_Byte, 0);
+
+    // Error creating destination raster
+    if (dstDS == 0)
         return ERROR_DST;
 
-    dstDS->SetMetadata(dstMetadata);
+    // Destination raster projection and transformation
     dstDS->SetProjection(srsWKT);
-    dstDS->SetGeoTransform(mGeoTransform);
+    dstDS->SetGeoTransform(geoTransform);
+
+    // Set zero as ND value
     if (zerosAsND)
         for (band = 1; band <= bands; ++band)
             dstDS->GetRasterBand(band)->SetNoDataValue(0);
 
-    unsigned char **pxsData = new unsigned char*[bands];
-    unsigned char **tmpData = new unsigned char*[bands];
-
+    // Source raster size
     unsigned int srcXSize = mSrcDS->GetRasterXSize(),
                  srcYSize = mSrcDS->GetRasterYSize();
     unsigned int srcSize  = srcXSize * srcYSize;
 
-    unsigned int pxsSize  = dstSize;
-    if (pxsSize < srcSize)
-        pxsSize = srcSize;
-
+    // Pixel arrays
+    unsigned char *pxlData = new unsigned char[(srcSize + dstSize) * bands];
+    unsigned char *srcData[bands];
+    unsigned char *dstData[bands];
     for (band = 0; band < bands; ++band)
     {
-        pxsData[band] = new unsigned char[pxsSize];
-        mSrcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize, pxsData[band],
+        srcData[band] = &pxlData[srcSize * band];
+        dstData[band] = &pxlData[srcSize * bands + dstSize * band];
+        // Read source data
+        mSrcDS->GetRasterBand(band + 1)->RasterIO(GF_Read, 0, 0, srcXSize, srcYSize,
+                                                  srcData[band],
                                                   srcXSize, srcYSize, GDT_Byte, 0, 0);
-        tmpData[band] = new unsigned char[dstSize]();
     }
 
-    unsigned int pLine, pColumn, pCount, gColumn, gCount, dCount,
-                 bilDelim = mGCPXStep * mGCPYStep;
-    int x, y, xx, yy;
-    double lat, lon;
+    // 10x10 GCP squares
+    unsigned int qdr10XSize, qrd10YSize;
+    qdrNode *qdr10Centers = this->sqSurface(GCPsW, 10, &qdr10XSize, &qrd10YSize);
+    unsigned int qrd10Size = qdr10XSize * qrd10YSize;
 
-    for (pLine = 0; pLine < srcYSize; ++pLine)
+    // 1x1 GCP squares
+    unsigned int qdr1XSize, qdr1YSize;
+    qdrNode *qdr1Centers = this->sqSurface(GCPsW, 2, &qdr1XSize, &qdr1YSize);
+
+    // 1x1 GCP triangles
+    unsigned int triXSize, triYSize;
+    msumr::TriNode *triNodes = this->triSurface(GCPsW, &triXSize, &triYSize);
+
+    // Real image borders inside the output raster
+    double *borders      = new double[(dstYSize + dstXSize) * 2]();
+    double *borderTop    = &borders[0];
+    double *borderRight  = &borders[dstXSize];
+    double *borderButton = &borders[dstXSize + dstYSize];
+    double *borderLeft   = &borders[dstXSize * 2 + dstYSize];
+    this->calculateBorder(BORDER_TOP,    GCPsW, geoTransform, borderTop, dstXSize);
+    this->calculateBorder(BORDER_RIGHT,  GCPsW, geoTransform, borderRight, dstXSize);
+    this->calculateBorder(BORDER_BUTTON, GCPsW, geoTransform, borderButton, dstYSize);
+    this->calculateBorder(BORDER_LEFT,   GCPsW, geoTransform, borderLeft, dstYSize);
+
+    // Required variables
+    unsigned int dstInd = 0;
+    double difLat, difLon;
+    double lat = geoTransform[3];
+
+    // Destination raster lines loop
+    for (unsigned int pLine = 0; pLine < dstYSize; ++pLine, lat += geoTransform[5])
     {
-        unsigned int gLine = (int)(pLine / mGCPYStep);
-        pCount = pLine * srcXSize;
-        for (pColumn = 0; pColumn < srcXSize; ++pColumn, ++pCount)
+        double lon = geoTransform[0];
+        // Destination raster columns loop
+        for (unsigned int pColumn = 0; pColumn < dstXSize; ++pColumn, ++dstInd, lon += geoTransform[1])
         {
-            gColumn = (int)(pColumn / mGCPXStep);
-            gCount = gColumn + gLine * mGCPXSize;
+            // Skip pixel if it is not in image borders
+            if (!(((borderTop[pColumn]     && lat < borderTop[pColumn])    || !borderTop[pColumn]) &&
+                   ((borderButton[pColumn] && lat > borderButton[pColumn]) || !borderButton[pColumn]) &&
+                   ((borderRight[pLine]    && lon < borderRight[pLine])    || !borderRight[pLine]) &&
+                   ((borderLeft[pLine]     && lon > borderLeft[pLine])     || !borderLeft[pLine])))
+                continue;
 
-            x  = pColumn - gColumn * mGCPXStep;
-            xx = mGCPXStep - x;
-            y  = pLine - gLine * mGCPYStep;
-            yy = mGCPYStep - y;
-
-            lon = (GCPsW[gCount].lon * xx * yy +
-                   GCPsW[gCount + 1].lon * x * yy +
-                   GCPsW[gCount + mGCPXSize].lon * xx * y +
-                   GCPsW[gCount + mGCPXSize + 1].lon * x * y) / bilDelim;
-            lat = (GCPsW[gCount].lat * xx * yy +
-                   GCPsW[gCount + 1].lat * x * yy +
-                   GCPsW[gCount + mGCPXSize].lat * xx * y +
-                   GCPsW[gCount + mGCPXSize + 1].lat * x * y) / bilDelim;
-
-            lon = (lon - mGeoTransform[0]) / mGeoTransform[1];
-            lat = (lat - mGeoTransform[3]) / mGeoTransform[5];
-
-            dCount = (int)(lat + 0.5) * dstXSize + (int)(lon + 0.5);
-
-            for (band = 0; band < bands; ++band)
+            // Find near 10x10 square
+            unsigned int nearInd = 0;
+            double distance = DBL_MAX;
+            for (unsigned int qdr10Iter = 0; qdr10Iter < qrd10Size; ++qdr10Iter)
             {
-                if (tmpData[band][dCount] == 0)
-                    tmpData[band][dCount] = pxsData[band][pCount];
-                else
-                    tmpData[band][dCount] = (unsigned char)((tmpData[band][dCount] + pxsData[band][pCount]) / 2 + 0.5);
+                difLat = qdr10Centers[qdr10Iter].lat - lat;
+                difLon = qdr10Centers[qdr10Iter].lon - lon;
+                double currentDistance = difLat * difLat + difLon * difLon;
+                if (currentDistance < distance)
+                {
+                    distance = currentDistance;
+                    nearInd  = qdr10Iter;
+                }
+            }
+
+            // Upper left GCP of the near 10x10 square (1x1 square index)
+            unsigned int qdr1Row = (int)(qdr10Centers[nearInd].GCP0 / mGCPXSize);
+            unsigned int qdr1RowLast = qdr1Row + 8;
+            if (qdr1Row > qdr1YSize - 1)
+                qdr1Row = qdr1YSize - 1;
+            if (qdr1RowLast > qdr1YSize)
+                qdr1RowLast = qdr1YSize;
+            unsigned int qdr1ColFirst = qdr10Centers[nearInd].GCP0 - mGCPXSize * qdr1Row;
+            unsigned int sq1ColLast = qdr1ColFirst + 8;
+            if (qdr1ColFirst > qdr1XSize - 1)
+                qdr1ColFirst = qdr1XSize - 1;
+            if (sq1ColLast > qdr1XSize)
+                sq1ColLast = qdr1XSize;
+
+            // Find near GCP
+            nearInd = 0;
+            distance = DBL_MAX;
+            for (qdr1Row; qdr1Row < qdr1RowLast; ++qdr1Row)
+            {
+                unsigned int gcpInd = qdr1Row * qdr1XSize + qdr1ColFirst;
+                for (unsigned int qdr1Col = qdr1ColFirst; qdr1Col < sq1ColLast; ++qdr1Col, ++gcpInd)
+                {
+                    difLat = qdr1Centers[gcpInd].lat - lat;
+                    difLon = qdr1Centers[gcpInd].lon - lon;
+                    double currentDistance = difLat * difLat + difLon * difLon;
+                    if (currentDistance < distance)
+                    {
+                        distance = currentDistance;
+                        nearInd  = gcpInd;
+                    }
+                }
+            }
+
+            // Calculate pixel position in source data
+            double pRRow = triNodes[nearInd].row0 -
+                           ((lon - triNodes[nearInd].lon0) * triNodes[nearInd].aRow -
+                            (lat - triNodes[nearInd].lat0) * triNodes[nearInd].bRow) /
+                           triNodes[nearInd].c;
+            double pRCol = triNodes[nearInd].col0 -
+                           ((lon - triNodes[nearInd].lon0) * triNodes[nearInd].aCol -
+                            (lat - triNodes[nearInd].lat0) * triNodes[nearInd].bCol) /
+                           triNodes[nearInd].c;
+
+            // Calculate pixel value (bilinear interpolation)
+            int srcRow = (int)pRRow;
+            int srcCol = (int)pRCol;
+            if (srcRow < srcYSize - 2 && srcRow > 0 && srcCol < srcXSize - 2 && srcCol > 0)
+            {
+                unsigned int srcInd = srcRow * srcXSize + srcCol;
+                pRRow -= srcRow;
+                pRCol -= srcCol;
+                for (band = 0; band < bands; ++band)
+                    dstData[band][dstInd] = (unsigned char)
+                         ((srcData[band][srcInd] * (1 - pRCol) * (1 - pRRow) +
+                           srcData[band][srcInd + srcXSize] * (1 - pRCol) * pRRow +
+                           srcData[band][srcInd + 1] * pRCol * (1 - pRRow) +
+                           srcData[band][srcInd + srcXSize + 1] * pRCol * pRRow) + 0.5);
             }
         }
     }
 
     for (band = 0; band < bands; ++band)
-        memset(pxsData[band], 0, pxsSize);
-
-    double vl, wDelim;
-    double *sum = new double[bands];
-
-    for (pLine = 0; pLine < dstYSize; ++pLine)
-    {
-        pCount = pLine * dstXSize;
-        for (pColumn = 0; pColumn < dstXSize; ++pColumn, ++pCount)
-        {
-            x = pColumn;
-            y = pLine;
-            for (band = 0; band < bands; ++band)
-                sum[band] = tmpData[band][pCount];
-
-            if (tmpData[0][pCount] == 0)
-            {
-                wDelim = 0;
-                xx = 0;
-            }
-            else
-            {
-                wDelim = 1;
-                xx = 1;
-            }
-
-            for (dCount = 2; dCount < mPerimSize; dCount += 2)
-            {
-                --y;
-                yy = y * dstXSize + x;
-                if (yy >= 0 && yy < dstSize &&
-                    tmpData[0][yy] > 0)
-                {
-                    vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
-                    for (band = 0; band < bands; ++band)
-                        sum[band] += tmpData[band][yy] / vl;
-                    wDelim += 1 / vl;
-                    ++xx;
-                }
-
-                for (gCount = 1; gCount < dCount; ++gCount)
-                {
-                    --x;
-                    yy = y * dstXSize + x;
-                    if (yy >= 0 && yy < dstSize &&
-                        tmpData[0][yy] > 0)
-                    {
-                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
-                        for (band = 0; band < bands; ++band)
-                            sum[band] += tmpData[band][yy] / vl;
-                        wDelim += 1 / vl;
-                        ++xx;
-                    }
-                }
-
-                for (gCount = 1; gCount <= dCount; ++gCount)
-                {
-                    ++y;
-                    yy = y * dstXSize + x;
-                    if (yy >= 0 && yy < dstSize &&
-                        tmpData[0][yy] > 0)
-                    {
-                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
-                        for (band = 0; band < bands; ++band)
-                            sum[band] += tmpData[band][yy] / vl;
-                        wDelim += 1 / vl;
-                        ++xx;
-                    }
-                }
-
-                for (gCount = 1; gCount <= dCount; ++gCount)
-                {
-                    ++x;
-                    yy = y * dstXSize + x;
-                    if (yy >= 0 && yy < dstSize &&
-                        tmpData[0][yy] > 0)
-                    {
-                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
-                        for (band = 0; band < bands; ++band)
-                            sum[band] += tmpData[band][yy] / vl;
-                        wDelim += 1 / vl;
-                        ++xx;
-                    }
-                }
-
-                for (gCount = 1; gCount <= dCount; ++gCount)
-                {
-                    --y;
-                    yy = y * dstXSize + x;
-                    if (yy >= 0 && yy < dstSize &&
-                        tmpData[0][yy] > 0)
-                    {
-                        vl = sqrt(pow(pColumn - x, 2) + pow(pLine - y, 2));
-                        for (band = 0; band < bands; ++band)
-                            sum[band] += tmpData[band][yy] / vl;
-                        wDelim += 1 / vl;
-                        ++xx;
-                    }
-                }
-
-                if (xx >= dCount * 4)
-                    break;
-            }
-            for (band = 0; band < bands; ++band)
-                pxsData[band][pCount] = (unsigned char)(sum[band] / wDelim + 0.5);
-        }
-    }
-
-    delete[] GCPsW;
-    delete[] sum;
-
-    for (band = 0; band < bands; ++band)
-    {
-        dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, 0, 0, dstXSize, dstYSize, pxsData[band],
+        dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, 0, 0, dstXSize, dstYSize,
+                                                 dstData[band],
                                                  dstXSize, dstYSize, GDT_Byte, 0, 0);
-        delete[] tmpData[band];
-        delete[] pxsData[band];
-    }
-    delete[] tmpData;
-    delete[] pxsData;
 
-    logoImage logo;
-    dstXSize -= logo.width;
-    dstYSize -= logo.height;
+    delete[] borders;
+    delete[] triNodes;
+    delete[] qdr1Centers;
+    delete[] qdr10Centers;
+    delete[] pxlData;
+    delete[] GCPsW;
+
     if (mAddLogo)
     {
+        logoImage logo;
+        dstXSize -= logo.width;
+        dstYSize -= logo.height;
         if (bands >= 3)
         {
             bands = 3;
             for (band = 0; band < bands; ++band)
-                dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, dstXSize, dstYSize,
-                                                         logo.width, logo.height, (unsigned char*)&logo.data[band][0],
-                        logo.width, logo.height, GDT_Byte, 0, 0);
+                dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, dstXSize, dstYSize, logo.width, logo.height,
+                                                         (unsigned char*)&logo.data[band][0],
+                                                         logo.width, logo.height, GDT_Byte, 0, 0);
         }
     }
 
@@ -483,4 +449,233 @@ bool msumr::MSUProj::ifAddLogo() const
 void msumr::MSUProj::setAddLogo(bool enabled)
 {
     mAddLogo = enabled;
+}
+
+msumr::RETURN_CODE msumr::MSUProj::calculateBorder(msumr::MSUProj::BORDER_SIDE side, const GCP *gcps,
+                                                   const double *geoTransform,
+                                                   double *border, const unsigned int &size) const
+{
+    if (gcps == 0 || border == 0 || geoTransform == 0)
+        return ERROR_ARG;
+
+    int gcpStart, gcpInc, gcpEnd;
+
+    if (gcps[0].lat > gcps[mGCPSize -  mGCPXSize + 1].lat)
+        switch (side)
+        {
+        case BORDER_TOP:
+            gcpStart = 0;
+            gcpInc   = 1;
+            gcpEnd   = mGCPXSize - 1;
+            break;
+        case BORDER_BUTTON:
+            gcpStart = mGCPSize - mGCPXSize;
+            gcpInc   = 1;
+            gcpEnd   = mGCPSize - 1;
+            break;
+        default:
+            break;
+        }
+    else
+        switch (side)
+        {
+        case BORDER_TOP:
+            gcpStart = mGCPSize - 1;
+            gcpInc   = -1;
+            gcpEnd   = mGCPSize - mGCPXSize;
+            break;
+        case BORDER_BUTTON:
+            gcpStart = mGCPXSize - 1;
+            gcpInc   = -1;
+            gcpEnd   = 0;
+            break;
+        default:
+            break;
+        }
+
+    if (gcps[0].lon < gcps[mGCPXSize - 1].lat)
+        switch (side)
+        {
+        case BORDER_RIGHT:
+            gcpStart = mGCPXSize - 1;
+            gcpInc   = mGCPXSize;
+            gcpEnd   = mGCPSize - 1;
+            break;
+        case BORDER_LEFT:
+            gcpStart = 0;
+            gcpInc   = mGCPXSize;
+            gcpEnd   = mGCPSize - mGCPXSize;
+            break;
+        default:
+            break;
+        }
+    else
+        switch (side)
+        {
+        case BORDER_RIGHT:
+            gcpStart = mGCPSize - mGCPXSize;
+            gcpInc   = -mGCPXSize;
+            gcpEnd   = 0;
+            break;
+        case BORDER_LEFT:
+            gcpStart = mGCPSize - 1;
+            gcpInc   = -mGCPXSize;
+            gcpEnd   = mGCPXSize - 1;
+            break;
+        default:
+            break;
+        }
+
+    unsigned int gcpInd = gcpStart + gcpInc;
+
+    double a = (gcps[gcpInd].lat - gcps[gcpInd - gcpInc].lat) /
+               (gcps[gcpInd].lon - gcps[gcpInd - gcpInc].lon);
+    double b = gcps[gcpInd - gcpInc].lat - gcps[gcpInd - gcpInc].lon * a;
+
+#ifndef NDEBUG
+    std::ofstream bordersCsv(mDstFile + "_border_" + std::to_string(side) + ".csv");
+    bordersCsv << "y,x\n";
+#endif
+
+    if (side < BORDER_RIGHT)
+    {
+        double coord    = geoTransform[0];
+        double coordInc = geoTransform[1];
+        for (unsigned int i = 0; i < size; ++i, coord += coordInc)
+        {
+            if (gcpInd + gcpInc != gcpEnd)
+            {
+                if (coord > gcps[gcpInd].lon)
+                {
+                    gcpInd += gcpInc;
+                    a = (gcps[gcpInd].lat - gcps[gcpInd - gcpInc].lat) /
+                        (gcps[gcpInd].lon - gcps[gcpInd - gcpInc].lon);
+                    b = gcps[gcpInd - gcpInc].lat - gcps[gcpInd - gcpInc].lon * a;
+                }
+            }
+            border[i] = coord * a + b;
+#ifndef NDEBUG
+                bordersCsv << border[i] << "," << coord << "\n";
+#endif
+        }
+    }
+    else
+    {
+        double coord    = geoTransform[3];
+        double coordInc = geoTransform[5];
+        for (unsigned int i = 0; i < size; ++i, coord += coordInc)
+        {
+            if (gcpInd + gcpInc != gcpEnd)
+            {
+                if (coord < gcps[gcpInd].lat)
+                {
+                    gcpInd += gcpInc;
+                    a = (gcps[gcpInd].lat - gcps[gcpInd - gcpInc].lat) /
+                        (gcps[gcpInd].lon - gcps[gcpInd - gcpInc].lon);
+                    b = gcps[gcpInd - gcpInc].lat - gcps[gcpInd - gcpInc].lon * a;
+                }
+            }
+            border[i] = (coord - b) / a;
+#ifndef NDEBUG
+                bordersCsv << coord << "," << border[i] << "\n";
+#endif
+        }
+    }
+
+#ifndef NDEBUG
+    bordersCsv.close();
+#endif
+
+    return SUCCESS;
+}
+
+msumr::qdrNode *msumr::MSUProj::sqSurface(const GCP *gcps, unsigned int squareSize,
+                                         unsigned int *xSize, unsigned int *ySize) const
+{
+    if(gcps == 0)
+        return 0;
+    if(squareSize < 2)
+        return 0;
+
+#ifndef NDEBUG
+    std::ofstream sqFile(mDstFile + "_" + std::to_string(squareSize) + "_centers.csv");
+    sqFile << "y,x\n";
+#endif
+
+    --squareSize;
+    if (squareSize > 1)
+    {
+        *xSize = (int)(mGCPXSize / squareSize) + 1;
+        *ySize = (int)(mGCPYSize / squareSize) + 1;
+    }
+    else
+    {
+        *xSize = mGCPXSize - 1;
+        *ySize = mGCPYSize - 1;
+    }
+
+    qdrNode *sqCenters = new qdrNode[*xSize * *ySize];
+    unsigned int sqIter = 0;
+    for (unsigned int sqRow = 0; sqRow < *ySize; ++sqRow)
+    {
+        unsigned int stepNextRow = squareSize;
+        if ((sqRow + 1) * squareSize >= mGCPYSize)
+            stepNextRow = mGCPYSize - sqRow * squareSize - 1;
+        unsigned int gcpIter = sqRow * squareSize * mGCPXSize;
+        for (unsigned int sqCol = 0; sqCol < *xSize; ++sqCol, ++sqIter, gcpIter += squareSize)
+        {
+            unsigned int stepNextCol = squareSize;
+            if ((sqCol + 1) * squareSize >= mGCPXSize)
+                stepNextCol = mGCPXSize - sqCol * squareSize - 1;
+            sqCenters[sqIter].GCP0 = gcpIter;
+            sqCenters[sqIter].lat = (gcps[gcpIter].lat + gcps[gcpIter + stepNextCol].lat +
+                gcps[gcpIter + mGCPXSize * stepNextRow].lat + gcps[gcpIter + mGCPXSize * stepNextRow + stepNextCol].lat) / 4;
+            sqCenters[sqIter].lon = (gcps[gcpIter].lon + gcps[gcpIter + stepNextCol].lon +
+                gcps[gcpIter + mGCPXSize * stepNextRow].lon + gcps[gcpIter + mGCPXSize * stepNextRow + stepNextCol].lon) / 4;
+#ifndef NDEBUG
+            sqFile << sqCenters[sqIter].lat << "," << sqCenters[sqIter].lon << "\n";
+#endif
+        }
+    }
+#ifndef NDEBUG
+    sqFile.close();
+#endif
+    return sqCenters;
+}
+
+msumr::TriNode *msumr::MSUProj::triSurface(const msumr::GCP *gcps, unsigned int *xSize, unsigned int *ySize) const
+{
+    if (gcps == 0)
+        return 0;
+
+    *xSize = mGCPXSize - 1;
+    *ySize = mGCPYSize - 1;
+    TriNode *nodes = new TriNode[*xSize * *ySize];
+    unsigned int triInd = 0, gcpInd = 0;
+    double x10, x20, y10, y20, z10R, z20R, z10L, z20L;
+    for (unsigned int triRow = 0; triRow < *ySize; ++triRow)
+    {
+        for (unsigned int triCol = 0; triCol < *xSize; ++triCol, ++triInd, ++gcpInd)
+        {
+            x10  = gcps[gcpInd + 1].lon - gcps[gcpInd].lon;
+            x20  = gcps[gcpInd + mGCPXSize].lon - gcps[gcpInd].lon;
+            y10  = gcps[gcpInd + 1].lat - gcps[gcpInd].lat;
+            y20  = gcps[gcpInd + mGCPXSize].lat - gcps[gcpInd].lat;
+            z10R = gcps[gcpInd + 1].x - gcps[gcpInd].x;
+            z20R = gcps[gcpInd + mGCPXSize].x - gcps[gcpInd].x;
+            z10L = gcps[gcpInd + 1].y - gcps[gcpInd].y;
+            z20L = gcps[gcpInd + mGCPXSize].y - gcps[gcpInd].y;
+            nodes[triInd].col0 = gcps[gcpInd].x;
+            nodes[triInd].row0 = gcps[gcpInd].y;
+            nodes[triInd].aCol = y10 * z20R - z10R * y20;
+            nodes[triInd].bCol = x10 * z20R - x20 * z10R;
+            nodes[triInd].aRow = y10 * z20L - z10L * y20;
+            nodes[triInd].bRow = x10 * z20L - x20 * z10L;
+            nodes[triInd].c  = x10 * y20 - x20 * y10;
+            nodes[triInd].lon0 = gcps[gcpInd].lon;
+            nodes[triInd].lat0 = gcps[gcpInd].lat;
+        }
+        ++gcpInd;
+    }
+    return nodes;
 }

@@ -20,10 +20,18 @@ static const unsigned short lineWidth = 1568; ///< The MSU-MR line width
 enum RETURN_CODE
 {
     SUCCESS,   ///< Successful exit
+    ERROR_ARG,
     ERROR_SRC, ///< Error of reading of a source raster
     ERROR_DST, ///< Error of creation of a destination raster
     ERROR_GCP, ///< Error of reading of a GCP file
     ERROR_STAT ///< Error of reading a stat file
+};
+
+struct SqNode
+{
+    unsigned int GCP0;
+    double lon; ///< A latitude
+    double lat; ///< A longitude
 };
 
 /**
@@ -35,6 +43,19 @@ struct GCP
     int y;      ///< A line of a source data matrix
     double lon; ///< A latitude
     double lat; ///< A longitude
+};
+
+struct TriNode
+{
+    int row0;
+    int col0;
+    double aRow;
+    double bRow;
+    double aCol;
+    double bCol;
+    double c;
+    double lat0;
+    double lon0;
 };
 
 /**

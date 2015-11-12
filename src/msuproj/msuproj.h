@@ -83,20 +83,6 @@ public:
     const RETURN_CODE readGCP(std::string file);
 
     /**
-     * @brief A method of setting a maximum size
-     * of the pixel values interpolation block side
-     *
-     * When warping we try to calculate the average pixel value from
-     * a block of near pixels. By default the maximal block size is 9x9.
-     *
-     * Set a less size to increase the warping speed.
-     * Too small values will cause graininess and black areas.
-     * Too big will blur image.
-     * @param perim A block side size in pixels
-     */
-    void setPerimSize(const unsigned int &perim);
-
-    /**
      * @brief A method of getting an UTM zone string.
      *
      * @return A UTM zone string in format \<hemisphere\>\<zone number\>.
@@ -164,6 +150,25 @@ public:
 
 private:
 
+    enum BORDER_SIDE
+    {
+        BORDER_TOP,
+        BORDER_BUTTON,
+        BORDER_RIGHT,
+        BORDER_LEFT
+    };
+
+    RETURN_CODE calculateBorder(BORDER_SIDE side, const GCP *gcps,
+                                const double *geoTransform,
+                                double *border, const unsigned int &size) const;
+
+    SqNode *sqSurface(const GCP *gcps, unsigned int squareSize,
+                      unsigned int *xSize, unsigned int *ySize) const;
+
+    msumr::TriNode *triSurface(const GCP *gcps, unsigned int *xSize, unsigned int *ySize) const;
+
+private:
+
     /**
      * @brief The enumeration for calculation of an output image size
      */
@@ -189,25 +194,11 @@ private:
                              /// - 1 - Northern
     unsigned int mZone;      ///< A destination image UTM zone number
 
-    unsigned int mPerimSize; ///< A maximal interpolation block side size in pixels
-
     unsigned int mGCPXSize;  ///< A number of points in a line of a GCP grid
     unsigned int mGCPYSize;  ///< A number of lines of a GCP grid
     unsigned int mGCPXStep;  ///< A X step size of a GCP grid
     unsigned int mGCPYStep;  ///< A Y step size of a GCP grid
     unsigned int mGCPSize;   ///< A total number of points in a GCP grid
-
-    /**
-     * An analog of the GDAL GeoTransform affine transformation coefficients, where
-     * - geoTransform[0] - top left X
-     * - geoTransform[1] - X pixel resolution
-     * - geoTransform[2] - X turning (0 for the North orientation)
-     * - geoTransform[3] - top left Y
-     * - geoTransform[4] - Y turning (0 for the North orientation)
-     * - geoTransform[5] - Y pixel resolution (negative value)
-     */
-    double *mGeoTransform;
-
 };
 
 }
