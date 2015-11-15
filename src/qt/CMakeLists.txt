@@ -1,7 +1,13 @@
 ###################### Configuring Qt ######################
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Help REQUIRED)
+set(QT_LIBRARIES Qt5Widgets Qt5Help)
+if(WIN32)
+    list(APPEND QT_LIBRARIES Qt5WinExtras)
+endif()
+foreach(LIBRARY ${QT_LIBRARIES})
+    find_package(${LIBRARY} REQUIRED)
+    list(APPEND QT_LINK_LIBRARIES ${${LIBRARY}_LIBRARIES})
+endforeach()
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 set_qt_defenitions()
 set(QT_VERSION ${Qt5Widgets_VERSION} PARENT_SCOPE)
@@ -94,7 +100,7 @@ set_target_properties(msuproj-qt PROPERTIES AUTOMOC YES
                                             AUTOUIC YES
                                             AUTORCC YES
 )
-target_link_libraries(msuproj-qt msuproj Qt5::Widgets Qt5::Help)
+target_link_libraries(msuproj-qt msuproj ${QT_LINK_LIBRARIES})
 
 install(TARGETS msuproj-qt
         DESTINATION ${INSTALL_PATH_BIN}

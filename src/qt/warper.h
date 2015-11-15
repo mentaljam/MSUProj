@@ -34,6 +34,9 @@ public:
     bool ifAddLogo() const;
     void setAddLogo(bool enable);
 
+    unsigned int *getProgressMaxPtr();
+    unsigned int *getProgressValPtr();
+
 signals:
 
     void started();

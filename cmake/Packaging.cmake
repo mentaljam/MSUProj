@@ -284,6 +284,7 @@ if(WIN32 AND INSTALL_RUNTIME)
                       ${QTDIR}/bin/Qt5Network.dll
                       ${QTDIR}/bin/Qt5Sql.dll
                       ${QTDIR}/bin/Qt5CLucene.dll
+                      ${QTDIR}/bin/Qt5WinExtras.dll
                 DESTINATION ${INSTALL_PATH_BIN}
                 COMPONENT runtime.qt)
         install(FILES ${QTDIR}/plugins/platforms/qwindows.dll

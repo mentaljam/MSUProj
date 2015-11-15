@@ -149,6 +149,10 @@ public:
      */
     void setAddLogo(bool enabled);
 
+    unsigned int *getProgressMaxPtr();
+
+    unsigned int *getProgressValPtr();
+
 private:
 
     /**
@@ -244,6 +248,9 @@ private:
     unsigned int mGCPXStep;  ///< A X step size of a GCP grid
     unsigned int mGCPYStep;  ///< A Y step size of a GCP grid
     unsigned int mGCPSize;   ///< A total number of points in a GCP grid
+
+    unsigned int mProgressMax;
+    unsigned int mProgressVal;
 };
 
 }

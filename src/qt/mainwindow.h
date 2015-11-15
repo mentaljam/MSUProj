@@ -7,8 +7,12 @@
 #ifdef WITH_UPDATES_ACTION
 #   include <QProcess>
 #endif // WITH_UPDATES_ACTION
+#ifdef Q_OS_WIN32
+#   include <QtWinExtras/QWinTaskbarProgress>
+#endif // Q_OS_WIN32
 
 #include <warper.h>
+#include <QProgressBar>
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +43,8 @@ private slots:
     void on_actionReference_triggered();
     void onWarpStarted();
     void onWarpFinished(msumr::RETURN_CODE code);
+    void setProgressMax();
+    void setProgressVal();
 #ifdef WITH_UPDATES_ACTION
     void checkUpdates();
     void onCheckUpdatesFinished(int code);
@@ -49,17 +55,24 @@ private:
     QGraphicsScene *mGraphicsScene;
     QFileDialog    *mOpenImageDialog;
     Warper         *mWarper;
+    QProgressBar   *mWarpProgress;
 #ifdef WITH_UPDATES_ACTION
     QAction        *mActionCheckUpdates;
     QProcess       *mUpdater;
     QTimer         *mUpdatesTimer;
 #endif // WITH_UPDATES_ACTION
+#ifdef Q_OS_WIN32
+    QWinTaskbarProgress *mWinProgress;
+#endif // Q_OS_WIN32
     QString        mFilePreffix;
     QString        mCurrentImage;
+    unsigned int *mProgressMax;
+    unsigned int *mProgressVal;
 
 protected:
     void resizeEvent(QResizeEvent *event);
     void closeEvent(QCloseEvent *event);
+    void showEvent(QShowEvent *event);
 };
 
 #endif // MAINWINDOW_H

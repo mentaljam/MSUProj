@@ -17,8 +17,14 @@ msumr::MSUProj::MSUProj() :
     mGCPYSize(0),
     mGCPXStep(0),
     mGCPYStep(0),
-    mGCPSize(0)
-{}
+    mGCPSize(0),
+    mProgressMax(0),
+    mProgressVal(0)
+{
+    // Need this for reading GCP files because Qt sets locale to system
+    // (error with decimal delimiter in stod function)
+    setlocale(LC_NUMERIC, "C");
+}
 
 msumr::MSUProj::~MSUProj()
 {
@@ -93,13 +99,13 @@ const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
     size_t pos;
     while(getline(srcGCP, line))
     {
-        line = comma2dot(line);
-
         mGCPs[gcpInd].x = std::stoi(line, &pos);
         line = line.substr(++pos, line.size() - pos);
 
         mGCPs[gcpInd].y = std::stoi(line, &pos);
         line = line.substr(++pos, line.size() - pos);
+
+        line = comma2dot(line);
 
         mGCPs[gcpInd].lat = std::stod(line, &pos);
         line = line.substr(++pos, line.size() - pos);
@@ -242,6 +248,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     unsigned int srcXSize = mSrcDS->GetRasterXSize(),
                  srcYSize = mSrcDS->GetRasterYSize();
     unsigned int srcSize  = srcXSize * srcYSize;
+    mProgressMax = srcYSize;
 
     // Pixel arrays
     unsigned char *pxlData = new unsigned char[(srcSize + dstSize) * bands];
@@ -287,7 +294,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     double lat = geoTransform[3];
 
     // Destination raster lines loop
-    for (unsigned int pLine = 0; pLine < dstYSize; ++pLine, lat += geoTransform[5])
+    for (unsigned int pLine = 0; pLine < dstYSize; ++pLine, ++mProgressVal, lat += geoTransform[5])
     {
         double lon = geoTransform[0];
         // Destination raster columns loop
@@ -405,6 +412,9 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
 
     GDALClose(dstDS);
 
+    mProgressMax = 0;
+    mProgressVal = 0;
+
     return SUCCESS;
 }
 
@@ -452,6 +462,16 @@ bool msumr::MSUProj::ifAddLogo() const
 void msumr::MSUProj::setAddLogo(bool enabled)
 {
     mAddLogo = enabled;
+}
+
+unsigned int *msumr::MSUProj::getProgressMaxPtr()
+{
+    return &mProgressMax;
+}
+
+unsigned int *msumr::MSUProj::getProgressValPtr()
+{
+    return &mProgressVal;
 }
 
 msumr::RETURN_CODE msumr::MSUProj::calculateBorder(msumr::MSUProj::BORDER_SIDE side, const GCP *gcps,

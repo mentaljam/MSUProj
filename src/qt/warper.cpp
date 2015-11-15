@@ -81,6 +81,16 @@ void Warper::setAddLogo(bool enable)
     mAddLogo = enable;
 }
 
+unsigned int *Warper::getProgressMaxPtr()
+{
+    return mMSUProj.getProgressMaxPtr();
+}
+
+unsigned int *Warper::getProgressValPtr()
+{
+    return mMSUProj.getProgressValPtr();
+}
+
 void Warper::start()
 {
     mMSUProj.setAddLogo(mAddLogo);
@@ -89,4 +99,3 @@ void Warper::start()
     this->moveToThread(qApp->thread());
     emit finished(code);
 }
-

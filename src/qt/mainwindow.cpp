@@ -4,6 +4,9 @@
 #ifdef WITH_UPDATES_ACTION
 #   include <QXmlStreamReader>
 #endif // WITH_UPDATES_ACTION
+#ifdef Q_OS_WIN32
+#   include <QtWinExtras/QWinTaskbarButton>
+#endif
 
 #include <settings.h>
 #include <settingswindow.h>
@@ -21,26 +24,21 @@ MainWindow::MainWindow(QWidget *parent) :
     mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
                                      tr("Meteor-M2 images (*.jpg *.bmp);;All files (*.*)"))),
     mWarper(new Warper),
+    mWarpProgress(new QProgressBar(ui->statusbar)),
 #ifdef WITH_UPDATES_ACTION
     mActionCheckUpdates(new QAction(tr("Check for updates"), this)),
 #endif // WITH_UPDATES_ACTION
     mFilePreffix(""),
-    mCurrentImage("")
+    mCurrentImage(""),
+    mProgressMax(mWarper->getProgressMaxPtr()),
+    mProgressVal(mWarper->getProgressValPtr())
 {
     ui->setupUi(this);
-
-#ifdef WITH_UPDATES_ACTION
-    ui->menuHelp->insertAction(ui->actionAbout, mActionCheckUpdates);
-    connect(mActionCheckUpdates, &QAction::triggered, this, &MainWindow::checkUpdates);
-    if (settingsObj.getBool(MSUSettings::BOOL_UPDATES_ON_START))
-        QTimer::singleShot(500, this, &MainWindow::checkUpdates);
-#endif // WITH_UPDATES_ACTION
 
     QByteArray geom(settingsObj.getGeometry(MSUSettings::MAINWINDOW));
     if (geom.size() > 0)
         this->restoreGeometry(geom);
 
-    this->showStdStatus(0);
     ui->imageView->setScene(mGraphicsScene);
     mOpenImageDialog->setFileMode(QFileDialog::ExistingFile);
     QString curPath;
@@ -49,6 +47,17 @@ MainWindow::MainWindow(QWidget *parent) :
     else
         curPath = settingsObj.getPath(MSUSettings::PATH_INPUT_PREVIOUS);
     mOpenImageDialog->setDirectory(curPath);
+
+    mWarpProgress->setVisible(false);
+    mWarpProgress->setRange(0, 0);
+    ui->statusbar->addPermanentWidget(mWarpProgress);
+
+#ifdef WITH_UPDATES_ACTION
+    ui->menuHelp->insertAction(ui->actionAbout, mActionCheckUpdates);
+    connect(mActionCheckUpdates, &QAction::triggered, this, &MainWindow::checkUpdates);
+    if (settingsObj.getBool(MSUSettings::BOOL_UPDATES_ON_START))
+        QTimer::singleShot(500, this, &MainWindow::checkUpdates);
+#endif // WITH_UPDATES_ACTION
 
     connect(ui->statusbar, &QStatusBar::messageChanged, this, &MainWindow::showStdStatus);
     connect(ui->previewBox, &QGroupBox::toggled, this, &MainWindow::setPreview);
@@ -352,6 +361,11 @@ void MainWindow::on_actionReference_triggered()
 
 void MainWindow::onWarpStarted()
 {
+    QTimer::singleShot(500, this, &MainWindow::setProgressMax);
+    mWarpProgress->setVisible(true);
+#ifdef Q_OS_WIN32
+    mWinProgress->setVisible(true);
+#endif // Q_OS_WIN32
     ui->centralwidget->setEnabled(false);
     ui->menubar->setEnabled(false);
     ui->statusbar->showMessage(tr("Transforming image, please wait..."));
@@ -360,6 +374,12 @@ void MainWindow::onWarpStarted()
 void MainWindow::onWarpFinished(msumr::RETURN_CODE code)
 {
     qApp->alert(this);
+    mWarpProgress->setVisible(false);
+#ifdef Q_OS_WIN32
+        mWinProgress->setVisible(false);
+#endif // Q_OS_WIN32
+    mWarpProgress->setMaximum(0);
+    mWarpProgress->setValue(0);
     if (code == msumr::SUCCESS)
         ui->statusbar->showMessage(tr("Transformation finished successfully"), 7000);
     else
@@ -367,6 +387,31 @@ void MainWindow::onWarpFinished(msumr::RETURN_CODE code)
     this->changeOutName();
     ui->centralwidget->setEnabled(true);
     ui->menubar->setEnabled(true);
+}
+
+void MainWindow::setProgressMax()
+{
+    if (*mProgressMax > 0)
+    {
+        mWarpProgress->setMaximum(*mProgressMax - 1);
+#ifdef Q_OS_WIN32
+        mWinProgress->setMaximum(*mProgressMax - 1);
+#endif // Q_OS_WIN32
+        QTimer *timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, &MainWindow::setProgressVal);
+        connect(mWarper, &Warper::finished, timer, &QTimer::deleteLater);
+        timer->start();
+    }
+    else
+        QTimer::singleShot(500, this, &MainWindow::setProgressMax);
+}
+
+void MainWindow::setProgressVal()
+{
+    mWarpProgress->setValue(*mProgressVal);
+#ifdef Q_OS_WIN32
+    mWinProgress->setValue(*mProgressVal);
+#endif // Q_OS_WIN32
 }
 
 #ifdef WITH_UPDATES_ACTION
@@ -464,5 +509,17 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     QApplication::closeAllWindows();
+    event->accept();
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+#ifdef Q_OS_WIN32
+    QWinTaskbarButton *taskButton = new QWinTaskbarButton(this);
+    taskButton->setWindow(this->windowHandle());
+    mWinProgress = taskButton->progress();
+    mWinProgress->setVisible(false);
+#endif // Q_OS_WIN32
+    this->showStdStatus(0);
     event->accept();
 }
