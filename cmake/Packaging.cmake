@@ -61,8 +61,8 @@ cpack_ifw_configure_component_group(tools
                                     VERSION 0
                                     PRIORITY 6)
 
-    cpack_add_component(gcpthiner DISABLED
-                        DISPLAY_NAME "GCPThiner"
+    cpack_add_component(gcpthinner DISABLED
+                        DISPLAY_NAME "GCPThinner"
                         DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files"
                         GROUP        tools)
 
