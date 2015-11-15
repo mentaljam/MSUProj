@@ -2,9 +2,8 @@
 #include <logoimage.hpp>
 #include <ogrsf_frmts.h>
 #include <fstream>
-#include <sstream>
 #include <cfloat>
-#include <iostream>
+
 
 msumr::MSUProj::MSUProj() :
     mSrcDS(NULL),
@@ -76,33 +75,37 @@ const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
     if (srcGCP.fail())
         return ERROR_GCP;
 
-    std::string tmp, line;
+    if (mGCPSize)
+    {
+        mGCPSize = 0;
+        delete[] mGCPs;
+    }
 
-    mGCPSize = 0;
+    std::string line;
+
     while(getline(srcGCP, line))
         ++mGCPSize;
     srcGCP.clear();
     srcGCP.seekg(0);
 
-    if (mGCPSize)
-        delete[] mGCPs;
     mGCPs = new GCP[mGCPSize];
     unsigned int gcpInd = 0;
+    size_t pos;
     while(getline(srcGCP, line))
     {
-        std::stringstream iss(line);
-        getline(iss, tmp, ' ');
-        mGCPs[gcpInd].x = stoi(tmp);
-        getline(iss, tmp, ' ');
-        mGCPs[gcpInd].y = stoi(tmp);
-        getline(iss, tmp, ' ');
-        tmp = comma2dot(tmp);
-        std::stringstream(tmp) >> mGCPs[gcpInd].lat;
-//        mGCPs[gcpInd].lat = stod(tmp);
-        getline(iss, tmp);
-        tmp = comma2dot(tmp);
-        std::stringstream(tmp) >> mGCPs[gcpInd].lon;
-//        mGCPs[gcpInd].lon = stod(tmp);
+        line = comma2dot(line);
+
+        mGCPs[gcpInd].x = std::stoi(line, &pos);
+        line = line.substr(++pos, line.size() - pos);
+
+        mGCPs[gcpInd].y = std::stoi(line, &pos);
+        line = line.substr(++pos, line.size() - pos);
+
+        mGCPs[gcpInd].lat = std::stod(line, &pos);
+        line = line.substr(++pos, line.size() - pos);
+
+        mGCPs[gcpInd].lon = std::stod(line, &pos);
+
         ++gcpInd;
     }
 
