@@ -1197,7 +1197,7 @@ logoImage::logoImage() :
 
 logoImage::~logoImage()
 {
-    for (int b = 0; b < bands; ++b)
+    for (unsigned int b = 0; b < bands; ++b)
         if (data[b])
             delete[] data[b];
     if (data)

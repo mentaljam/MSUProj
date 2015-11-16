@@ -3,6 +3,7 @@
 #include <ogrsf_frmts.h>
 #include <fstream>
 #include <cfloat>
+#include <vector>
 
 
 msumr::MSUProj::MSUProj() :
@@ -252,8 +253,8 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
 
     // Pixel arrays
     unsigned char *pxlData = new unsigned char[(srcSize + dstSize) * bands];
-    unsigned char *srcData[bands];
-    unsigned char *dstData[bands];
+    std::vector<unsigned char*> srcData(bands);
+    std::vector<unsigned char*> dstData(bands);
     for (band = 0; band < bands; ++band)
     {
         srcData[band] = &pxlData[srcSize * band];
@@ -537,12 +538,12 @@ msumr::RETURN_CODE msumr::MSUProj::calculateBorder(msumr::MSUProj::BORDER_SIDE s
         {
         case BORDER_RIGHT:
             gcpStart = mGCPSize - mGCPXSize;
-            gcpInc   = -mGCPXSize;
+            gcpInc   = -(int)mGCPXSize;
             gcpEnd   = 0;
             break;
         case BORDER_LEFT:
             gcpStart = mGCPSize - 1;
-            gcpInc   = -mGCPXSize;
+            gcpInc   = -(int)mGCPXSize;
             gcpEnd   = mGCPXSize - 1;
             break;
         default:
