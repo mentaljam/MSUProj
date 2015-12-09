@@ -400,7 +400,7 @@ void MainWindow::setProgressMax()
         QTimer *timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, &MainWindow::setProgressVal);
         connect(mWarper, &Warper::finished, timer, &QTimer::deleteLater);
-        timer->start();
+        timer->start(250);
     }
     else
         QTimer::singleShot(500, this, &MainWindow::setProgressMax);
