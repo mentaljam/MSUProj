@@ -295,7 +295,7 @@ void MainWindow::changeStartButtonState()
         ui->startButton->setEnabled(true);
     else
         ui->startButton->setEnabled(false);
-    this->showStdStatus(NULL);
+    this->showStdStatus(0);
 }
 
 void MainWindow::on_startButton_clicked()

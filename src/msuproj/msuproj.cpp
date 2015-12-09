@@ -7,8 +7,8 @@
 
 
 msumr::MSUProj::MSUProj() :
-    mSrcDS(NULL),
-    mGCPs(NULL),
+    mSrcDS(0),
+    mGCPs(0),
     mDstFile(),
     mDstFormat("GTiff"),
     mAddLogo(true),
