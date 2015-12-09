@@ -33,9 +33,10 @@ enum RETURN_CODE
  */
 struct qdrNode
 {
-    unsigned int GCP0; ///< The index of the first GCP in the node
-    double lon;        ///< The node center point latitude
-    double lat;        ///< The node center point longitude
+    unsigned int firstRow; ///< The row of the first GCP in the node
+    unsigned int firstCol; ///< The column of the first GCP in the node
+    double lon;            ///< The node center point latitude
+    double lat;            ///< The node center point longitude
 };
 
 /**

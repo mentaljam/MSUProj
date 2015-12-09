@@ -289,23 +289,22 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     this->calculateBorder(BORDER_BUTTON, GCPsW, geoTransform, borderButton, dstYSize);
     this->calculateBorder(BORDER_LEFT,   GCPsW, geoTransform, borderLeft, dstYSize);
 
-    // Required variables
-    unsigned int dstInd = 0;
-    double difLat, difLon;
-    double lat = geoTransform[3];
-
     // Destination raster lines loop
-    for (unsigned int pLine = 0; pLine < dstYSize; ++pLine, ++mProgressVal, lat += geoTransform[5])
+#pragma omp parallel for private(band)
+    for (unsigned int pLine = 0; pLine < dstYSize; ++pLine)
     {
+        ++mProgressVal;
+        unsigned int dstInd = dstXSize * pLine;
+        double lat = geoTransform[3] + geoTransform[5] * pLine;
         double lon = geoTransform[0];
         // Destination raster columns loop
         for (unsigned int pColumn = 0; pColumn < dstXSize; ++pColumn, ++dstInd, lon += geoTransform[1])
         {
             // Skip pixel if it is not in image borders
-            if (!(((borderTop[pColumn]     && lat < borderTop[pColumn])    || !borderTop[pColumn]) &&
-                   ((borderButton[pColumn] && lat > borderButton[pColumn]) || !borderButton[pColumn]) &&
-                   ((borderRight[pLine]    && lon < borderRight[pLine])    || !borderRight[pLine]) &&
-                   ((borderLeft[pLine]     && lon > borderLeft[pLine])     || !borderLeft[pLine])))
+            if (!(((borderTop[pColumn]    && lat < borderTop[pColumn])    || !borderTop[pColumn]) &&
+                  ((borderButton[pColumn] && lat > borderButton[pColumn]) || !borderButton[pColumn]) &&
+                  ((borderRight[pLine]    && lon < borderRight[pLine])    || !borderRight[pLine]) &&
+                  ((borderLeft[pLine]     && lon > borderLeft[pLine])     || !borderLeft[pLine])))
                 continue;
 
             // Find near 10x10 square
@@ -313,8 +312,8 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
             double distance = DBL_MAX;
             for (unsigned int qdr10Iter = 0; qdr10Iter < qrd10Size; ++qdr10Iter)
             {
-                difLat = qdr10Centers[qdr10Iter].lat - lat;
-                difLon = qdr10Centers[qdr10Iter].lon - lon;
+                double difLat = qdr10Centers[qdr10Iter].lat - lat;
+                double difLon = qdr10Centers[qdr10Iter].lon - lon;
                 double currentDistance = difLat * difLat + difLon * difLon;
                 if (currentDistance < distance)
                 {
@@ -324,13 +323,13 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
             }
 
             // Upper left GCP of the near 10x10 square (1x1 square index)
-            unsigned int qdr1Row = (int)(qdr10Centers[nearInd].GCP0 / mGCPXSize);
+            unsigned int qdr1Row = qdr10Centers[nearInd].firstRow;
             unsigned int qdr1RowLast = qdr1Row + 8;
             if (qdr1Row > qdr1YSize - 1)
                 qdr1Row = qdr1YSize - 1;
             if (qdr1RowLast > qdr1YSize)
                 qdr1RowLast = qdr1YSize;
-            unsigned int qdr1ColFirst = qdr10Centers[nearInd].GCP0 - mGCPXSize * qdr1Row;
+            unsigned int qdr1ColFirst = qdr10Centers[nearInd].firstCol;
             unsigned int sq1ColLast = qdr1ColFirst + 8;
             if (qdr1ColFirst > qdr1XSize - 1)
                 qdr1ColFirst = qdr1XSize - 1;
@@ -345,8 +344,8 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
                 unsigned int gcpInd = qdr1Row * qdr1XSize + qdr1ColFirst;
                 for (unsigned int qdr1Col = qdr1ColFirst; qdr1Col < sq1ColLast; ++qdr1Col, ++gcpInd)
                 {
-                    difLat = qdr1Centers[gcpInd].lat - lat;
-                    difLon = qdr1Centers[gcpInd].lon - lon;
+                    double difLat = qdr1Centers[gcpInd].lat - lat;
+                    double difLon = qdr1Centers[gcpInd].lon - lon;
                     double currentDistance = difLat * difLat + difLon * difLon;
                     if (currentDistance < distance)
                     {
@@ -627,10 +626,13 @@ msumr::qdrNode *msumr::MSUProj::sqSurface(const GCP *gcps, unsigned int squareSi
 #endif
 
     --squareSize;
+    unsigned int step = squareSize;
     if (squareSize > 1)
     {
-        *xSize = (int)(mGCPXSize / squareSize) + 1;
-        *ySize = (int)(mGCPYSize / squareSize) + 1;
+        // Add an overlap
+//        step -= (int)(squareSize / 2);
+        *xSize = (int)(mGCPXSize / step) + 1;
+        *ySize = (int)(mGCPYSize / step) + 1;
     }
     else
     {
@@ -643,15 +645,16 @@ msumr::qdrNode *msumr::MSUProj::sqSurface(const GCP *gcps, unsigned int squareSi
     for (unsigned int sqRow = 0; sqRow < *ySize; ++sqRow)
     {
         unsigned int stepNextRow = squareSize;
-        if ((sqRow + 1) * squareSize >= mGCPYSize)
-            stepNextRow = mGCPYSize - sqRow * squareSize - 1;
-        unsigned int gcpIter = sqRow * squareSize * mGCPXSize;
-        for (unsigned int sqCol = 0; sqCol < *xSize; ++sqCol, ++sqIter, gcpIter += squareSize)
+        if ((sqRow + 1) * step >= mGCPYSize)
+            stepNextRow = mGCPYSize - sqRow * step - 1;
+        unsigned int gcpIter = sqRow * step * mGCPXSize;
+        for (unsigned int sqCol = 0; sqCol < *xSize; ++sqCol, ++sqIter, gcpIter += step)
         {
             unsigned int stepNextCol = squareSize;
-            if ((sqCol + 1) * squareSize >= mGCPXSize)
-                stepNextCol = mGCPXSize - sqCol * squareSize - 1;
-            sqCenters[sqIter].GCP0 = gcpIter;
+            if ((sqCol + 1) * step >= mGCPXSize)
+                stepNextCol = mGCPXSize - sqCol * step - 1;
+            sqCenters[sqIter].firstRow = sqRow * step;
+            sqCenters[sqIter].firstCol = sqCol * step;
             sqCenters[sqIter].lat = (gcps[gcpIter].lat + gcps[gcpIter + stepNextCol].lat +
                 gcps[gcpIter + mGCPXSize * stepNextRow].lat + gcps[gcpIter + mGCPXSize * stepNextRow + stepNextCol].lat) / 4;
             sqCenters[sqIter].lon = (gcps[gcpIter].lon + gcps[gcpIter + stepNextCol].lon +
