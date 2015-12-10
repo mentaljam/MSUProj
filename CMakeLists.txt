@@ -28,7 +28,8 @@ option(INSTALL_DOCS "Install documentation" ON)
 option(WITH_UPDATES_ACTION "Check for updates action" ON)
 
 #### Compiler flags
-set(GCC_FLAGS "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024 -fopenmp")
+set(GCC_FLAGS  "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024 -fopenmp")
+set(MSVC_FLAGS "/openmp")
 
 
 ############### Setting additional variables ###############

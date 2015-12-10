@@ -291,7 +291,14 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
 
     // Destination raster lines loop
     #pragma omp parallel for private(band)
-    for (unsigned int pLine = 0; pLine < dstYSize; ++pLine)
+    for (
+// A workaround for MSVC that does not support OpenMP 3.0
+#ifdef _MSC_VER
+         int pLine = 0;
+#else
+         unsigned int pLine = 0;
+#endif
+         pLine < dstYSize; ++pLine)
     {
         ++mProgressVal;
         unsigned int dstInd = dstXSize * pLine;
