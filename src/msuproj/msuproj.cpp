@@ -290,7 +290,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
     this->calculateBorder(BORDER_LEFT,   GCPsW, geoTransform, borderLeft, dstYSize);
 
     // Destination raster lines loop
-#pragma omp parallel for private(band)
+    #pragma omp parallel for private(band)
     for (unsigned int pLine = 0; pLine < dstYSize; ++pLine)
     {
         ++mProgressVal;

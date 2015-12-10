@@ -251,10 +251,12 @@ if(WIN32 AND INSTALL_RUNTIME)
         get_filename_component(CXX_PATH ${CMAKE_CXX_COMPILER} PATH)
         if(ARCH EQUAL 64)
             set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++_64-*.dll
-                                 ${CXX_PATH}/libgcc*64*.dll)
+                                 ${CXX_PATH}/libgcc*64*.dll
+                                 ${CXX_PATH}/libgomp_64-*.dll)
         else()
             set(GCC_RUNTIME_MASK ${CXX_PATH}/libstdc++-*.dll
-                                 ${CXX_PATH}/libgcc*sjlj*.dll)
+                                 ${CXX_PATH}/libgcc*sjlj*.dll
+                                 ${CXX_PATH}/libgomp-*.dll)
         endif()
         file(GLOB GCC_RUNTIME ${GCC_RUNTIME_MASK})
         list(APPEND CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${GCC_RUNTIME})
