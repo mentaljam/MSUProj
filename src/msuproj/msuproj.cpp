@@ -523,7 +523,7 @@ msumr::RETURN_CODE msumr::MSUProj::calculateBorder(msumr::MSUProj::BORDER_SIDE s
             break;
         }
 
-    if (gcps[0].lon < gcps[mGCPXSize - 1].lat)
+    if (gcps[0].lon < gcps[mGCPXSize - 1].lon)
         switch (side)
         {
         case BORDER_RIGHT:
