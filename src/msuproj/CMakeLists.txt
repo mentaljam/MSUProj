@@ -100,6 +100,7 @@ if(INSTALL_DEV)
                             ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
         endif()
     endif()
+    list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/msuproj_version.h)
     install(FILES ${HDR_OUT_FILES}
             DESTINATION ${INSTALL_PATH_DEV}
             COMPONENT headers)

@@ -2,6 +2,7 @@
 #define MSUCORE_H
 
 
+#include <msuproj_version.h>
 #include <gdal_priv.h>
 #if _MSC_VER && !__INTEL_COMPILER
 #   include <msuproj/msuproj_export.h>
