@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
                         "               Research Center for Earth Operative Monitoring\n"
                         "               (NTs OMZ) <www.ntsomz.ru>\n\n"
                         "Project Page:  https://github.com/mentaljam/MSUProj\n\n"
-                        "Version:       " << msuObj.getVersion()
-                                          << " (" << msuObj.getVersion(MSUProj::VERSION_DATE)
-                                          << ") for " << msuObj.getVersion(MSUProj::VERSION_ARCH) << "\n\n"
+                        "Version:       " << msuObj.version()
+                                          << " (" << msuObj.version(MSUProj::VERSION_DATE)
+                                          << ") for " << msuObj.version(MSUProj::VERSION_ARCH) << "\n\n"
                         "Usage:   msuproj-cli [OPTIONS] -src input_file -gcp gcp_file [-dst output_file]\n\n"
                         "Options:\n"
                         "    -u              Produce an image in UTM projection\n"
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
             }
             if (!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version"))
             {
-                cout << msuObj.getVersion() << endl;
+                cout << msuObj.version() << endl;
                 return 0;
             }
             else if (i + 1 < argc && !strcmp(argv[i], "-src"))
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
         return code;
     }
 
-    string UTMZone =  msuObj.getUTM();
+    string UTMZone = msuObj.gcpGrid()->utmZoneName();
 
     if (dstFile.empty())
     {

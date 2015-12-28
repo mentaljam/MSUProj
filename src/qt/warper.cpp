@@ -18,12 +18,12 @@ msumr::RETURN_CODE Warper::setSrc(const QString &file)
 
 int Warper::getSrcXSize() const
 {
-    return mMSUProj.getSrcXSize();
+    return mMSUProj.srcXSize();
 }
 
 int Warper::getSrcYSize() const
 {
-    return mMSUProj.getSrcYSize();
+    return mMSUProj.srcYSize();
 }
 
 msumr::RETURN_CODE Warper::readGCP(const QString &file)
@@ -33,27 +33,27 @@ msumr::RETURN_CODE Warper::readGCP(const QString &file)
 
 int Warper::getGCPXSize() const
 {
-    return mMSUProj.getGCPXSize();
+    return mMSUProj.gcpGrid()->xSize();
 }
 
 int Warper::getGCPYSize() const
 {
-    return mMSUProj.getGCPYSize();
+    return mMSUProj.gcpGrid()->ySize();
 }
 
 int Warper::getGCPXStep() const
 {
-    return mMSUProj.getGCPXStep();
+    return (int)((double)mMSUProj.srcXSize() / (double)mMSUProj.gcpGrid()->xSize() + 0.5);
 }
 
 int Warper::getGCPYStep() const
 {
-    return mMSUProj.getGCPYStep();
+    return (int)((double)mMSUProj.srcYSize() / (double)mMSUProj.gcpGrid()->ySize() + 0.5);
 }
 
 QString Warper::getUTM() const
 {
-    return mMSUProj.getUTM().c_str();
+    return mMSUProj.gcpGrid()->utmZoneName().c_str();
 }
 
 void Warper::setDst(const QString &file)
@@ -83,12 +83,12 @@ void Warper::setAddLogo(bool enable)
 
 unsigned int *Warper::getProgressMaxPtr()
 {
-    return mMSUProj.getProgressMaxPtr();
+    return mMSUProj.progressMaxPtr();
 }
 
 unsigned int *Warper::getProgressValPtr()
 {
-    return mMSUProj.getProgressValPtr();
+    return mMSUProj.progressValPtr();
 }
 
 void Warper::start()

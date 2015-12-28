@@ -3,6 +3,7 @@
 
 
 #include <msucore.h>
+#include <msugcpgrid.h>
 
 
 namespace msumr {
@@ -25,12 +26,17 @@ public:
     MSUProj();
 
     /**
+     * @brief The copy constructor
+     */
+    MSUProj(const MSUProj &other);
+
+    /**
      * @brief The destructor
      */
     ~MSUProj();
 
     /**
-     * @brief The enumiration for the getVersion() method
+     * @brief The enumiration for the version() method
      */
     enum VERSION_TYPE
     {
@@ -44,7 +50,7 @@ public:
      * @param type - the type of the returning value
      * @return the build information
      */
-    const char* getVersion(VERSION_TYPE type = VERSION_STRING) const;
+    const char* version(VERSION_TYPE type = VERSION_STRING) const;
 
     /**
      * @brief Sets the destination file name
@@ -81,17 +87,6 @@ public:
     const RETURN_CODE readGCP(std::string file);
 
     /**
-     * @brief Returns the UTM zone string.
-     *
-     * @return The UTM zone string in format
-     * @code
-     * <hemisphere><zone number>
-     * @endcode
-     * For example 'N38'.
-     */
-    const std::string getUTM() const;
-
-    /**
      * @brief Project the MSU-MR image
      * @return The exit code:
      * - msumr::SUCCESS - successful projection
@@ -105,37 +100,13 @@ public:
      * @brief Returns the source image X size
      * @return The number of pixels in the a of the source image
      */
-    unsigned int getSrcXSize() const;
+    unsigned int srcXSize() const;
 
     /**
      * @brief Returns the source image Y size
      * @return The number of lines of the source image
      */
-    unsigned int getSrcYSize() const;
-
-    /**
-     * @brief Returns the GCP grid X size
-     * @return The number of points in a line of the GCP grid
-     */
-    unsigned int getGCPXSize() const;
-
-    /**
-     * @brief Returns the GCP grid Y size
-     * @return The number of lines of the GCP grid
-     */
-    unsigned int getGCPYSize() const;
-
-    /**
-     * @brief Returns the GCP grid X step
-     * @return The X step size of the GCP grid
-     */
-    unsigned int getGCPXStep() const;
-
-    /**
-     * @brief Returns the GCP grid Y step
-     * @return The Y step size of the GCP grid
-     */
-    unsigned int getGCPYStep() const;
+    unsigned int srcYSize() const;
 
     /**
      * @brief Returns the 'Add logotype' option state
@@ -149,9 +120,11 @@ public:
      */
     void setAddLogo(bool enabled);
 
-    unsigned int *getProgressMaxPtr();
+    unsigned int *progressMaxPtr();
 
-    unsigned int *getProgressValPtr();
+    unsigned int *progressValPtr();
+
+    GCPGrid *gcpGrid() const;
 
 private:
 
@@ -161,7 +134,7 @@ private:
     enum BORDER_SIDE
     {
         BORDER_TOP,    ///< 0 - the image top border
-        BORDER_BUTTON, ///< 1 - the image button border
+        BORDER_BOTTOM, ///< 1 - the image button border
         BORDER_RIGHT,  ///< 2 - the image right border
         BORDER_LEFT    ///< 3 - the image left border
     };
@@ -188,66 +161,17 @@ private:
                                 const double *geoTransform,
                                 double *border, const unsigned int &size) const;
 
-    /**
-     * @brief Returns the surface of qdrNode's of given size
-     *
-     * The surfaces of quad nodes is used for finding the nearest area
-     * of GCPs of given size.
-     *
-     * @param gcps - the array of GCPs for surface building
-     * @param squareSize - the node size
-     * @param xSize - a pointer to an initialized variable
-     *                where the X size of the surface will be recorded
-     * @param ySize - a pointer to an initialized variable
-     *                where the Y size of the surface will be recorded
-     * @return The qdrNode's surface array
-     */
-    qdrNode *sqSurface(const GCP *gcps, unsigned int squareSize,
-                       unsigned int *xSize, unsigned int *ySize) const;
-
-    /**
-     * @brief Returns the surface of triNode's
-     * @param gcps - the array of GCPs for surface building
-     * @param xSize - a pointer to an initialized variable
-     *                where the X size of the surface will be recorded
-     * @param ySize - a pointer to an initialized variable
-     *                where the Y size of the surface will be recorded
-     * @return The triNode's surface array
-     */
-    msumr::TriNode *triSurface(const GCP *gcps, unsigned int *xSize, unsigned int *ySize) const;
-
 private:
-
-    /**
-     * @brief The enumeration for calculation of the output image size
-     */
-    enum COMPARE_COORDS
-    {
-        MIN_LON, ///< Minimal longitude
-        MAX_LON, ///< Maximal longitude
-        MIN_LAT, ///< Minimal latitude
-        MAX_LAT  ///< Maximal latitude
-    };
-
-    GDALDataset* mSrcDS;     ///< A source image path
-
-    GCP* mGCPs;              ///< A GCPs grid
-
-    std::string mDstFile;    ///< A destination image path
-    std::string mDstFormat;  ///< A destination image format code
 
     bool mAddLogo;           ///< Add logotypes of NTs OMZ and GDAL onto output raster.
 
-    bool mHemisphere;        ///< A destination image hemisphere:
-                             /// - 0 - Southern
-                             /// - 1 - Northern
-    unsigned int mZone;      ///< A destination image UTM zone number
+    GDALDataset* mSrcDS;     ///< A source image path
 
-    unsigned int mGCPXSize;  ///< A number of points in a line of a GCP grid
-    unsigned int mGCPYSize;  ///< A number of lines of a GCP grid
-    unsigned int mGCPXStep;  ///< A X step size of a GCP grid
-    unsigned int mGCPYStep;  ///< A Y step size of a GCP grid
-    unsigned int mGCPSize;   ///< A total number of points in a GCP grid
+    GCPGrid *mGcpGrid;
+
+    std::string mDstFile;    ///< A destination image path
+
+    std::string mDstFormat;  ///< A destination image format code
 
     unsigned int mProgressMax;
     unsigned int mProgressVal;
