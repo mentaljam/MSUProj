@@ -24,7 +24,7 @@ cpack_ifw_configure_component(lib
                               PRIORITY 10)
 
 cpack_add_component(cli
-                    DISPLAY_NAME "MSUProj CLI"
+                    DISPLAY_NAME "MSUProj Console Utility"
                     DESCRIPTION  "MSUProj command line interface application"
                     ${DEPENDS})
 cpack_ifw_configure_component(cli

@@ -71,11 +71,23 @@ set(INSTALL_PATH_LIB lib)
 #### Set of CMake modules (https://github.com/mentaljam/OMZModules)
 find_package(OMZModules)
 
-#### Run OMZ preconfiguring script
-include(OMZProjectPreConf)
+#### Version
+if(VERSION_MAJOR)
+    set_project_version(MAJOR ${VERSION_MAJOR}
+                        MINOR ${VERSION_MINOR}
+                        PATCH ${VERSION_PATCH}
+                        TWEAK ${VERSION_TWEAK}
+                        DATE ${VERSION_DATE})
+else()
+    set_project_version(GIT)
+endif()
+write_version_file(${CMAKE_BINARY_DIR}/msuproj_version.h)
 
-#### Configure doxygen
+#### Doxygen
 include(OMZDoxyConf)
+
+#### CPack
+include(OMZCPack)
 
 #### Find GDAL
 include(GDAL)
@@ -111,5 +123,5 @@ include(DoxygenTargets)
 #### Configure packaging rules
 include(Packaging)
 
-#### Run OMZ postconfiguring script
-include(OMZProjectPostConf)
+#### OMZ postconfig function
+postconfig()
