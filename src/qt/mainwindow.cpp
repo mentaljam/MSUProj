@@ -124,7 +124,8 @@ void MainWindow::onImagePathChanged()
 
             if (mWarper->setSrc(file) == msumr::SUCCESS)
             {
-                ui->imagePathLabel->setText(tr("Input image file") + " - " + tr("loaded"));
+                ui->imagePathLabel->setText(tr("Input image file") +
+                                            " - <font color=\"green\">" + tr("loaded") + "</font>");
                 ui->imageWidthLabel->setText(tr("Image width") + QString(" %1").arg(mWarper->getSrcXSize()));
                 ui->imageHeightLabel->setText(tr("Image height") + QString(" %1").arg(mWarper->getSrcYSize()));
                 ui->gcpBox->setEnabled(true);
@@ -140,13 +141,15 @@ void MainWindow::onImagePathChanged()
             }
             else
             {
-                ui->imagePathLabel->setText(tr("Input image file") + " - " + tr("error loading"));
+                ui->imagePathLabel->setText(tr("Input image file") +
+                                            " - <font color=\"red\">" + tr("error loading") + "</font>");
                 ui->statusbar->showMessage(tr("Error loading image"), 7000);
             }
         }
         else
         {
-            ui->imagePathLabel->setText(tr("Input image file") + " - " + tr("no such file"));
+            ui->imagePathLabel->setText(tr("Input image file") +
+                                        " - <font color=\"red\">" + tr("no such file") + "</font>");
             ui->statusbar->showMessage(tr("Image file does not exist"), 7000);
         }
         this->setPreview();
@@ -192,7 +195,8 @@ void MainWindow::onGCPPathChanged()
     {
         if (mWarper->readGCP(file) == msumr::SUCCESS)
         {
-            ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("Loaded"));
+            ui->gcpPathLabel->setText(tr("Input GCPs") +
+                                      " - <font color=\"green\">" + tr("loaded") + "</font>");
             ui->gcpWidthLabel->setText(tr("GCPs grid width") + QString(" %1").arg(mWarper->getGCPXSize()));
             ui->gcpHeightLabel->setText(tr("GCPs grid height") + QString(" %1").arg(mWarper->getGCPYSize()));
             ui->gcpColumnStepLabel->setText(tr("Step of GCPs grid columns") + QString(" %1").arg(mWarper->getGCPXStep()));
@@ -203,13 +207,15 @@ void MainWindow::onGCPPathChanged()
         }
         else
         {
-            ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("Error loading"));
+            ui->gcpPathLabel->setText(tr("Input GCPs") +
+                                      " - <font color=\"red\">" + tr("Error loading") + "</font>");
             ui->statusbar->showMessage(tr("Error loading GCP file"), 7000);
         }
     }
     else
     {
-        ui->gcpPathLabel->setText(tr("Input GCPs") + " - " + tr("No such file"));
+        ui->gcpPathLabel->setText(tr("Input GCPs") +
+                                  " - <font color=\"red\">" + tr("No such file") + "</font>");
         ui->statusbar->showMessage(tr("GCP file does not exist"), 7000);
     }
     this->changeStartButtonState();
