@@ -14,7 +14,7 @@
    <string notr="true">MSUProj-Qt</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../../build/msuproj/res/icons/icons.qrc">
+   <iconset>
     <normaloff>:/icons/MSUProj</normaloff>:/icons/MSUProj</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -117,6 +117,9 @@
              </property>
              <property name="toolTip">
               <string>Path to input image file</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -225,6 +228,9 @@
              <property name="toolTip">
               <string>Path to input GCP file</string>
              </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
@@ -324,6 +330,9 @@
              <property name="toolTip">
               <string>Path to output image file</string>
              </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
@@ -396,7 +405,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -447,9 +456,7 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../../../../build/msuproj/mingw-32/res/icons/icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionExit</sender>
