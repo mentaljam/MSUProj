@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=MSUProj-Qt
-Version="@V_VERSION@"
+Version="@PROJECT_VERSION@"
 GenericName=MSUProj Qt Interface
 Icon=msuproj
 Exec=msuproj-qt
