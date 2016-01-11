@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mProgressVal(mWarper->getProgressValPtr())
 {
     ui->setupUi(this);
+    this->setAcceptDrops(true);
 
     QByteArray geom(settingsObj.getGeometry(MSUSettings::MAINWINDOW));
     if (geom.size() > 0)
@@ -528,4 +529,22 @@ void MainWindow::showEvent(QShowEvent *event)
 #endif // Q_OS_WIN32
     this->showStdStatus(0);
     event->accept();
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    const QMimeData* mimeData = event->mimeData();
+    if (mimeData->hasUrls())
+    {
+        QUrl url(mimeData->urls()[0]);
+        QMimeType type(QMimeDatabase().mimeTypeForUrl(url));
+        if (type.name() == "image/jpeg" || type.name() == "image/bmp")
+            event->acceptProposedAction();
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    ui->imagePathEdit->setText(event->mimeData()->urls()[0].toLocalFile());
+    emit ui->imagePathEdit->editingFinished();
 }

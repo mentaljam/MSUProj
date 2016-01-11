@@ -66,13 +66,15 @@ private:
 #endif // Q_OS_WIN32
     QString        mFilePreffix;
     QString        mCurrentImage;
-    unsigned int *mProgressMax;
-    unsigned int *mProgressVal;
+    unsigned int   *mProgressMax;
+    unsigned int   *mProgressVal;
 
 protected:
     void resizeEvent(QResizeEvent *event);
     void closeEvent(QCloseEvent *event);
     void showEvent(QShowEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 };
 
 #endif // MAINWINDOW_H
