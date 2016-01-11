@@ -2,6 +2,7 @@
 
 include(CPackComponent)
 include(CPackIFW)
+configure_cpack()
 
 
 ################# Installation components ##################
