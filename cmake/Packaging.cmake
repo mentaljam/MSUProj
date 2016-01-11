@@ -1,122 +1,6 @@
-################# Including CPack modules ##################
+#################### Configuring CPack #####################
 
-include(CPackComponent)
-include(CPackIFW)
 configure_cpack()
-
-
-################# Installation components ##################
-
-#### Common
-
-if(BUILD_SHARED_LIBS)
-    set(DEPENDS DEPENDS lib)
-endif()
-
-cpack_add_component(doc HIDDEN REQUIRED
-                    DISPLAY_NAME "MSUProj Documentation")
-cpack_ifw_configure_component(doc
-                              SCRIPT ${RESOURCES_DIR}/qtifw/component-doc.qs)
-
-cpack_add_component(lib
-                    DISPLAY_NAME "MSUProj Shared"
-                    DESCRIPTION  "MSUProj shared library")
-cpack_ifw_configure_component(lib
-                              PRIORITY 10)
-
-cpack_add_component(cli
-                    DISPLAY_NAME "MSUProj Console Utility"
-                    DESCRIPTION  "MSUProj command line interface application"
-                    ${DEPENDS})
-cpack_ifw_configure_component(cli
-                              PRIORITY 9)
-
-cpack_add_component(qt
-                    DISPLAY_NAME "MSUProj-Qt"
-                    DESCRIPTION  "MSUProj graphical user interface application"
-                    ${DEPENDS})
-cpack_ifw_configure_component(qt
-                              SCRIPT ${RESOURCES_DIR}/qtifw/component-qt.qs
-                              PRIORITY 8)
-
-#### Development
-cpack_add_component_group(dev DISPLAY_NAME "Development")
-cpack_ifw_configure_component_group(dev
-                                    VERSION 0
-                                    PRIORITY 0)
-
-    cpack_add_component(libdev DISABLED
-                        DISPLAY_NAME "MSUProj Static"
-                        DESCRIPTION  "MSUProj static library"
-                        GROUP        dev
-                        ${DEPENDS})
-
-    cpack_add_component(headers DISABLED
-                        DISPLAY_NAME "Headers"
-                        DESCRIPTION  "MSUProj library headers"
-                        GROUP        dev)
-
-#### Tools
-cpack_add_component_group(tools DISPLAY_NAME "Tools")
-cpack_ifw_configure_component_group(tools
-                                    VERSION 0
-                                    PRIORITY 6)
-
-    cpack_add_component(gcpthinner DISABLED
-                        DISPLAY_NAME "GCPThinner"
-                        DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files"
-                        GROUP        tools)
-
-#### Manuals
-cpack_add_component_group(qtman DISPLAY_NAME "Manuals")
-cpack_ifw_configure_component_group(qtman
-                                    VERSION 0
-                                    PRIORITY 7)
-    set(LOCALE_PRIORITY ${DOXY_LOCALES_SIZE})
-    math(EXPR LOCALE_PRIORITY "${LOCALE_PRIORITY} + 1")
-    foreach(LOCALE ${DOXY_LOCALES})
-        cpack_add_component(qtman.${LOCALE}
-                            DISPLAY_NAME "${${LOCALE}_LANG} MSUProj-Qt help"
-                            DEPENDS      qt
-                            GROUP        qtman)
-        cpack_ifw_configure_component(qtman.${LOCALE}
-                                      PRIORITY ${LOCALE_PRIORITY})
-        math(EXPR LOCALE_PRIORITY "${LOCALE_PRIORITY} - 1")
-    endforeach()
-
-#### Runtime
-cpack_add_component_group(runtime
-                          DISPLAY_NAME "Runtime"
-                          DESCRIPTION  "Thirdparty runtime libraries \(GDAL, GEOS, Proj, Qt, C++ standard library\)")
-cpack_ifw_configure_component_group(runtime
-                                    VERSION 0
-                                    PRIORITY 5)
-
-    cpack_add_component(runtime.gdal
-                        DISPLAY_NAME "GDAL"
-                        DESCRIPTION  "GDAL, GEOS and Proj libraries"
-                        GROUP runtime)
-    cpack_ifw_configure_component(runtime.gdal
-                                  VERSION ${GDAL_VERSION}
-                                  PRIORITY 3)
-
-    cpack_add_component(runtime.cpp
-                        DISPLAY_NAME "${CMAKE_CXX_COMPILER_ID}"
-                        DESCRIPTION  "C++ standard library"
-                        GROUP runtime)
-    cpack_ifw_configure_component(runtime.cpp
-                                  VERSION ${CMAKE_CXX_COMPILER_VERSION}
-                                  PRIORITY 2)
-
-    if(BUILD_QT)
-        cpack_add_component(runtime.qt
-                            DISPLAY_NAME "Qt"
-                            DESCRIPTION  "Qt libraries"
-                            GROUP runtime)
-        cpack_ifw_configure_component(runtime.qt
-                                      VERSION ${QT_VERSION}
-                                      PRIORITY 1)
-    endif()
 
 
 #################### Common information ####################
@@ -181,7 +65,7 @@ if(BUILD_PPA_PACKAGE)
                                      -DBUILD_QT=${BUILD_QT}
                                      -DBUILD_TOOLS=${BUILD_TOOLS}
                                      -DINSTALL_DEV=${INSTALL_DEV}
-                                     -DV_DATE=${V_DATE})
+                                     -DINSTALL_DOCS=${INSTALL_DEV})
     include(OMZDebuildConf)
 endif()
 
@@ -217,18 +101,6 @@ configure_file(${RESOURCES_DIR}/qtifw/controller.qs.in
                ${CPACK_IFW_PACKAGE_CONTROL_SCRIPT} @ONLY)
 file(GLOB IFW_SCRIPTS ${RESOURCES_DIR}/qtifw/*.qs)
 list(APPEND PROJECT_FILES ${IFW_SCRIPTS})
-
-
-##################### QtIFW repository #####################
-
-if(WIN32)
-    set(REPO "win")
-else()
-    set(REPO ${CMAKE_SYSTEM_NAME})
-endif()
-cpack_ifw_add_repository(qtifwrepo
-     URL "${REPO_URL}/ifw/${REPO}/${COMPILED_ARCH}/"
-     DISPLAY_NAME "MSUProj QtIFW Repository")
 
 
 #################### Additional targets ####################
@@ -319,6 +191,138 @@ set(PROJECT_FILES ${PROJECT_FILES} ${LICENSE_FILES}
                                    README.md)
 
 
-##################### Including CPack ######################
+################# Including CPack modules ##################
 
 include(CPack)
+include(CPackComponent)
+include(CPackIFW)
+
+
+################# Installation components ##################
+
+#### Common
+
+if(BUILD_SHARED_LIBS)
+    set(DEPENDS DEPENDS lib)
+endif()
+
+cpack_add_component(doc HIDDEN REQUIRED
+                    DISPLAY_NAME "MSUProj Documentation")
+cpack_ifw_configure_component(doc
+                              SCRIPT ${RESOURCES_DIR}/qtifw/component-doc.qs)
+
+cpack_add_component(lib
+                    DISPLAY_NAME "MSUProj Shared"
+                    DESCRIPTION  "MSUProj shared library")
+cpack_ifw_configure_component(lib
+                              PRIORITY 10)
+
+cpack_add_component(cli
+                    DISPLAY_NAME "MSUProj Console Utility"
+                    DESCRIPTION  "MSUProj command line interface application"
+                    ${DEPENDS})
+cpack_ifw_configure_component(cli
+                              PRIORITY 9)
+
+cpack_add_component(qt
+                    DISPLAY_NAME "MSUProj-Qt"
+                    DESCRIPTION  "MSUProj graphical user interface application"
+                    ${DEPENDS})
+cpack_ifw_configure_component(qt
+                              SCRIPT ${RESOURCES_DIR}/qtifw/component-qt.qs
+                              PRIORITY 8)
+
+#### Development
+cpack_add_component_group(dev DISPLAY_NAME "Development")
+cpack_ifw_configure_component_group(dev
+                                    VERSION 0
+                                    PRIORITY 0)
+
+    cpack_add_component(libdev DISABLED
+                        DISPLAY_NAME "MSUProj Static"
+                        DESCRIPTION  "MSUProj static library"
+                        GROUP        dev
+                        ${DEPENDS})
+
+    cpack_add_component(headers DISABLED
+                        DISPLAY_NAME "Headers"
+                        DESCRIPTION  "MSUProj library headers"
+                        GROUP        dev)
+
+#### Tools
+cpack_add_component_group(tools DISPLAY_NAME "Tools")
+cpack_ifw_configure_component_group(tools
+                                    VERSION 0
+                                    PRIORITY 6)
+
+    cpack_add_component(gcpthinner DISABLED
+                        DISPLAY_NAME "GCPThinner"
+                        DESCRIPTION  "A tool to reduce GCPs number and their step size in .gcp files"
+                        GROUP        tools)
+
+#### Manuals
+cpack_add_component_group(qtman DISPLAY_NAME "Manuals")
+cpack_ifw_configure_component_group(qtman
+                                    VERSION 0
+                                    PRIORITY 7)
+    set(LOCALE_PRIORITY ${DOXY_LOCALES_SIZE})
+    math(EXPR LOCALE_PRIORITY "${LOCALE_PRIORITY} + 1")
+    foreach(LOCALE ${DOXY_LOCALES})
+        cpack_add_component(qtman.${LOCALE}
+                            DISPLAY_NAME "${${LOCALE}_LANG} MSUProj-Qt help"
+                            DEPENDS      qt
+                            GROUP        qtman)
+        cpack_ifw_configure_component(qtman.${LOCALE}
+                                      PRIORITY ${LOCALE_PRIORITY})
+        math(EXPR LOCALE_PRIORITY "${LOCALE_PRIORITY} - 1")
+    endforeach()
+
+#### Runtime
+if(WIN32 AND INSTALL_RUNTIME)
+
+    cpack_add_component_group(runtime
+                              DISPLAY_NAME "Runtime"
+                              DESCRIPTION  "Thirdparty runtime libraries \(GDAL, GEOS, Proj, Qt, C++ standard library\)")
+    cpack_ifw_configure_component_group(runtime
+                                        VERSION 0
+                                        PRIORITY 5)
+
+        cpack_add_component(runtime.gdal
+                            DISPLAY_NAME "GDAL"
+                            DESCRIPTION  "GDAL, GEOS and Proj libraries"
+                            GROUP runtime)
+        cpack_ifw_configure_component(runtime.gdal
+                                      VERSION ${GDAL_VERSION}
+                                      PRIORITY 3)
+
+        cpack_add_component(runtime.cpp
+                            DISPLAY_NAME "${CMAKE_CXX_COMPILER_ID}"
+                            DESCRIPTION  "C++ standard library"
+                            GROUP runtime)
+        cpack_ifw_configure_component(runtime.cpp
+                                      VERSION ${CMAKE_CXX_COMPILER_VERSION}
+                                      PRIORITY 2)
+
+        if(BUILD_QT)
+            cpack_add_component(runtime.qt
+                                DISPLAY_NAME "Qt"
+                                DESCRIPTION  "Qt libraries"
+                                GROUP runtime)
+            cpack_ifw_configure_component(runtime.qt
+                                          VERSION ${QT_VERSION}
+                                          PRIORITY 1)
+        endif()
+
+endif()
+
+
+##################### QtIFW repository #####################
+
+if(WIN32)
+    set(REPO "win")
+else()
+    set(REPO ${CMAKE_SYSTEM_NAME})
+endif()
+cpack_ifw_add_repository(qtifwrepo
+     URL "${REPO_URL}/ifw/${REPO}/${COMPILED_ARCH}/"
+     DISPLAY_NAME "MSUProj QtIFW Repository")
