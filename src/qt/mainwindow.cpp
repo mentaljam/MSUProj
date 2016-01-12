@@ -109,16 +109,21 @@ void MainWindow::on_imagePathButton_clicked()
 void MainWindow::onImagePathChanged()
 {
     QString file(ui->imagePathEdit->text());
-    if (file != mCurrentImage)
+    if (file.isEmpty() || file != mCurrentImage)
     {
-        mCurrentImage = file;
-
+        ui->gcpPathEdit->clear();
+        ui->gcpBox->setEnabled(false);
+    }
+    if(file.isEmpty())
+    {
         ui->imagePathLabel->setText(tr("Input image file"));
         ui->imageWidthLabel->setText(tr("Image width"));
         ui->imageHeightLabel->setText(tr("Image height"));
-        ui->gcpPathEdit->clear();
-        ui->gcpBox->setEnabled(false);
-
+        this->onGCPPathChanged();
+    }
+    else if (file != mCurrentImage)
+    {
+        mCurrentImage = file;
         if (QFile(file).exists())
         {
             QStringList gcpFiles(file + ".gcp");
@@ -209,14 +214,14 @@ void MainWindow::onGCPPathChanged()
         else
         {
             ui->gcpPathLabel->setText(tr("Input GCPs") +
-                                      " - <font color=\"red\">" + tr("Error loading") + "</font>");
+                                      " - <font color=\"red\">" + tr("error loading") + "</font>");
             ui->statusbar->showMessage(tr("Error loading GCP file"), 7000);
         }
     }
     else
     {
         ui->gcpPathLabel->setText(tr("Input GCPs") +
-                                  " - <font color=\"red\">" + tr("No such file") + "</font>");
+                                  " - <font color=\"red\">" + tr("no such file") + "</font>");
         ui->statusbar->showMessage(tr("GCP file does not exist"), 7000);
     }
     this->changeStartButtonState();
