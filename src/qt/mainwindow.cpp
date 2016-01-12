@@ -373,7 +373,7 @@ void MainWindow::on_actionReference_triggered()
 
 void MainWindow::onWarpStarted()
 {
-    QTimer::singleShot(250, this, &MainWindow::setProgressMax);
+    QTimer::singleShot(20, this, &MainWindow::setProgressMax);
     mWarpProgress->setVisible(true);
 #ifdef Q_OS_WIN32
     mWinProgress->setVisible(true);
