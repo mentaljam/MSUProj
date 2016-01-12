@@ -3,6 +3,8 @@
 
 #include <msutriangle.h>
 
+#include <vector>
+
 namespace msumr
 {
 

@@ -86,6 +86,7 @@ endif()
 
 if(INSTALL_DEV)
 
+    # Library and CMake export files
     install(TARGETS ${MSUPROJ_DEV}
             EXPORT  MSUProjStaticConfig
             DESTINATION ${INSTALL_PATH_LIB}
@@ -94,19 +95,22 @@ if(INSTALL_DEV)
             DESTINATION ${INSTALL_PATH_CMAKE}
             COMPONENT libdev)
 
-    list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/include/msuproj.h)
-    if(NOT EXISTS ${CMAKE_BINARY_DIR}/include/msuproj.h)
-        remove_comments(msuproj.h ${CMAKE_BINARY_DIR}/include/msuproj.h)
-    endif()
+    # Headers
+    file(GLOB H_FILES *.h)
+    list(APPEND H_FILES ${CMAKE_BINARY_DIR}/msuproj_version.h)
     if(MSVC)
-        list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
-        if(NOT EXISTS ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
-            remove_comments(${CMAKE_CURRENT_BINARY_DIR}/msuproj_export.h
-                            ${CMAKE_BINARY_DIR}/include/msuproj_export.h)
-        endif()
+        list(APPEND H_FILES ${CMAKE_BINARY_DIR}/msuproj/msuproj_export.h)
     endif()
-    list(APPEND HDR_OUT_FILES ${CMAKE_BINARY_DIR}/msuproj_version.h)
-    install(FILES ${HDR_OUT_FILES}
+    foreach(H_FILE ${H_FILES})
+        get_filename_component(H_FILE_NAME ${H_FILE} NAME)
+        set(OUT_H_FILE ${CMAKE_BINARY_DIR}/include/${H_FILE_NAME})
+        list(APPEND OUT_H_FILES ${OUT_H_FILE})
+        if(NOT EXISTS ${OUT_H_FILE})
+            remove_comments(${H_FILE} ${OUT_H_FILE})
+        endif()
+    endforeach()
+
+    install(FILES ${OUT_H_FILES}
             DESTINATION ${INSTALL_PATH_DEV}
             COMPONENT headers)
 

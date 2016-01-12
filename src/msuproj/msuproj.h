@@ -1,10 +1,8 @@
 #ifndef MSUPROJ_H
 #define MSUPROJ_H
 
-
 #include <msucore.h>
 #include <msugcpgrid.h>
-
 
 namespace msumr {
 
