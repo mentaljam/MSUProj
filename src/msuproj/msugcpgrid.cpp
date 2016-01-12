@@ -13,10 +13,15 @@ msumr::GCPGrid::GCPGrid() :
     mYSize(0),
     mSize(0),
     mExtentXSize(0),
-    mExtentYSize(0),
-    mGeoTransform{0}
+    mExtentYSize(0)
+  // A workaround for Visual Studio 2013
+#if _MSC_VER != 1800
+    , mGeoTransform{0.0}
 {
-
+#else
+{
+    memset(mGeoTransform, 0, 6 * sizeof(double));
+#endif
 }
 
 msumr::GCPGrid::GCPGrid(const msumr::GCPGrid &other) :
