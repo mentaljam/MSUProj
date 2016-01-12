@@ -1,5 +1,36 @@
-Current:
+1.0 (2016-01-12)
+    General:
     - NEW:    Add option to disable logotype
+    - NEW:    Check for updates functionality on Windows
+    - UPDATE: Readme, documentation and manuals
+    - UPDATE: Gcp-thinner tool (and fix its name)
+    - UPDATE: Better execution time calculation for msuproj-cli
+    - UPDATE: The transforming algorithm was totally rewrited
+    - UPDATE: Rewrite the GCP file reading method without stringstream
+    - FIX:    Installing GCC libraries on Windows
+    - FIX:    OMP parallel for image the lines loop
+
+    GUI:
+    - NEW:    A progress bar (and a taskbar for Windows) of the warp operation
+    - NEW:    Clear buttons for file path edit lines
+    - NEW:    Colors for files loading status
+    - NEW:    Drops handling for image files (an image can be dragged and dropped to the main window of the MSUProj-Qt)
+    - UPDATE: "About" dialog
+    - UPDATE: Better image and GCP file loading status
+    - FIX:    Current language selection in settings window
+    - FIX:    Settings dialog size
+
+    Localization:
+    - NEW:    Hungarian language, thanks to gurrsoft (Zsolt Gurmai)
+    - FIX:    Russian documentation
+    - FIX:    Interface strings and translations
+
+    Other:
+    - UPDATE: Project configuration for the last OMZModules version
+    - UPDATE: Additional project variables were moved to OMZModules
+    - UPDATE: QtIfw configuration
+    - FIX:    Version and date in gh-pages target
+    - FIX:    Headers includings for the "dev" target
 
 0.6 (2015-08-30)
     - NEW:    An option to open file dialogs in a previously selected folder or a prefered folder
