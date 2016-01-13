@@ -2,11 +2,7 @@
 #define MSUCORE_H
 
 #include <msuproj_version.h>
-#if _MSC_VER && !__INTEL_COMPILER
-#   include <msuproj/msuproj_export.h>
-#else
-#   define MSUPROJ_EXPORT
-#endif
+#include <msuproj_export.h>
 
 #include <string>
 

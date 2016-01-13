@@ -30,6 +30,9 @@ option(WITH_UPDATES_ACTION "Check for updates action" ON)
 #### Compiler flags
 set(GCC_FLAGS  "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024 -fopenmp")
 set(MSVC_FLAGS "/openmp")
+if(NOT BUILD_SHARED_LIBS OR NOT MSVC)
+    add_definitions("-DMSUPROJ_STATIC_DEFINE=1")
+endif()
 
 
 ############### Setting additional variables ###############
@@ -98,6 +101,8 @@ include(GDAL)
 ######## Library ########
 include_directories(src/msuproj)
 add_subdirectory(src/msuproj msuproj)
+include(GenerateExportHeader)
+generate_export_header(msuproj)
 
 ##### Applications ######
 if(BUILD_CLI)

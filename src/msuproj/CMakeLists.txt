@@ -26,11 +26,6 @@ endif()
 add_library(msuproj ${MSUPROJ_SOURCES})
 target_link_libraries(msuproj ${GDAL_LIBRARIES})
 
-if(MSVC)
-    include(GenerateExportHeader)
-    generate_export_header(msuproj)
-endif()
-
 if(BUILD_SHARED_LIBS)
 
     set_target_properties(msuproj
@@ -97,10 +92,8 @@ if(INSTALL_DEV)
 
     # Headers
     file(GLOB H_FILES *.h)
-    list(APPEND H_FILES ${CMAKE_BINARY_DIR}/msuproj_version.h)
-    if(MSVC)
-        list(APPEND H_FILES ${CMAKE_BINARY_DIR}/msuproj/msuproj_export.h)
-    endif()
+    list(APPEND H_FILES ${CMAKE_BINARY_DIR}/msuproj_version.h
+                        ${CMAKE_BINARY_DIR}/msuproj_export.h)
     foreach(H_FILE ${H_FILES})
         get_filename_component(H_FILE_NAME ${H_FILE} NAME)
         set(OUT_H_FILE ${CMAKE_BINARY_DIR}/include/${H_FILE_NAME})

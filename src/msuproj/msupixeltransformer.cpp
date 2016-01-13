@@ -1,5 +1,7 @@
 #include "msupixeltransformer.h"
 
+#include <cstring>
+
 msumr::PixelTransformer::PixelTransformer(const unsigned int &raster_x_size, const unsigned int &raster_y_size,
                                           const unsigned int &gcpgrid_x_size, const unsigned int &gcpgrid_y_size,
                                           GCP *gcps, double *geo_transform) :
