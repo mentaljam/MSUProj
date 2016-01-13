@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mOpenImageDialog(new QFileDialog(this, tr("Select input image"), 0,
                                      tr("Meteor-M2 images (*.jpg *.bmp);;All files (*.*)"))),
     mWarper(new Warper),
-    mWarpProgress(new QProgressBar(ui->statusbar)),
+    mWarpProgress(new QProgressBar(this)),
 #ifdef WITH_UPDATES_ACTION
     mActionCheckUpdates(new QAction(tr("Check for updates"), this)),
 #endif // WITH_UPDATES_ACTION
