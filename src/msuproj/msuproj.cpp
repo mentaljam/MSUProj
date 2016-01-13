@@ -183,8 +183,6 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
             double pRCol, pRRow;
             if (transformer->transform(pCol, pRow, lon, lat, &pRCol, &pRRow))
             {
-                for (band = 0; band < bands; ++band)
-                    dstData[band][dstInd] = (unsigned char)transformer->transform(pCol, pRow, lon, lat, &pRCol, &pRRow);
                 // Calculate pixel value (bilinear interpolation)
                 int srcRow = (int)pRRow;
                 int srcCol = (int)pRCol;
