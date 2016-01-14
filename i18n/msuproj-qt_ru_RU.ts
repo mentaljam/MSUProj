@@ -53,15 +53,15 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="66"/>
-        <location filename="../src/qt/mainwindow.cpp" line="121"/>
-        <location filename="../src/qt/mainwindow.cpp" line="136"/>
+        <location filename="../src/qt/mainwindow.cpp" line="127"/>
+        <location filename="../src/qt/mainwindow.cpp" line="142"/>
         <source>Image height</source>
         <translation>Высота</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="73"/>
-        <location filename="../src/qt/mainwindow.cpp" line="120"/>
-        <location filename="../src/qt/mainwindow.cpp" line="135"/>
+        <location filename="../src/qt/mainwindow.cpp" line="126"/>
+        <location filename="../src/qt/mainwindow.cpp" line="141"/>
         <source>Image width</source>
         <translation>Ширина</translation>
     </message>
@@ -73,10 +73,10 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="101"/>
-        <location filename="../src/qt/mainwindow.cpp" line="119"/>
-        <location filename="../src/qt/mainwindow.cpp" line="133"/>
-        <location filename="../src/qt/mainwindow.cpp" line="150"/>
-        <location filename="../src/qt/mainwindow.cpp" line="157"/>
+        <location filename="../src/qt/mainwindow.cpp" line="125"/>
+        <location filename="../src/qt/mainwindow.cpp" line="139"/>
+        <location filename="../src/qt/mainwindow.cpp" line="156"/>
+        <location filename="../src/qt/mainwindow.cpp" line="163"/>
         <source>Input image file</source>
         <translation>Файл изображения</translation>
     </message>
@@ -88,45 +88,45 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="147"/>
-        <location filename="../src/qt/mainwindow.cpp" line="193"/>
-        <location filename="../src/qt/mainwindow.cpp" line="204"/>
-        <location filename="../src/qt/mainwindow.cpp" line="216"/>
-        <location filename="../src/qt/mainwindow.cpp" line="223"/>
+        <location filename="../src/qt/mainwindow.cpp" line="199"/>
+        <location filename="../src/qt/mainwindow.cpp" line="210"/>
+        <location filename="../src/qt/mainwindow.cpp" line="222"/>
+        <location filename="../src/qt/mainwindow.cpp" line="229"/>
         <source>Input GCPs</source>
         <translation>Исходная геосетка</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="155"/>
-        <location filename="../src/qt/mainwindow.cpp" line="195"/>
-        <location filename="../src/qt/mainwindow.cpp" line="207"/>
+        <location filename="../src/qt/mainwindow.cpp" line="201"/>
+        <location filename="../src/qt/mainwindow.cpp" line="213"/>
         <source>GCPs grid height</source>
         <translation>Высота сетки</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="162"/>
-        <location filename="../src/qt/mainwindow.cpp" line="194"/>
-        <location filename="../src/qt/mainwindow.cpp" line="206"/>
+        <location filename="../src/qt/mainwindow.cpp" line="200"/>
+        <location filename="../src/qt/mainwindow.cpp" line="212"/>
         <source>GCPs grid width</source>
         <translation>Ширина сетки</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="169"/>
-        <location filename="../src/qt/mainwindow.cpp" line="196"/>
-        <location filename="../src/qt/mainwindow.cpp" line="208"/>
+        <location filename="../src/qt/mainwindow.cpp" line="202"/>
+        <location filename="../src/qt/mainwindow.cpp" line="214"/>
         <source>Step of GCPs grid columns</source>
         <translation>Шаг колонок</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="176"/>
-        <location filename="../src/qt/mainwindow.cpp" line="197"/>
-        <location filename="../src/qt/mainwindow.cpp" line="209"/>
+        <location filename="../src/qt/mainwindow.cpp" line="203"/>
+        <location filename="../src/qt/mainwindow.cpp" line="215"/>
         <source>Step of GCPs grid rows</source>
         <translation>Шаг строк</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="183"/>
-        <location filename="../src/qt/mainwindow.cpp" line="198"/>
-        <location filename="../src/qt/mainwindow.cpp" line="210"/>
+        <location filename="../src/qt/mainwindow.cpp" line="204"/>
+        <location filename="../src/qt/mainwindow.cpp" line="216"/>
         <source>UTM zone</source>
         <translation>Зона UTM</translation>
     </message>
@@ -228,190 +228,195 @@
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="24"/>
+        <location filename="../src/qt/mainwindow.cpp" line="27"/>
         <source>Select input image</source>
         <translation>Выберите исходное изображение</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="25"/>
+        <location filename="../src/qt/mainwindow.cpp" line="28"/>
         <source>Meteor-M2 images (*.jpg *.bmp);;All files (*.*)</source>
         <translation>Снимки Метеор-М (*.jpg *.bmp);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="29"/>
+        <location filename="../src/qt/mainwindow.cpp" line="33"/>
         <source>Check for updates</source>
         <translation>Проверить обновления</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="94"/>
+        <location filename="../src/qt/mainwindow.cpp" line="100"/>
         <source>Ready to transform</source>
         <translation>Готов к трансформированию</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="96"/>
+        <location filename="../src/qt/mainwindow.cpp" line="102"/>
         <source>Select input files</source>
         <translation>Выберите исходные файлы</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="134"/>
-        <location filename="../src/qt/mainwindow.cpp" line="205"/>
+        <location filename="../src/qt/mainwindow.cpp" line="140"/>
+        <location filename="../src/qt/mainwindow.cpp" line="211"/>
         <source>loaded</source>
         <translation>загружено</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="151"/>
-        <location filename="../src/qt/mainwindow.cpp" line="217"/>
+        <location filename="../src/qt/mainwindow.cpp" line="157"/>
+        <location filename="../src/qt/mainwindow.cpp" line="223"/>
         <source>error loading</source>
         <translation>ошибка загрузки</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="152"/>
+        <location filename="../src/qt/mainwindow.cpp" line="158"/>
         <source>Error loading image</source>
         <translation>Ошибка загрузки изображения</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="158"/>
-        <location filename="../src/qt/mainwindow.cpp" line="224"/>
+        <location filename="../src/qt/mainwindow.cpp" line="164"/>
+        <location filename="../src/qt/mainwindow.cpp" line="230"/>
         <source>no such file</source>
         <translation>нет такого файла</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="159"/>
+        <location filename="../src/qt/mainwindow.cpp" line="165"/>
         <source>Image file does not exist</source>
         <translation>Файл изображения не существует</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="177"/>
+        <location filename="../src/qt/mainwindow.cpp" line="183"/>
         <source>Select input GCP file</source>
         <translation>Выберите файл геосетки</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="179"/>
+        <location filename="../src/qt/mainwindow.cpp" line="185"/>
         <source>Meteor-M2 GCP file (*.gcp);;All files (*.*)</source>
         <translation>Геосетка Метеор-М (*.gcp);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="218"/>
+        <location filename="../src/qt/mainwindow.cpp" line="224"/>
         <source>Error loading GCP file</source>
         <translation>Ошибка загрузки файла геосетки</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="225"/>
+        <location filename="../src/qt/mainwindow.cpp" line="231"/>
         <source>GCP file does not exist</source>
         <translation>Файл геосетки не существует</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="240"/>
+        <location filename="../src/qt/mainwindow.cpp" line="246"/>
         <source>Specify output file</source>
         <translation>Укажите выходной файл</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="242"/>
+        <location filename="../src/qt/mainwindow.cpp" line="248"/>
         <source>GeoTiff images (*.tif)</source>
         <translation>Растры GeoTiff (*.tif)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="335"/>
+        <location filename="../src/qt/mainwindow.cpp" line="341"/>
         <source>Output file name is empty</source>
         <translation>Не указано имя выходного растра</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="348"/>
+        <location filename="../src/qt/mainwindow.cpp" line="354"/>
         <source>About MSUProj-Qt</source>
         <translation>О MSUProj-Qt</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="356"/>
+        <location filename="../src/qt/mainwindow.cpp" line="362"/>
         <source>MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.</source>
         <translation>MSUProj - библиотека и приложения для геопроецирования изображений аппаратуры МСУ-МР космического аппарата дистанционного зондирования Земли Метеор-М.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="357"/>
+        <location filename="../src/qt/mainwindow.cpp" line="363"/>
         <source>This is a Qt graphical interface for MSUProj.</source>
         <translation>Это графический интерфейс Qt для библиотеки MSUProj.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="358"/>
+        <location filename="../src/qt/mainwindow.cpp" line="364"/>
         <source>MSUProj is provided under &lt;a href=&apos;http://opensource.org/licenses/Zlib&apos;&gt;The Zlib License&lt;/a&gt;.</source>
         <translation>MSUProj распространяется под лицензией &lt;a href=&apos;http://opensource.org/licenses/Zlib&apos;&gt;Zlib&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="359"/>
+        <location filename="../src/qt/mainwindow.cpp" line="365"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="360"/>
+        <location filename="../src/qt/mainwindow.cpp" line="366"/>
         <source>Author</source>
         <translation>Автор</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="361"/>
+        <location filename="../src/qt/mainwindow.cpp" line="367"/>
         <source>Project page</source>
         <translation>Страница проекта</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="362"/>
+        <location filename="../src/qt/mainwindow.cpp" line="368"/>
         <source>Translations</source>
         <translation>Переводы</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="383"/>
+        <location filename="../src/qt/mainwindow.cpp" line="389"/>
         <source>Transforming image, please wait...</source>
         <translation>Идет трансформирование изображения, подождите...</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="396"/>
+        <location filename="../src/qt/mainwindow.cpp" line="402"/>
         <source>Transformation finished successfully</source>
         <translation>Трансформирование успешно завершено</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="398"/>
+        <location filename="../src/qt/mainwindow.cpp" line="404"/>
         <source>An error occured. Please check input data</source>
         <translation>Произошла ошибка, проверьте исходные данные</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="437"/>
+        <location filename="../src/qt/mainwindow.cpp" line="433"/>
+        <source>Saving image file...</source>
+        <translation>Сохранение файла изображения...</translation>
+    </message>
+    <message>
+        <location filename="../src/qt/mainwindow.cpp" line="445"/>
         <source>Searching for updates...</source>
         <translation>Поиск обновлений...</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="449"/>
+        <location filename="../src/qt/mainwindow.cpp" line="457"/>
         <source>Error searching for updates</source>
         <translation>Ошибка поиска обновлений</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="450"/>
+        <location filename="../src/qt/mainwindow.cpp" line="458"/>
         <source>Cannot find update tool &quot;maintenancetool.exe&quot;.</source>
         <translation>Не найден инструмент управления установкой &quot;maintenancetool.exe&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="478"/>
+        <location filename="../src/qt/mainwindow.cpp" line="486"/>
         <source>Updates are available</source>
         <translation>Доступны обновления</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="481"/>
+        <location filename="../src/qt/mainwindow.cpp" line="489"/>
         <source>MSUProj-Qt version %1 is available.</source>
         <translation>Доступен MSUProj-Qt %1.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="483"/>
+        <location filename="../src/qt/mainwindow.cpp" line="491"/>
         <source>MSUProj components updates are available.</source>
         <translation>Доступны обновления компонентов MSUProj.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="487"/>
+        <location filename="../src/qt/mainwindow.cpp" line="495"/>
         <source>Start the maintenance tool now?</source>
         <translation>Запустить процесс обновления?</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="502"/>
+        <location filename="../src/qt/mainwindow.cpp" line="510"/>
         <source>No updates are available</source>
         <translation>Доступных обновлений нет</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="507"/>
+        <location filename="../src/qt/mainwindow.cpp" line="515"/>
         <source>Error searching for updates, check your internet connection</source>
         <translation>Ошибка поиска обновлений, проверьте интернет соединение</translation>
     </message>

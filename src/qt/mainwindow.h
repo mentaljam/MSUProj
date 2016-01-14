@@ -56,6 +56,7 @@ private:
     QFileDialog    *mOpenImageDialog;
     Warper         *mWarper;
     QProgressBar   *mWarpProgress;
+    QTimer         *mWarpProgressTimer;
 #ifdef WITH_UPDATES_ACTION
     QAction        *mActionCheckUpdates;
     QProcess       *mUpdater;

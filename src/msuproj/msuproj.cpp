@@ -204,6 +204,7 @@ const msumr::RETURN_CODE msumr::MSUProj::warp(const bool &useUtm, const bool &ze
         }
     }
 
+    mProgressVal = mProgressMax;
     for (band = 0; band < bands; ++band)
         dstDS->GetRasterBand(band + 1)->RasterIO(GF_Write, 0, 0, dstXSize, dstYSize,
                                                  dstData[band],

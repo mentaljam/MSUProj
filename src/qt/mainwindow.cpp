@@ -14,6 +14,9 @@
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 
+// Progress update timeout
+#define P_U_T 25
+
 
 extern MSUSettings settingsObj;
 
@@ -25,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                      tr("Meteor-M2 images (*.jpg *.bmp);;All files (*.*)"))),
     mWarper(new Warper),
     mWarpProgress(new QProgressBar(this)),
+    mWarpProgressTimer(new QTimer(this)),
 #ifdef WITH_UPDATES_ACTION
     mActionCheckUpdates(new QAction(tr("Check for updates"), this)),
 #endif // WITH_UPDATES_ACTION
@@ -51,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mWarpProgress->setVisible(false);
     mWarpProgress->setRange(0, 0);
+    mWarpProgress->setAlignment(Qt::AlignCenter);
     ui->statusbar->addPermanentWidget(mWarpProgress);
 
 #ifdef WITH_UPDATES_ACTION
@@ -73,6 +78,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(mWarper, &Warper::started, this, &MainWindow::onWarpStarted);
     connect(mWarper, &Warper::finished, this, &MainWindow::onWarpFinished);
+
+    connect(mWarpProgressTimer, &QTimer::timeout, this, &MainWindow::setProgressVal);
 }
 
 MainWindow::~MainWindow()
@@ -373,7 +380,7 @@ void MainWindow::on_actionReference_triggered()
 
 void MainWindow::onWarpStarted()
 {
-    QTimer::singleShot(20, this, &MainWindow::setProgressMax);
+    QTimer::singleShot(P_U_T, this, &MainWindow::setProgressMax);
     mWarpProgress->setVisible(true);
 #ifdef Q_OS_WIN32
     mWinProgress->setVisible(true);
@@ -390,8 +397,8 @@ void MainWindow::onWarpFinished(msumr::RETURN_CODE code)
 #ifdef Q_OS_WIN32
         mWinProgress->setVisible(false);
 #endif // Q_OS_WIN32
-    mWarpProgress->setMaximum(0);
-    mWarpProgress->setValue(0);
+//    mWarpProgress->setMaximum(0);
+//    mWarpProgress->setValue(0);
     if (code == msumr::SUCCESS)
         ui->statusbar->showMessage(tr("Transformation finished successfully"), 7000);
     else
@@ -405,17 +412,14 @@ void MainWindow::setProgressMax()
 {
     if (*mProgressMax > 0)
     {
-        mWarpProgress->setMaximum(*mProgressMax - 1);
+        mWarpProgress->setMaximum(*mProgressMax);
 #ifdef Q_OS_WIN32
-        mWinProgress->setMaximum(*mProgressMax - 1);
+        mWinProgress->setMaximum(*mProgressMax);
 #endif // Q_OS_WIN32
-        QTimer *timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, this, &MainWindow::setProgressVal);
-        connect(mWarper, &Warper::finished, timer, &QTimer::deleteLater);
-        timer->start(250);
+        mWarpProgressTimer->start(P_U_T);
     }
     else
-        QTimer::singleShot(500, this, &MainWindow::setProgressMax);
+        QTimer::singleShot(P_U_T, this, &MainWindow::setProgressMax);
 }
 
 void MainWindow::setProgressVal()
@@ -424,6 +428,13 @@ void MainWindow::setProgressVal()
 #ifdef Q_OS_WIN32
     mWinProgress->setValue(*mProgressVal);
 #endif // Q_OS_WIN32
+    if (*mProgressVal == *mProgressMax)
+    {
+        mWarpProgressTimer->stop();
+        mWarpProgress->setMaximum(0);
+        mWarpProgress->setValue(0);
+        ui->statusbar->showMessage(tr("Saving image file..."));
+    }
 }
 
 #ifdef WITH_UPDATES_ACTION
