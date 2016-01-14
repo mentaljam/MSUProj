@@ -101,8 +101,6 @@ include(GDAL)
 ######## Library ########
 include_directories(src/msuproj)
 add_subdirectory(src/msuproj msuproj)
-include(GenerateExportHeader)
-generate_export_header(msuproj)
 
 ##### Applications ######
 if(BUILD_CLI)

@@ -25,6 +25,8 @@ endif()
 
 add_library(msuproj ${MSUPROJ_SOURCES})
 target_link_libraries(msuproj ${GDAL_LIBRARIES})
+include(GenerateExportHeader)
+generate_export_header(msuproj EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/msuproj_export.h")
 
 if(BUILD_SHARED_LIBS)
 
