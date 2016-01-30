@@ -53,15 +53,15 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="66"/>
-        <location filename="../src/qt/mainwindow.cpp" line="121"/>
-        <location filename="../src/qt/mainwindow.cpp" line="136"/>
+        <location filename="../src/qt/mainwindow.cpp" line="128"/>
+        <location filename="../src/qt/mainwindow.cpp" line="143"/>
         <source>Image height</source>
         <translation>Kép magassága</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="73"/>
-        <location filename="../src/qt/mainwindow.cpp" line="120"/>
-        <location filename="../src/qt/mainwindow.cpp" line="135"/>
+        <location filename="../src/qt/mainwindow.cpp" line="127"/>
+        <location filename="../src/qt/mainwindow.cpp" line="142"/>
         <source>Image width</source>
         <translation>Kép szélessége</translation>
     </message>
@@ -73,10 +73,10 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="101"/>
-        <location filename="../src/qt/mainwindow.cpp" line="119"/>
-        <location filename="../src/qt/mainwindow.cpp" line="133"/>
-        <location filename="../src/qt/mainwindow.cpp" line="150"/>
+        <location filename="../src/qt/mainwindow.cpp" line="126"/>
+        <location filename="../src/qt/mainwindow.cpp" line="140"/>
         <location filename="../src/qt/mainwindow.cpp" line="157"/>
+        <location filename="../src/qt/mainwindow.cpp" line="164"/>
         <source>Input image file</source>
         <translation>Bemeneti kép fájl</translation>
     </message>
@@ -88,45 +88,45 @@
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="147"/>
-        <location filename="../src/qt/mainwindow.cpp" line="193"/>
-        <location filename="../src/qt/mainwindow.cpp" line="204"/>
-        <location filename="../src/qt/mainwindow.cpp" line="216"/>
+        <location filename="../src/qt/mainwindow.cpp" line="200"/>
+        <location filename="../src/qt/mainwindow.cpp" line="211"/>
         <location filename="../src/qt/mainwindow.cpp" line="223"/>
+        <location filename="../src/qt/mainwindow.cpp" line="230"/>
         <source>Input GCPs</source>
         <translation>Bemeneti GCP</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="155"/>
-        <location filename="../src/qt/mainwindow.cpp" line="195"/>
-        <location filename="../src/qt/mainwindow.cpp" line="207"/>
+        <location filename="../src/qt/mainwindow.cpp" line="202"/>
+        <location filename="../src/qt/mainwindow.cpp" line="214"/>
         <source>GCPs grid height</source>
         <translation>GCP rács magassága</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="162"/>
-        <location filename="../src/qt/mainwindow.cpp" line="194"/>
-        <location filename="../src/qt/mainwindow.cpp" line="206"/>
+        <location filename="../src/qt/mainwindow.cpp" line="201"/>
+        <location filename="../src/qt/mainwindow.cpp" line="213"/>
         <source>GCPs grid width</source>
         <translation>GCP rács szélessége</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="169"/>
-        <location filename="../src/qt/mainwindow.cpp" line="196"/>
-        <location filename="../src/qt/mainwindow.cpp" line="208"/>
+        <location filename="../src/qt/mainwindow.cpp" line="203"/>
+        <location filename="../src/qt/mainwindow.cpp" line="215"/>
         <source>Step of GCPs grid columns</source>
         <translation>GCP rács oszlopok lépésköze</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="176"/>
-        <location filename="../src/qt/mainwindow.cpp" line="197"/>
-        <location filename="../src/qt/mainwindow.cpp" line="209"/>
+        <location filename="../src/qt/mainwindow.cpp" line="204"/>
+        <location filename="../src/qt/mainwindow.cpp" line="216"/>
         <source>Step of GCPs grid rows</source>
         <translation>GCP rács sorok lépésköze</translation>
     </message>
     <message>
         <location filename="../src/qt/mainwindow.ui" line="183"/>
-        <location filename="../src/qt/mainwindow.cpp" line="198"/>
-        <location filename="../src/qt/mainwindow.cpp" line="210"/>
+        <location filename="../src/qt/mainwindow.cpp" line="205"/>
+        <location filename="../src/qt/mainwindow.cpp" line="217"/>
         <source>UTM zone</source>
         <translation>UTM zóna</translation>
     </message>
@@ -228,190 +228,195 @@
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="24"/>
+        <location filename="../src/qt/mainwindow.cpp" line="27"/>
         <source>Select input image</source>
         <translation>Bemeneti kép választása</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="25"/>
+        <location filename="../src/qt/mainwindow.cpp" line="28"/>
         <source>Meteor-M2 images (*.jpg *.bmp);;All files (*.*)</source>
         <translation>Meteor-M2 képek (*.jpg *.bmp);;Minden fájl (*.*)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="29"/>
+        <location filename="../src/qt/mainwindow.cpp" line="33"/>
         <source>Check for updates</source>
         <translation>Keressen frissítést</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="94"/>
+        <location filename="../src/qt/mainwindow.cpp" line="101"/>
         <source>Ready to transform</source>
         <translation>Készen áll az átalakításra</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="96"/>
+        <location filename="../src/qt/mainwindow.cpp" line="103"/>
         <source>Select input files</source>
         <translation>Válasszon bemeneti fájlokat!</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="134"/>
-        <location filename="../src/qt/mainwindow.cpp" line="205"/>
+        <location filename="../src/qt/mainwindow.cpp" line="141"/>
+        <location filename="../src/qt/mainwindow.cpp" line="212"/>
         <source>loaded</source>
         <translation>betöltve</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="151"/>
-        <location filename="../src/qt/mainwindow.cpp" line="217"/>
+        <location filename="../src/qt/mainwindow.cpp" line="158"/>
+        <location filename="../src/qt/mainwindow.cpp" line="224"/>
         <source>error loading</source>
         <translation>betöltési hiba</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="152"/>
+        <location filename="../src/qt/mainwindow.cpp" line="159"/>
         <source>Error loading image</source>
         <translation>Kép betöltési hiba</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="158"/>
-        <location filename="../src/qt/mainwindow.cpp" line="224"/>
+        <location filename="../src/qt/mainwindow.cpp" line="165"/>
+        <location filename="../src/qt/mainwindow.cpp" line="231"/>
         <source>no such file</source>
         <translation>nincs ilyen fájl</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="159"/>
+        <location filename="../src/qt/mainwindow.cpp" line="166"/>
         <source>Image file does not exist</source>
         <translation>A kép fájl nem létezik</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="177"/>
+        <location filename="../src/qt/mainwindow.cpp" line="184"/>
         <source>Select input GCP file</source>
         <translation>Bemeneti GCP fájl választása</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="179"/>
+        <location filename="../src/qt/mainwindow.cpp" line="186"/>
         <source>Meteor-M2 GCP file (*.gcp);;All files (*.*)</source>
         <translation>Meteor-M2 GCP fájl (*.gcp);;Minden fájl (*.*)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="218"/>
+        <location filename="../src/qt/mainwindow.cpp" line="225"/>
         <source>Error loading GCP file</source>
         <translation>Nem sikerült betölteni a GCP fájlt</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="225"/>
+        <location filename="../src/qt/mainwindow.cpp" line="232"/>
         <source>GCP file does not exist</source>
         <translation>A GCP fájl nem létezik</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="240"/>
+        <location filename="../src/qt/mainwindow.cpp" line="247"/>
         <source>Specify output file</source>
         <translation>Kimeneti fájl megadása</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="242"/>
+        <location filename="../src/qt/mainwindow.cpp" line="249"/>
         <source>GeoTiff images (*.tif)</source>
         <translation>GeoTiff képek (*.tif)</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="335"/>
+        <location filename="../src/qt/mainwindow.cpp" line="342"/>
         <source>Output file name is empty</source>
         <translation>Kimeneti fájlnév üres</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="348"/>
+        <location filename="../src/qt/mainwindow.cpp" line="355"/>
         <source>About MSUProj-Qt</source>
         <translation>MSUProj-Qt Névjegye</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="356"/>
+        <location filename="../src/qt/mainwindow.cpp" line="363"/>
         <source>MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.</source>
         <translation>Az MSUProj egy projekt az orosz ERS Meteor-M műhold MSU-MR érzékelőjének képeinek georeferálásához.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="357"/>
+        <location filename="../src/qt/mainwindow.cpp" line="364"/>
         <source>This is a Qt graphical interface for MSUProj.</source>
         <translation>Ez egy Qt grafikus felület az MSUProj számára.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="358"/>
+        <location filename="../src/qt/mainwindow.cpp" line="365"/>
         <source>MSUProj is provided under &lt;a href=&apos;http://opensource.org/licenses/Zlib&apos;&gt;The Zlib License&lt;/a&gt;.</source>
         <translation>Az MSUProj projekt a &lt;a href=&apos;http://opensource.org/licenses/Zlib&apos;&gt; Zlib licenz alá tartozik&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="359"/>
+        <location filename="../src/qt/mainwindow.cpp" line="366"/>
         <source>Version</source>
         <translation>Verzió</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="360"/>
+        <location filename="../src/qt/mainwindow.cpp" line="367"/>
         <source>Author</source>
         <translation>Szerző</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="361"/>
+        <location filename="../src/qt/mainwindow.cpp" line="368"/>
         <source>Project page</source>
         <translation>Projekt honlapja</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="362"/>
+        <location filename="../src/qt/mainwindow.cpp" line="369"/>
         <source>Translations</source>
         <translation>Fordítások</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="383"/>
+        <location filename="../src/qt/mainwindow.cpp" line="390"/>
         <source>Transforming image, please wait...</source>
         <translation>Kép átalakítása, kérem várjon...</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="396"/>
+        <location filename="../src/qt/mainwindow.cpp" line="403"/>
         <source>Transformation finished successfully</source>
         <translation>Átalakítás sikeresen befejeződött</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="398"/>
+        <location filename="../src/qt/mainwindow.cpp" line="405"/>
         <source>An error occured. Please check input data</source>
         <translation>Hiba történt. Kérem ellenőrizze a bemeneti adatokat</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="437"/>
+        <location filename="../src/qt/mainwindow.cpp" line="436"/>
+        <source>Saving image file...</source>
+        <translation>Kép fájl mentése...</translation>
+    </message>
+    <message>
+        <location filename="../src/qt/mainwindow.cpp" line="448"/>
         <source>Searching for updates...</source>
         <translation>Frissítések keresése...</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="449"/>
+        <location filename="../src/qt/mainwindow.cpp" line="460"/>
         <source>Error searching for updates</source>
         <translation>Hiba a frissítések keresése során</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="450"/>
+        <location filename="../src/qt/mainwindow.cpp" line="461"/>
         <source>Cannot find update tool &quot;maintenancetool.exe&quot;.</source>
         <translation>Nem található a frissítő eszköz &quot;maintenancetool.exe&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="478"/>
+        <location filename="../src/qt/mainwindow.cpp" line="489"/>
         <source>Updates are available</source>
         <translation>Frissítések elérhetőek</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="481"/>
+        <location filename="../src/qt/mainwindow.cpp" line="492"/>
         <source>MSUProj-Qt version %1 is available.</source>
         <translation>MSUProj-Qt %1 verzió elérhető.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="483"/>
+        <location filename="../src/qt/mainwindow.cpp" line="494"/>
         <source>MSUProj components updates are available.</source>
         <translation>MSUProj összetevő frissítések elérhetőek.</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="487"/>
+        <location filename="../src/qt/mainwindow.cpp" line="498"/>
         <source>Start the maintenance tool now?</source>
         <translation>Indítja a karbantartó eszközt?</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="502"/>
+        <location filename="../src/qt/mainwindow.cpp" line="513"/>
         <source>No updates are available</source>
         <translation>Nem találhatóak frissítések</translation>
     </message>
     <message>
-        <location filename="../src/qt/mainwindow.cpp" line="507"/>
+        <location filename="../src/qt/mainwindow.cpp" line="518"/>
         <source>Error searching for updates, check your internet connection</source>
         <translation>Hiba a frissítések keresése közben, ellenőrizze az internet kapcsolatát</translation>
     </message>
