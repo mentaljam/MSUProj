@@ -68,6 +68,20 @@ cpack_ifw_configure_component_group(msuproj
     LICENSES "\"MSUProj License\"" LICENSE.MSUProj.txt
              "\"GDAL Logo License\"" LICENSE.GDALLogoColor.txt)
 
+#### Install documentation
+set(DOC_FILES
+    LICENSE.MSUProj.txt
+    LICENSE.GDALLogoColor.txt
+    CHANGELOG.txt
+    TODO.txt)
+install(FILES ${DOC_FILES}
+    DESTINATION ${INSTALL_PATH_DOCS}
+    COMPONENT msuproj.doc)
+cpack_add_component(msuproj.doc
+    DISPLAY_NAME "MSUProj Documentation"
+    REQUIRED
+    GROUP msuproj)
+
 #### Package repository
 if(WIN32)
     cpack_ifw_add_repository(qtifwrepo
@@ -80,4 +94,5 @@ add_custom_target(package_files
     SOURCES ${CPACK_PROJECT_CONFIG_FILE}
             package/qtifw/component-msuproj.qs
             package/qtifw/component-msuproj_qt.qs
+            ${DOC_FILES}
     COMMENT "Dummy target to show package configuration files in Qt Creator interface")
