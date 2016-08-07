@@ -1,0 +1,3 @@
+[submodule "third-party/OMZModules"]
+	path = third-party/OMZModules
+	url = git@github.com:mentaljam/OMZModules.git

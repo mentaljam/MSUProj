@@ -1,5 +1,0 @@
-MSUProj is a project for georeferencing images from MSU-MR sensing equipment of Russian ERS satellite Meteor-M.
-
-Data from Meteor-M MSU-MR equipment is broadcasted at frequencies of 137.1 and 137.9 MHz in the LRPT format and can be obtained by everyone under "Free Space" program.
-All additional information in English can be found on http://meteor.robonuka.ru.
-

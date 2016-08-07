@@ -1,0 +1,19 @@
+div#projectname {
+    font-size: xx-large;
+    vertical-align: middle;
+}
+
+div.title {
+        font: 400 14px/28px Roboto,sans-serif;
+        font-size: x-large;
+        font-weight: bold;
+        margin: 10px 2px;
+}
+
+h1, h2, span#projectnumber {
+    font-size: large;
+}
+
+h3 {
+    font-size: medium;
+}

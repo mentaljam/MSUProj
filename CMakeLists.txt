@@ -1,130 +1,92 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.3)
 
-project("msuproj")
-set(PROJECT_NAME "MSUProj")
+#### OMZ modules
+find_package(OMZModules PATHS third-party)
 
+#### Project version
+get_version_from_git(VERSION VERSION_DATE)
+add_changelog_target(print_changelog)
 
-####################### Build options ######################
+#### Set project
+project("MSUProj" VERSION ${VERSION})
+omz_init_vars()
 
-#### Install development files
+#### Build options
+include(CMakeDependentOption)
+option(GDAL_PROJ4_STATIC "GDAL is built with static Proj4" OFF)
+option(BUILD_MSUPROJ_CLI "Build the command line application" ON)
+option(BUILD_MSUPROJ_QT "Build the qt application" ON)
+option(WITH_UPDATES_ACTION "Enable update mechanism for MSUProj-Qt" ON)
 option(INSTALL_DEV "Install development files" OFF)
-
-#### Build cli
-option(BUILD_CLI "Build command line application" OFF)
-
-#### Build qt
-option(BUILD_QT "Build qt application" OFF)
-
-#### Build tools
-option(BUILD_TOOLS "Build additional tools" OFF)
-
-#### Install runtime
 option(INSTALL_RUNTIME "Install runtime libraries on Windows" ON)
+cmake_dependent_option(INSTALL_MAN "Install documentation" ON
+    BUILD_MSUPROJ_QT OFF)
 
-#### Install documentation
-option(INSTALL_DOCS "Install documentation" ON)
-
-#### Add "Check for updates" action on windows
-option(WITH_UPDATES_ACTION "Check for updates action" ON)
+#### Use c++11 standard
+set(CMAKE_CXX_STANDARD 11)
 
 #### Compiler flags
-set(GCC_FLAGS  "-std=gnu++11 -funroll-loops -O3 -Wframe-larger-than=1024 -fopenmp")
-set(MSVC_FLAGS "/openmp")
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /openmp")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}\
+-funroll-loops \
+-O3 \
+-Wframe-larger-than=1024 \
+-fopenmp")
+endif()
 if(NOT BUILD_SHARED_LIBS OR NOT MSVC)
-    add_definitions("-DMSUPROJ_STATIC_DEFINE=1")
+    add_definitions(-DMSUPROJ_STATIC_DEFINE=1)
 endif()
 
+#### Find GDAL
+include(cmake/FindGDAL.cmake)
 
-############### Setting additional variables ###############
-
-#### GDAL paths (on Windows)
-set(SEARCH_PREFIX "" CACHE PATH "Additional path for searching packages")
-
-
-####################### Setting paths ######################
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist/lib)
-
-set(DOC_DIR         ${PROJECT_SOURCE_DIR}/doc)
-set(RESOURCES_DIR   ${PROJECT_SOURCE_DIR}/res)
-set(THIRD_PARTY_DIR ${PROJECT_SOURCE_DIR}/3rd)
-
+#### Install paths
 if(WIN32)
     set(INSTALL_PATH_BIN   .)
-    set(INSTALL_PATH_I18N  i18n)
-    set(INSTALL_PATH_DOCS  doc/${CMAKE_PROJECT_NAME})
+    set(INSTALL_PATH_I18N  translations)
+    set(INSTALL_PATH_DOCS  doc/msuproj)
     set(INSTALL_PATH_MAN   help)
-    set(INSTALL_PATH_DEV   include/${CMAKE_PROJECT_NAME})
+    set(INSTALL_PATH_INCLUDE include/msuproj)
     set(INSTALL_PATH_CMAKE cmake)
 else()
     set(INSTALL_PATH_BIN   bin)
-    set(INSTALL_PATH_I18N  share/${CMAKE_PROJECT_NAME}/i18n)
-    set(INSTALL_PATH_DOCS  share/${CMAKE_PROJECT_NAME}/doc)
-    set(INSTALL_PATH_MAN   share/${CMAKE_PROJECT_NAME}/help)
-    set(INSTALL_PATH_DEV   share/include/${CMAKE_PROJECT_NAME})
-    set(INSTALL_PATH_CMAKE share/${CMAKE_PROJECT_NAME}/cmake)
+    set(INSTALL_PATH_I18N  share/msuproj/translations)
+    set(INSTALL_PATH_DOCS  share/msuproj/doc)
+    set(INSTALL_PATH_MAN   share/msuproj/help)
+    set(INSTALL_PATH_INCLUDE share/include/msuproj)
+    set(INSTALL_PATH_CMAKE share/msuproj/cmake)
 endif()
 set(INSTALL_PATH_LIB lib)
 
+#### Icons
+add_subdirectory(icons)
 
-###################### CMake modules #######################
+#### CPack configuration
+include(package/CMakeLists.txt)
 
-#### Set of CMake modules (https://github.com/mentaljam/OMZModules)
-find_package(OMZModules)
+#### Library
+include_directories(
+    "library/src"
+    "${CMAKE_BINARY_DIR}/library")
+add_subdirectory(library)
 
-#### Version
-if(VERSION_MAJOR)
-    set_project_version(MAJOR ${VERSION_MAJOR}
-                        MINOR ${VERSION_MINOR}
-                        PATCH ${VERSION_PATCH}
-                        TWEAK ${VERSION_TWEAK}
-                        DATE ${VERSION_DATE})
-else()
-    set_project_version(GIT)
+#### Applications
+if(BUILD_MSUPROJ_CLI)
+    add_subdirectory(msuproj-cli)
 endif()
-write_version_file(${CMAKE_BINARY_DIR}/msuproj_version.h)
-
-#### Doxygen
-include(OMZDoxyConf)
-
-#### CPack
-include(OMZCPack)
-
-#### Find GDAL
-include(GDAL)
-
-
-########################## Targets #########################
-
-######## Library ########
-include_directories(src/msuproj)
-add_subdirectory(src/msuproj msuproj)
-
-##### Applications ######
-if(BUILD_CLI)
-    include_directories(src/cli)
-    add_subdirectory(src/cli msuproj-cli)
-endif()
-if(BUILD_QT)
-    include_directories(src/qt ${CMAKE_BINARY_DIR}/msuproj-qt)
-    add_subdirectory(src/qt msuproj-qt)
+if(BUILD_MSUPROJ_QT)
+    add_subdirectory(msuproj-qt)
 endif()
 
-######### Tools #########
-if(BUILD_TOOLS)
-    add_subdirectory(src/tools/ tools)
+#### Tools
+add_subdirectory(tools)
+
+#### Developer documentation
+add_subdirectory(doc)
+
+#### Install runtime
+if(WIN32 AND INSTALL_RUNTIME)
+    include(cmake/InstallRuntime.cmake)
 endif()
-
-
-##################### Post configuration ###################
-
-#### Configure doxygen targets
-include(DoxygenTargets)
-
-#### Configure packaging rules
-include(Packaging)
-
-#### OMZ postconfig function
-postconfig()

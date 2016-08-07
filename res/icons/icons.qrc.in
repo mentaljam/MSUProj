@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/icons">
-        <file alias="MSUProj">@CMAKE_BINARY_DIR@/res/icons/msuproj.png</file>
-    </qresource>
-</RCC>
