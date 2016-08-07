@@ -55,7 +55,7 @@ public:
      * @brief Sets the destination file name
      * @param file - the destination file name
      */
-    void setDst(std::string file);
+    void setDst(const std::string &file);
 
     /**
      * @brief Sets the destination file format
@@ -65,7 +65,7 @@ public:
      * (http://www.gdal.org/formats_list.html)
      * that supports creation. Default is 'GeoTiff'.
      */
-    void setDstFormat(std::string format);
+    void setDstFormat(const std::string &format);
 
     /**
      * @brief Sets the source raster file
@@ -74,7 +74,7 @@ public:
      * - msumr::SUCCESS   - successful reading of the source file
      * - msumr::ERROR_SRC - the source file reading error
      */
-    const RETURN_CODE setSrc(std::string file);
+    const RETURN_CODE setSrc(const std::string &file);
 
     /**
      * @brief Sets the GCP file
@@ -83,7 +83,7 @@ public:
      * - msumr::SUCCESS - successful reading of the GCP file
      * - msumr::ERROR_GCP - the GCP file reading error
      */
-    const RETURN_CODE readGCP(std::string file);
+    const RETURN_CODE readGCP(const std::string &file);
 
     /**
      * @brief Project the MSU-MR image

@@ -136,6 +136,10 @@ bool msumr::GCPGrid::fromFile(const std::string &path)
         line = line.substr(++pos, line.size() - pos);
 
         mGcps[gcpInd].lon = std::stod(line, &pos);
+        if (mGcps[gcpInd].lon < 0)
+        {
+            mGcps[gcpInd].lon += 360.0;
+        }
 
         ++gcpInd;
     }
@@ -223,6 +227,10 @@ void msumr::GCPGrid::pUpdateVars(bool utm)
             mGeoTransform[1] = 0.01;
             mGeoTransform[5] = -0.01;
             mUtmZone     = (int)(((int)(lon + 0.5) + 180) / 6) + 1;
+            if (mUtmZone > 60)
+            {
+                mUtmZone -= 60;
+            }
             mUtmNorthern = (int)(lat + 0.5) > 0;
         }
         else

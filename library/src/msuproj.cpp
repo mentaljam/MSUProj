@@ -54,17 +54,17 @@ const char *msumr::MSUProj::version(VERSION_TYPE type) const
     }
 }
 
-void msumr::MSUProj::setDst(std::string file)
+void msumr::MSUProj::setDst(const std::string &file)
 {
     mDstFile = file;
 }
 
-void msumr::MSUProj::setDstFormat(std::string format)
+void msumr::MSUProj::setDstFormat(const std::string &format)
 {
     mDstFormat = format;
 }
 
-const msumr::RETURN_CODE msumr::MSUProj::setSrc(std::string file)
+const msumr::RETURN_CODE msumr::MSUProj::setSrc(const std::string &file)
 {
     if (mSrcDS)
         GDALClose(mSrcDS);
@@ -75,7 +75,7 @@ const msumr::RETURN_CODE msumr::MSUProj::setSrc(std::string file)
     return SUCCESS;
 }
 
-const msumr::RETURN_CODE msumr::MSUProj::readGCP(std::string file)
+const msumr::RETURN_CODE msumr::MSUProj::readGCP(const std::string &file)
 {
     if (!mSrcDS)
         return ERROR_SRC;
