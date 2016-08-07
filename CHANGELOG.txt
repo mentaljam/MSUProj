@@ -1,3 +1,7 @@
+1.1 (2016-08-07)
+    - UPDATE: Project structure
+    - FIX:    Longitude overpassing 180 degree
+
 1.0 (2016-01-12)
     General:
     - NEW:    Add option to disable logotype
