@@ -441,7 +441,7 @@ void MainWindow::setProgressVal()
 void MainWindow::checkUpdates()
 {
 
-    QString tool = QDir::currentPath() + "/maintenancetool.exe";
+    QString tool = QDir::currentPath() + "/msuproj-setup.exe";
     if (QFile(tool).exists())
     {
         mActionCheckUpdates->setEnabled(false);
@@ -458,7 +458,7 @@ void MainWindow::checkUpdates()
     {
         qDebug() << "Error searching for updates: cannot find" << tool;
         QMessageBox::critical(this, tr("Error searching for updates"),
-                              tr("Cannot find update tool \"maintenancetool.exe\"."));
+                              tr("Cannot find update tool \"msuproj-setup.exe\"."));
     }
 }
 
@@ -500,7 +500,7 @@ void MainWindow::onCheckUpdatesFinished(int code)
             QMessageBox::Yes)
         {
             qDebug() << "Starting maintenance tool";
-            QProcess::startDetached(QDir::currentPath() + "/maintenancetool.exe",
+            QProcess::startDetached(QDir::currentPath() + "/msuproj-setup.exe",
                                     QStringList("--updater"));
             qApp->quit();
         }
