@@ -51,28 +51,29 @@ if(BUILD_MSUPROJ_QT AND QTDIR)
     if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
         set(QT_DLL_SUFFIX "d")
     endif()
-    install(FILES ${QTDIR}/bin/Qt5Core${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5Gui${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5Widgets${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5Help${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5Network${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5Sql${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5CLucene${QT_DLL_SUFFIX}.dll
-                  ${QTDIR}/bin/Qt5WinExtras${QT_DLL_SUFFIX}.dll
+    install(FILES "${QTDIR}/bin/Qt5Core${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5Gui${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5Widgets${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5Help${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5Network${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5Sql${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5CLucene${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/bin/Qt5WinExtras${QT_DLL_SUFFIX}.dll"
         DESTINATION ${INSTALL_PATH_BIN}
         COMPONENT runtime.qt)
     if(MSVC)
-        install(FILES ${QTDIR}/bin/libGLESV2.dll
+        install(FILES "${QTDIR}/bin/libGLESV2.dll"
             DESTINATION ${INSTALL_PATH_BIN}
             COMPONENT runtime.qt)
     endif()
-    install(FILES ${QTDIR}/plugins/platforms/qwindows.dll
+    install(FILES "${QTDIR}/plugins/platforms/qwindows.dll"
         DESTINATION  ${INSTALL_PATH_BIN}/platforms
         COMPONENT runtime.qt)
-    install(FILES ${QTDIR}/plugins/sqldrivers/qsqlite.dll
+    install(FILES "${QTDIR}/plugins/sqldrivers/qsqlite.dll"
         DESTINATION ${INSTALL_PATH_BIN}/sqldrivers
         COMPONENT runtime.qt)
-    install(FILES ${QTDIR}/translations/qtbase_ru.qm
+    file(GLOB QT_TRANSLATIONS "${QTDIR}/translations/qtbase_*.qm")
+    install(FILES ${QT_TRANSLATIONS}
         DESTINATION ${INSTALL_PATH_I18N}
         COMPONENT runtime.qt)
 
