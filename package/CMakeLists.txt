@@ -78,7 +78,7 @@ install(FILES ${DOC_FILES}
     DESTINATION ${INSTALL_PATH_DOCS}
     COMPONENT msuproj.doc)
 cpack_add_component(msuproj.doc
-    DISPLAY_NAME "MSUProj Documentation"
+    DISPLAY_NAME "Documentation"
     REQUIRED
     GROUP msuproj)
 
@@ -94,5 +94,6 @@ add_custom_target(package_files
     SOURCES ${CPACK_PROJECT_CONFIG_FILE}
             package/qtifw/component-msuproj.qs
             package/qtifw/component-msuproj_qt.qs
+            package/qtifw/component-runtime_msvc.qs
             ${DOC_FILES}
     COMMENT "Dummy target to show package configuration files in Qt Creator interface")

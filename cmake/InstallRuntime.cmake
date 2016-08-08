@@ -22,27 +22,39 @@ cpack_ifw_configure_component(runtime.gdal
     VERSION ${GDAL_VERSION})
 
 #### Scan and install GCC libraries
-set(RUNTIME_TYPE "GCC")
-configure_file(cmake/InstallRuntimeScript.cmake.in InstallRuntimeScriptGcc.cmake @ONLY)
-install(SCRIPT "${CMAKE_BINARY_DIR}/InstallRuntimeScriptGcc.cmake"
-    COMPONENT runtime.gcc)
-cpack_add_component(runtime.gcc
-    DISPLAY_NAME "GCC"
-    DESCRIPTION  "GCC libraries"
-    GROUP        runtime)
-cpack_ifw_configure_component(runtime.gcc
-    VERSION ${CMAKE_CXX_COMPILER_VERSION})
+if(CMAKE_COMPILER_IS_GNUCC )
+    set(RUNTIME_TYPE "GCC")
+    configure_file(cmake/InstallRuntimeScript.cmake.in InstallRuntimeScriptGcc.cmake @ONLY)
+    install(SCRIPT "${CMAKE_BINARY_DIR}/InstallRuntimeScriptGcc.cmake"
+        COMPONENT runtime.gcc)
+    cpack_add_component(runtime.gcc
+        DISPLAY_NAME "GCC"
+        DESCRIPTION  "GCC libraries"
+        GROUP        runtime)
+    cpack_ifw_configure_component(runtime.gcc
+        VERSION ${CMAKE_CXX_COMPILER_VERSION})
+endif()
 
 #### MSVC
 if(MSVC)
-    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${INSTALL_PATH_BIN})
-    set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT   runtime.cpp)
-    include(InstallRequiredSystemLibraries)
-    cpack_add_component(runtime.msvc
-        DISPLAY_NAME "MSVC"
-        GROUP        runtime)
-    cpack_ifw_configure_component(runtime.msvc
-        VERSION ${MSVC_VERSION})
+    if("${TARGET_ARCHITECTURE}" STREQUAL "amd64")
+        set(VCREDIST_NAME "vcredist_x64.exe")
+    elseif("${TARGET_ARCHITECTURE}" STREQUAL "i386")
+        set(VCREDIST_NAME "vcredist_x86.exe")
+    endif()
+    if(VCREDIST_NAME)
+        file(GLOB_RECURSE VCREDIST "$ENV{VSInstallDir}VC/redist/*/${VCREDIST_NAME}")
+        file(TO_CMAKE_PATH "${VCREDIST}" VCREDIST)
+        install(FILES "${VCREDIST}"
+            DESTINATION ${INSTALL_PATH_BIN}
+            COMPONENT runtime.msvc)
+        cpack_add_component(runtime.msvc
+            DISPLAY_NAME "MSVC"
+            GROUP        runtime)
+        cpack_ifw_configure_component(runtime.msvc
+            SCRIPT "${CMAKE_SOURCE_DIR}/package/qtifw/component-runtime_msvc.qs"
+            VERSION ${MSVC_VERSION})
+    endif()
 endif()
 
 ##### Qt
@@ -61,17 +73,21 @@ if(BUILD_MSUPROJ_QT AND QTDIR)
                   "${QTDIR}/bin/Qt5WinExtras${QT_DLL_SUFFIX}.dll"
         DESTINATION ${INSTALL_PATH_BIN}
         COMPONENT runtime.qt)
-    if(MSVC)
+    if(MSVC AND EXISTS "${QTDIR}/bin/libGLESV2.dll")
         install(FILES "${QTDIR}/bin/libGLESV2.dll"
             DESTINATION ${INSTALL_PATH_BIN}
             COMPONENT runtime.qt)
     endif()
-    install(FILES "${QTDIR}/plugins/platforms/qwindows.dll"
+    install(FILES "${QTDIR}/plugins/platforms/qwindows${QT_DLL_SUFFIX}.dll"
         DESTINATION  ${INSTALL_PATH_BIN}/platforms
         COMPONENT runtime.qt)
-    install(FILES "${QTDIR}/plugins/sqldrivers/qsqlite.dll"
+    install(FILES "${QTDIR}/plugins/sqldrivers/qsqlite${QT_DLL_SUFFIX}.dll"
         DESTINATION ${INSTALL_PATH_BIN}/sqldrivers
         COMPONENT runtime.qt)
+    install(FILES "${QTDIR}/plugins/imageformats/qjpeg${QT_DLL_SUFFIX}.dll"
+                  "${QTDIR}/plugins/imageformats/qwbmp${QT_DLL_SUFFIX}.dll"
+            DESTINATION ${INSTALL_PATH_BIN}/imageformats
+            COMPONENT runtime.qt)
     file(GLOB QT_TRANSLATIONS "${QTDIR}/translations/qtbase_*.qm")
     install(FILES ${QT_TRANSLATIONS}
         DESTINATION ${INSTALL_PATH_I18N}
@@ -79,7 +95,7 @@ if(BUILD_MSUPROJ_QT AND QTDIR)
 
     cpack_add_component(runtime.qt
         DISPLAY_NAME "Qt Framework"
-        GROUP        runtime.qt)
+        GROUP        runtime)
     cpack_ifw_configure_component(runtime.qt
         VERSION ${QT_VERSION})
 endif()
