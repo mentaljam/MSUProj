@@ -66,6 +66,10 @@ target_include_directories(msuproj-qt PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(msuproj-qt msuproj ${QT_LINK_LIBRARIES})
 
+if(WITH_UPDATES_ACTION)
+    target_compile_definitions(msuproj-qt PRIVATE -DWITH_UPDATES_ACTION=)
+endif()
+
 install(TARGETS msuproj-qt
     DESTINATION ${INSTALL_PATH_BIN}
     COMPONENT msuproj.qt.app)

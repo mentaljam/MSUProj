@@ -21,6 +21,8 @@ option(INSTALL_DEV "Install development files" OFF)
 option(INSTALL_RUNTIME "Install runtime libraries on Windows" ON)
 cmake_dependent_option(INSTALL_MAN "Install documentation" ON
     BUILD_MSUPROJ_QT OFF)
+cmake_dependent_option(WITH_UPDATES_ACTION "Updater functionality" ON
+    BUILD_MSUPROJ_QT OFF)
 
 #### Use c++11 standard
 set(CMAKE_CXX_STANDARD 11)
