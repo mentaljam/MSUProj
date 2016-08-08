@@ -64,9 +64,7 @@ include(CPackIFW)
 cpack_add_component_group(msuproj
     DISPLAY_NAME "MSUProj")
 cpack_ifw_configure_component_group(msuproj
-    SCRIPT package/qtifw/component-msuproj.qs
-    LICENSES "\"MSUProj License\"" LICENSE.MSUProj.txt
-             "\"GDAL Logo License\"" LICENSE.GDALLogoColor.txt)
+    SCRIPT package/qtifw/component-msuproj.qs)
 
 #### Install documentation
 set(DOC_FILES
